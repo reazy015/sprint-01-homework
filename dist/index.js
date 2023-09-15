@@ -107,7 +107,7 @@ app.put("/videos/:id", (req, res) => {
     }
     const errorsMessages = [];
     if (typeof canBeDownloaded !== 'boolean') {
-        errorsMessages.push({ message: 'can be only boolean type', field: 'title' });
+        errorsMessages.push({ message: 'can be only boolean type', field: 'canBeDownloaded' });
     }
     if (!title) {
         errorsMessages.push({ message: 'title is required', field: 'title' });
