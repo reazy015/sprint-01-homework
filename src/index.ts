@@ -171,7 +171,7 @@ app.put("/videos/:id", (req, res) => {
     errorsMessages.push({ message: 'availableResolutions is required', field: 'availableResolutions' })
   }
 
-  if (minAgeRestriction > 18 && minAgeRestriction < 1) {
+  if (minAgeRestriction > 18 || minAgeRestriction < 1) {
     errorsMessages.push({ message: 'minAgeRestriction is incorrect, must be in range 1-18', field: 'minAgeRestriction' })
   }
 
