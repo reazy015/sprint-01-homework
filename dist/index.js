@@ -21,18 +21,7 @@ const RESOLUTIONS_STRING = RESOLUTIONS.join(', ');
 const isAvailableResolutionsCorrect = (availableResolutions) => {
     return availableResolutions.every((res) => RESOLUTIONS.includes(res));
 };
-let videoList = [
-    {
-        id: +new Date(),
-        title: "Hobbit",
-        author: "Jackson",
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
-        publicationDate: new Date().toISOString(),
-        availableResolutions: "P144",
-    },
-];
+let videoList = [];
 app.use(jsonBodyParser);
 app.get("/videos", (_req, res) => {
     res.status(200).json(videoList);
@@ -41,7 +30,7 @@ app.get("/videos/:id", (req, res) => {
     const id = req.params.id;
     const found = videoList.find((video) => video.id === +id);
     if (!found) {
-        res.status(404);
+        res.sendStatus(404);
         return;
     }
     res.status(200).json(found);
@@ -49,8 +38,8 @@ app.get("/videos/:id", (req, res) => {
 app.post("/videos", (req, res) => {
     const { title, author, availableResolutions } = req.body;
     const errorsMessages = [];
-    if (!title) {
-        errorsMessages.push({ message: 'title is required', field: 'title' });
+    if (!title || title.length > 40) {
+        errorsMessages.push({ message: 'title is required, max length 40', field: 'title' });
     }
     if (!author) {
         errorsMessages.push({ message: 'author is required', field: 'author' });
@@ -67,7 +56,7 @@ app.post("/videos", (req, res) => {
     }
     const id = +new Date();
     const createdAtDate = new Date();
-    const publicationDate = new Date(createdAtDate.getDate() + 1).toISOString();
+    let publicationDate = new Date(new Date(createdAtDate).setDate(createdAtDate.getDate() + 1)).toISOString();
     const created = {
         title,
         author,
@@ -107,23 +96,19 @@ app.delete("/all-data", (_req, res) => {
         deleted: true
     });
 });
-app.put("/videos/:id", (req, res) => {
+app.put("/testing/videos/:id", (req, res) => {
     const updates = req.body;
     const { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = updates;
     const id = req.params.id;
     const found = videoList.find((video) => video.id === +id);
     if (!found) {
-        res.status(404).json({
-            errorsMessages: [
-                {
-                    message: 'Not found',
-                    field: 'Id'
-                }
-            ]
-        });
+        res.sendStatus(404);
         return;
     }
     const errorsMessages = [];
+    if (typeof canBeDownloaded !== 'boolean') {
+        errorsMessages.push({ message: 'can be only boolean type', field: 'title' });
+    }
     if (!title) {
         errorsMessages.push({ message: 'title is required', field: 'title' });
     }
@@ -143,6 +128,6 @@ app.put("/videos/:id", (req, res) => {
     const updated = Object.assign(Object.assign({}, found), updates);
     const filteredVideoList = videoList.filter((video) => video.id !== +id);
     videoList = [...filteredVideoList, updated];
-    res.status(204).json(updated);
+    res.sendStatus(204);
 });
 app.listen(PORT, () => `Server started on localhost:${PORT}`);
