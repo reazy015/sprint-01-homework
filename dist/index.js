@@ -121,6 +121,9 @@ app.put("/videos/:id", (req, res) => {
     if (minAgeRestriction > 18 || minAgeRestriction < 1) {
         errorsMessages.push({ message: 'minAgeRestriction is incorrect, must be in range 1-18', field: 'minAgeRestriction' });
     }
+    if (typeof publicationDate !== 'string') {
+        errorsMessages.push({ message: 'publicationDate is incorrect, must be a date string in ISO format', field: 'publicationDate' });
+    }
     if (availableResolutions && availableResolutions.length && !isAvailableResolutionsCorrect(availableResolutions)) {
         errorsMessages.push({ message: `availableResolutions has incorrect values, correct types are: ${RESOLUTIONS_STRING}`, field: 'availableResolutions' });
     }
