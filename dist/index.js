@@ -109,11 +109,11 @@ app.put("/videos/:id", (req, res) => {
     if (typeof canBeDownloaded !== 'boolean') {
         errorsMessages.push({ message: 'can be only boolean type', field: 'canBeDownloaded' });
     }
-    if (!title) {
-        errorsMessages.push({ message: 'title is required', field: 'title' });
+    if (!title || title.length > 40) {
+        errorsMessages.push({ message: 'title is required, max length 40', field: 'title' });
     }
-    if (!author) {
-        errorsMessages.push({ message: 'author is required', field: 'author' });
+    if (!author || author.length > 20) {
+        errorsMessages.push({ message: 'author is required, max length 20', field: 'author' });
     }
     if (!availableResolutions || !availableResolutions.length) {
         errorsMessages.push({ message: 'availableResolutions is required', field: 'availableResolutions' });
