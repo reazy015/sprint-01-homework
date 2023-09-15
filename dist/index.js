@@ -41,8 +41,8 @@ app.post("/videos", (req, res) => {
     if (!title || title.length > 40) {
         errorsMessages.push({ message: 'title is required, max length 40', field: 'title' });
     }
-    if (!author) {
-        errorsMessages.push({ message: 'author is required', field: 'author' });
+    if (!author || author.length > 20) {
+        errorsMessages.push({ message: 'author is required, max length 20', field: 'author' });
     }
     if (!availableResolutions || !availableResolutions.length) {
         errorsMessages.push({ message: 'availableResolutions is required', field: 'availableResolutions' });
@@ -90,13 +90,13 @@ app.delete("/videos/:id", (req, res) => {
         deleted: true
     });
 });
-app.delete("/all-data", (_req, res) => {
+app.delete("/testing/all-data", (_req, res) => {
     videoList = [];
     res.status(204).json({
         deleted: true
     });
 });
-app.put("/testing/videos/:id", (req, res) => {
+app.put("/videos/:id", (req, res) => {
     const updates = req.body;
     const { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = updates;
     const id = req.params.id;
