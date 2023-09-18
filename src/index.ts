@@ -1,6 +1,6 @@
 import express from "express";
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT || 3003
 const jsonBodyParser = express.json();
 
@@ -45,6 +45,7 @@ interface Video {
   publicationDate: string;
   availableResolutions: Resolutions;
 }
+
 
 let videoList: Video[] = [];
 
