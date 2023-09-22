@@ -1,7 +1,7 @@
 const authDb: Record<string, {login: string; password: string}> = {
   admin: {
     login: 'admin',
-    password: 'admin',
+    password: 'qwerty',
   },
 }
 

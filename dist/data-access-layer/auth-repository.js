@@ -4,7 +4,7 @@ exports.authRepository = void 0;
 const authDb = {
     admin: {
         login: 'admin',
-        password: 'admin',
+        password: 'qwerty',
     },
 };
 exports.authRepository = {

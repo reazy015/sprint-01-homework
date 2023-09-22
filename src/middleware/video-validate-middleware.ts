@@ -9,13 +9,13 @@ export const postVideoMiddleware = () =>
     title: {
       isLength: {
         options: {min: 3, max: 40},
-        errorMessage: ERROR_MESSAGES.TITLE,
+        errorMessage: ERROR_MESSAGES.title,
       },
     },
     author: {
       isLength: {
         options: {min: 3, max: 20},
-        errorMessage: ERROR_MESSAGES.AUTHOR,
+        errorMessage: ERROR_MESSAGES.author,
       },
     },
     availableResolutions: {
@@ -23,7 +23,7 @@ export const postVideoMiddleware = () =>
       isIn: {
         options: [RESOLUTIONS],
       },
-      errorMessage: ERROR_MESSAGES.AVAILABLE_RESOLUTIONS,
+      errorMessage: ERROR_MESSAGES.availableResolutions,
     },
   })
 export const putVideoMiddleware = () => {

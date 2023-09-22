@@ -10,13 +10,13 @@ const postVideoMiddleware = () => (0, express_validator_1.checkSchema)({
     title: {
         isLength: {
             options: { min: 3, max: 40 },
-            errorMessage: constants_2.ERROR_MESSAGES.TITLE,
+            errorMessage: constants_2.ERROR_MESSAGES.title,
         },
     },
     author: {
         isLength: {
             options: { min: 3, max: 20 },
-            errorMessage: constants_2.ERROR_MESSAGES.AUTHOR,
+            errorMessage: constants_2.ERROR_MESSAGES.author,
         },
     },
     availableResolutions: {
@@ -24,7 +24,7 @@ const postVideoMiddleware = () => (0, express_validator_1.checkSchema)({
         isIn: {
             options: [constants_1.RESOLUTIONS],
         },
-        errorMessage: constants_2.ERROR_MESSAGES.AVAILABLE_RESOLUTIONS,
+        errorMessage: constants_2.ERROR_MESSAGES.availableResolutions,
     },
 });
 exports.postVideoMiddleware = postVideoMiddleware;
