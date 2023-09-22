@@ -1,4 +1,4 @@
-import {Video} from '../types/videos'
+import {Video} from '../types/video'
 
 type VideoId = number
 let videosDb: Record<VideoId, Video> = []
@@ -8,7 +8,9 @@ export const videoRepositry = {
     return videosDb[id]
   },
   getAllVideos() {
-    return Object.values(videosDb)
+    const result = Object.values(videosDb)
+
+    return result
   },
   addVideo(video: Omit<Video, 'id' | 'createdAt' | 'publicationDate'>) {
     const id = +new Date()
@@ -17,14 +19,16 @@ export const videoRepositry = {
       new Date(createdAtDate).setDate(createdAtDate.getDate() + 1),
     ).toISOString()
 
-    videosDb[id] = {
+    const newVideo: Video = {
       ...video,
       id,
       createdAt: createdAtDate.toISOString(),
       publicationDate,
     }
 
-    return id
+    videosDb[id] = newVideo
+
+    return newVideo
   },
   updateVideo(id: number, video: Video) {
     videosDb[id] = {

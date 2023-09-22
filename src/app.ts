@@ -1,5 +1,5 @@
 import express, {json} from 'express'
-import {getVideosRouter} from './routes/videos'
+import {getVideosRouter} from './routes/video'
 import {getTestingRouter} from './routes/testing'
 
 export const app = express()

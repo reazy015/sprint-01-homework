@@ -1,4 +1,4 @@
-import {Resolutions} from '../types/videos'
+import {Resolutions} from '../types/video'
 import {RESOLUTIONS} from './constants'
 
 export const isAvailableResolutionsCorrect = (availableResolutions: Resolutions[]) => {

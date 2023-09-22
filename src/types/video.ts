@@ -12,9 +12,9 @@ export interface Video {
   id: number
   title: string
   author: string
+  availableResolutions: Resolutions[]
   canBeDownloaded: boolean
   minAgeRestriction: AgeRange | null
   createdAt: string
   publicationDate: string
-  availableResolutions: Resolutions[]
 }

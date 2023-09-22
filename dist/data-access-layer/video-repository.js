@@ -7,14 +7,16 @@ exports.videoRepositry = {
         return videosDb[id];
     },
     getAllVideos() {
-        return Object.values(videosDb);
+        const result = Object.values(videosDb);
+        return result;
     },
     addVideo(video) {
         const id = +new Date();
         const createdAtDate = new Date();
         let publicationDate = new Date(new Date(createdAtDate).setDate(createdAtDate.getDate() + 1)).toISOString();
-        videosDb[id] = Object.assign(Object.assign({}, video), { id, createdAt: createdAtDate.toISOString(), publicationDate });
-        return id;
+        const newVideo = Object.assign(Object.assign({}, video), { id, createdAt: createdAtDate.toISOString(), publicationDate });
+        videosDb[id] = newVideo;
+        return newVideo;
     },
     updateVideo(id, video) {
         videosDb[id] = Object.assign({}, video);

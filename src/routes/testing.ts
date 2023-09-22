@@ -1,5 +1,5 @@
 import express from 'express'
-import {Video} from '../types/videos'
+import {Video} from '../types/video'
 import {videoRepositry} from '../data-access-layer/video-repository'
 
 export const getTestingRouter = () => {
