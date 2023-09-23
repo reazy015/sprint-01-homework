@@ -59,32 +59,68 @@ describe('/blogs', () => {
     })
   })
 
-  it('PUT /blogs/:id should return 401 if user unauthorized, use POST to create', async () => {
+  it('PUT /blogs/:id should return 401 if user unauthorized', async () => {
+    await request(app)
+      .put(`/blogs/some_id`)
+      .auth(CREDENTIALS.LOGIN, 'wrong_pass')
+      .send({})
+      .expect(401)
+  })
+
+  it('PUT /blogs/:id should return 404 if blog not found', async () => {
     const blogUpdate: BlogInputModel = {
       name: 'name',
       description: 'description',
       websiteUrl: 'https://websiteurl.com',
     }
 
-    const postBlogResponse = await request(app)
-      .post('/blogs')
+    await request(app)
+      .put('/blogs/not_exists_id')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(blogUpdate)
+      .expect(404)
+  })
+
+  it('PUT /blogs/:id should return 400 if input model incorrect, use POST', async () => {
+    const newBlog: BlogInputModel = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://websiteurl.com',
+    }
+
+    const postResponse = await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
       .expect(201)
 
     await request(app)
-      .put(`/blogs/${postBlogResponse.body.id}`)
-      .auth(CREDENTIALS.LOGIN, 'wrong_pass')
+      .put(`/blogs/${postResponse.body.id}`)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send({
-        id: postBlogResponse.body.id,
-        ...blogUpdate,
+        ...newBlog,
+        websiteUrl: '',
       })
-      .expect(401)
+      .expect(400)
   })
 
-  it('PUT /blogs/:id should return 400 if input model incorrect', async () => {})
+  it('PUT /blogs/:id should return 204 if input model correct, use POST', async () => {
+    const newBlog: BlogInputModel = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://websiteurl.com',
+    }
 
-  it('PUT /blogs/:id should return 404 if blog not found', async () => {})
+    const postResponse = await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
+      .expect(201)
 
-  it('PUT /blogs/:id should return 204 if input model correct', async () => {})
+    await request(app)
+      .put(`/blogs/${postResponse.body.id}`)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
+      .expect(204)
+  })
 })

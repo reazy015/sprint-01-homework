@@ -22,4 +22,12 @@ export const blogsRepository = {
 
     return id.toString()
   },
+  updateBlog(id: string, blogUpdate: BlogInputModel) {
+    blogsDb[id] = {
+      id,
+      ...blogUpdate,
+    }
+
+    return true
+  },
 }

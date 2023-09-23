@@ -35,14 +35,18 @@ const getBlogsRouter = () => {
         res.status(201).json(newBlog);
     });
     router.put('/:id', basic_auth_middleware_1.basicAuthMiddleware, (0, blog_validate_middleware_1.postBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => {
-        const addBlogData = req.body;
-        const newBlogId = blogs_repository_1.blogsRepository.addBlog(addBlogData);
-        const newBlog = blogs_repository_1.blogsRepository.getBlogById(newBlogId);
-        if (!newBlog) {
-            res.status(500).send('Error on creating');
+        const id = req.params.id;
+        const blog = blogs_repository_1.blogsRepository.getBlogById(id);
+        if (!blog) {
+            res.sendStatus(404);
             return;
         }
-        res.status(201).json(newBlog);
+        const updateResult = blogs_repository_1.blogsRepository.updateBlog(id, req.body);
+        if (!updateResult) {
+            res.sendStatus(500);
+            return;
+        }
+        res.sendStatus(204);
     });
     return router;
 };

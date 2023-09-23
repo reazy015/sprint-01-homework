@@ -17,5 +17,9 @@ exports.blogsRepository = {
         blogsDb[id] = Object.assign({ id: id.toString() }, blog);
         return id.toString();
     },
+    updateBlog(id, blogUpdate) {
+        blogsDb[id] = Object.assign({ id }, blogUpdate);
+        return true;
+    },
 };
 //# sourceMappingURL=blogs-repository.js.map

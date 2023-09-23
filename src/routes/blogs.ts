@@ -54,19 +54,24 @@ export const getBlogsRouter = () => {
     postBlogValidateMiddleware(),
     validationErrorMiddleware,
 
-    (req: Request<{}, {}, BlogInputModel>, res: Response<Blog | string>) => {
-      const addBlogData = req.body
+    (req: Request<{id: string}, {}, BlogInputModel>, res: Response) => {
+      const id = req.params.id
 
-      const newBlogId = blogsRepository.addBlog(addBlogData)
+      const blog = blogsRepository.getBlogById(id)
 
-      const newBlog = blogsRepository.getBlogById(newBlogId)
-
-      if (!newBlog) {
-        res.status(500).send('Error on creating')
+      if (!blog) {
+        res.sendStatus(404)
         return
       }
 
-      res.status(201).json(newBlog)
+      const updateResult = blogsRepository.updateBlog(id, req.body)
+
+      if (!updateResult) {
+        res.sendStatus(500)
+        return
+      }
+
+      res.sendStatus(204)
     },
   )
 
