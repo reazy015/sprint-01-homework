@@ -15,7 +15,26 @@ const getBlogsRouter = () => {
         const blogs = blogs_repository_1.blogsRepository.getAllBlogs();
         res.status(200).json(blogs);
     });
+    router.get('/:id', (req, res) => {
+        const id = req.params.id;
+        const blog = blogs_repository_1.blogsRepository.getBlogById(id);
+        if (!blog) {
+            res.status(404).send('Not found');
+            return;
+        }
+        res.status(200).send(blog);
+    });
     router.post('/', basic_auth_middleware_1.basicAuthMiddleware, (0, blog_validate_middleware_1.postBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => {
+        const addBlogData = req.body;
+        const newBlogId = blogs_repository_1.blogsRepository.addBlog(addBlogData);
+        const newBlog = blogs_repository_1.blogsRepository.getBlogById(newBlogId);
+        if (!newBlog) {
+            res.status(500).send('Error on creating');
+            return;
+        }
+        res.status(201).json(newBlog);
+    });
+    router.put('/:id', basic_auth_middleware_1.basicAuthMiddleware, (0, blog_validate_middleware_1.postBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => {
         const addBlogData = req.body;
         const newBlogId = blogs_repository_1.blogsRepository.addBlog(addBlogData);
         const newBlog = blogs_repository_1.blogsRepository.getBlogById(newBlogId);

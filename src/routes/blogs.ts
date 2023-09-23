@@ -13,8 +13,43 @@ export const getBlogsRouter = () => {
     res.status(200).json(blogs)
   })
 
+  router.get('/:id', (req: Request<{id: string}>, res: Response<Blog | string>) => {
+    const id = req.params.id
+
+    const blog = blogsRepository.getBlogById(id)
+
+    if (!blog) {
+      res.status(404).send('Not found')
+      return
+    }
+
+    res.status(200).send(blog)
+  })
+
   router.post(
     '/',
+    basicAuthMiddleware,
+    postBlogValidateMiddleware(),
+    validationErrorMiddleware,
+
+    (req: Request<{}, {}, BlogInputModel>, res: Response<Blog | string>) => {
+      const addBlogData = req.body
+
+      const newBlogId = blogsRepository.addBlog(addBlogData)
+
+      const newBlog = blogsRepository.getBlogById(newBlogId)
+
+      if (!newBlog) {
+        res.status(500).send('Error on creating')
+        return
+      }
+
+      res.status(201).json(newBlog)
+    },
+  )
+
+  router.put(
+    '/:id',
     basicAuthMiddleware,
     postBlogValidateMiddleware(),
     validationErrorMiddleware,
