@@ -123,4 +123,34 @@ describe('/blogs', () => {
       .send(newBlog)
       .expect(204)
   })
+
+  it('DELETE /blogs/:id should return 401 if not authorized', async () => {
+    await request(app).delete('/blogs/some_id').auth(CREDENTIALS.LOGIN, 'wrong_pass').expect(401)
+  })
+
+  it('DELETE /blogs/:id should return 404 if not found', async () => {
+    await request(app)
+      .delete('/blogs/some_id')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(404)
+  })
+
+  it('DELETE /blogs/:id should return 204 if delete success, use POST', async () => {
+    const newBlog: BlogInputModel = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://websiteurl.com',
+    }
+
+    const postResponse = await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
+      .expect(201)
+
+    await request(app)
+      .delete(`/blogs/${postResponse.body.id}`)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(204)
+  })
 })

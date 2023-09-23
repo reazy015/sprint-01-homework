@@ -21,5 +21,9 @@ exports.blogsRepository = {
         blogsDb[id] = Object.assign({ id }, blogUpdate);
         return true;
     },
+    deleteBlogById(id) {
+        delete blogsDb[id];
+        return true;
+    },
 };
 //# sourceMappingURL=blogs-repository.js.map

@@ -40,7 +40,7 @@ export const getBlogsRouter = () => {
       const newBlog = blogsRepository.getBlogById(newBlogId)
 
       if (!newBlog) {
-        res.status(500).send('Error on creating')
+        res.sendStatus(500)
         return
       }
 
@@ -74,6 +74,26 @@ export const getBlogsRouter = () => {
       res.sendStatus(204)
     },
   )
+
+  router.delete('/:id', basicAuthMiddleware, (req: Request<{id: string}>, res: Response) => {
+    const id = req.params.id
+
+    const blog = blogsRepository.getBlogById(id)
+
+    if (!blog) {
+      res.sendStatus(404)
+      return
+    }
+
+    const deleteResult = blogsRepository.deleteBlogById(id)
+
+    if (!deleteResult) {
+      res.sendStatus(500)
+      return
+    }
+
+    res.sendStatus(204)
+  })
 
   return router
 }

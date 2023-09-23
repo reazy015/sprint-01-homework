@@ -29,7 +29,7 @@ const getBlogsRouter = () => {
         const newBlogId = blogs_repository_1.blogsRepository.addBlog(addBlogData);
         const newBlog = blogs_repository_1.blogsRepository.getBlogById(newBlogId);
         if (!newBlog) {
-            res.status(500).send('Error on creating');
+            res.sendStatus(500);
             return;
         }
         res.status(201).json(newBlog);
@@ -43,6 +43,20 @@ const getBlogsRouter = () => {
         }
         const updateResult = blogs_repository_1.blogsRepository.updateBlog(id, req.body);
         if (!updateResult) {
+            res.sendStatus(500);
+            return;
+        }
+        res.sendStatus(204);
+    });
+    router.delete('/:id', basic_auth_middleware_1.basicAuthMiddleware, (req, res) => {
+        const id = req.params.id;
+        const blog = blogs_repository_1.blogsRepository.getBlogById(id);
+        if (!blog) {
+            res.sendStatus(404);
+            return;
+        }
+        const deleteResult = blogs_repository_1.blogsRepository.deleteBlogById(id);
+        if (!deleteResult) {
             res.sendStatus(500);
             return;
         }

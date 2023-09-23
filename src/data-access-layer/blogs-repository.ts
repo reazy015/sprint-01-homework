@@ -30,4 +30,9 @@ export const blogsRepository = {
 
     return true
   },
+  deleteBlogById(id: string) {
+    delete blogsDb[id]
+
+    return true
+  },
 }
