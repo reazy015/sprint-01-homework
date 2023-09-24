@@ -19,5 +19,5 @@ exports.app.use(jsonBodyParser);
 exports.app.use('/videos', (0, video_1.getVideosRouter)());
 exports.app.use('/blogs', (0, blogs_1.getBlogsRouter)());
 exports.app.use('/posts', (0, posts_1.getPostsRouter)());
-exports.app.use('/__testing__/all-data', (0, testing_1.getTestingRouter)());
+exports.app.use('/testing/all-data', (0, testing_1.getTestingRouter)());
 //# sourceMappingURL=app.js.map
