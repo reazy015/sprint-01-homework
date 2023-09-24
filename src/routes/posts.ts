@@ -24,7 +24,7 @@ export const getPostsRouter = () => {
     res.status(200).json(postsWithBlogName)
   })
 
-  router.get('/:id', (req: Request<{id: string}>, res: Response<PostViewModel>) => {
+  router.get('/:id', (req: Request<IdURIParam>, res: Response<PostViewModel>) => {
     const postId = req.params.id
 
     const post = postsRepository.getPostById(postId)

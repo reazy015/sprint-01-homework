@@ -20,7 +20,7 @@ export const getBlogsRouter = () => {
     const blog = blogsRepository.getBlogById(id)
 
     if (!blog) {
-      res.status(404)
+      res.sendStatus(404)
       return
     }
 
