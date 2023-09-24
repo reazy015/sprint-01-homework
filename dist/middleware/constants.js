@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.POST_ERROR_MESSAGES = exports.BLOG_ERROR_MESSAGES = exports.ERROR_MESSAGES = exports.POST_VALIDATION_FIELDS = exports.BLOG_VALIDATION_FIELDS = exports.POST_VIDEO_VALIDATION_FIELDS = void 0;
+exports.POST_ERROR_MESSAGES = exports.BLOG_ERROR_MESSAGES = exports.ERROR_MESSAGES = exports.POST_VALIDATION_FIELDS = exports.BLOG_VALIDATION_FIELDS = exports.VIDEO_VALIDATION_FIELDS = void 0;
 const constants_1 = require("../utils/constants");
-exports.POST_VIDEO_VALIDATION_FIELDS = {
+exports.VIDEO_VALIDATION_FIELDS = {
     ID: 'id',
     TITLE: 'title',
     AUTHOR: 'author',
@@ -23,13 +23,13 @@ exports.POST_VALIDATION_FIELDS = {
     BLOG_ID: 'blogId',
 };
 exports.ERROR_MESSAGES = {
-    [exports.POST_VIDEO_VALIDATION_FIELDS.ID]: 'Can not be empty, only numeric accepted',
-    [exports.POST_VIDEO_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 40 symbols length',
-    [exports.POST_VIDEO_VALIDATION_FIELDS.AUTHOR]: 'Can not be empty, from 3 to 20 symbols length',
-    [exports.POST_VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: 'Can not be empty, possible values are ' + constants_1.RESOLUTIONS_STRING,
-    [exports.POST_VIDEO_VALIDATION_FIELDS.CAN_BE_DOWNLOADED]: 'Can be only of boolean type',
-    [exports.POST_VIDEO_VALIDATION_FIELDS.MIN_AGE_RESTRICTION]: 'Can be only of integer type in range from 1 to 18',
-    [exports.POST_VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE]: 'Can be only of string type',
+    [exports.VIDEO_VALIDATION_FIELDS.ID]: 'Can not be empty, only numeric accepted',
+    [exports.VIDEO_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 40 symbols length',
+    [exports.VIDEO_VALIDATION_FIELDS.AUTHOR]: 'Can not be empty, from 3 to 20 symbols length',
+    [exports.VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: 'Can not be empty, possible values are ' + constants_1.RESOLUTIONS_STRING,
+    [exports.VIDEO_VALIDATION_FIELDS.CAN_BE_DOWNLOADED]: 'Can be only of boolean type',
+    [exports.VIDEO_VALIDATION_FIELDS.MIN_AGE_RESTRICTION]: 'Can be only of integer type in range from 1 to 18',
+    [exports.VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE]: 'Can be only of string type',
 };
 exports.BLOG_ERROR_MESSAGES = {
     [exports.BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',

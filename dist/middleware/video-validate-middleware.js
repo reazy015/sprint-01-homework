@@ -7,66 +7,66 @@ const constants_2 = require("./constants");
 const getVideoByIdMiddleware = () => (0, express_validator_1.param)('id').notEmpty().isNumeric().withMessage(constants_2.ERROR_MESSAGES.id);
 exports.getVideoByIdMiddleware = getVideoByIdMiddleware;
 const postVideoMiddleware = () => (0, express_validator_1.checkSchema)({
-    title: {
+    [constants_2.VIDEO_VALIDATION_FIELDS.TITLE]: {
         isLength: {
             options: { min: 3, max: 40 },
-            errorMessage: constants_2.ERROR_MESSAGES.title,
+            errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.TITLE],
         },
     },
-    author: {
+    [constants_2.VIDEO_VALIDATION_FIELDS.AUTHOR]: {
         isLength: {
             options: { min: 3, max: 20 },
-            errorMessage: constants_2.ERROR_MESSAGES.author,
+            errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.AUTHOR],
         },
     },
-    availableResolutions: {
+    [constants_2.VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: {
         isArray: { options: { min: 1 } },
         isIn: {
             options: [constants_1.RESOLUTIONS],
         },
-        errorMessage: constants_2.ERROR_MESSAGES.availableResolutions,
+        errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS],
     },
 });
 exports.postVideoMiddleware = postVideoMiddleware;
 const putVideoMiddleware = () => {
     return (0, express_validator_1.checkSchema)({
-        title: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.TITLE]: {
             isLength: {
                 options: { min: 3, max: 40 },
-                errorMessage: constants_2.ERROR_MESSAGES.title,
+                errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.TITLE],
             },
         },
-        author: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.AUTHOR]: {
             isLength: {
                 options: { min: 3, max: 20 },
-                errorMessage: constants_2.ERROR_MESSAGES.author,
+                errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.AUTHOR],
             },
         },
-        availableResolutions: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: {
             isArray: { options: { min: 1 } },
             isIn: {
                 options: [constants_1.RESOLUTIONS],
             },
-            errorMessage: constants_2.ERROR_MESSAGES.availableResolutions,
+            errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS],
         },
-        canBeDownloaded: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.CAN_BE_DOWNLOADED]: {
             isBoolean: {
                 options: { strict: true },
             },
             errorMessage: constants_2.ERROR_MESSAGES.canBeDownloaded,
         },
-        minAgeRestriction: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.MIN_AGE_RESTRICTION]: {
             optional: true,
             isInt: {
                 options: { min: 1, max: 18 },
             },
-            errorMessage: constants_2.ERROR_MESSAGES.minAgeRestriction,
+            errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.MIN_AGE_RESTRICTION],
         },
-        publicationDate: {
+        [constants_2.VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE]: {
             isString: true,
-            errorMessage: constants_2.ERROR_MESSAGES.publicationDate,
+            errorMessage: constants_2.ERROR_MESSAGES[constants_2.VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE],
         },
-    }, ['body']);
+    });
 };
 exports.putVideoMiddleware = putVideoMiddleware;
 //# sourceMappingURL=video-validate-middleware.js.map

@@ -19,7 +19,7 @@ const getBlogsRouter = () => {
         const id = req.params.id;
         const blog = blogs_repository_1.blogsRepository.getBlogById(id);
         if (!blog) {
-            res.status(404).send('Not found');
+            res.status(404);
             return;
         }
         res.status(200).send(blog);

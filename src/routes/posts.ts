@@ -1,10 +1,11 @@
-import express, {NextFunction, Request, Response} from 'express'
+import express, {Request, Response} from 'express'
 import {postsRepository} from '../data-access-layer/post-repository'
-import {Post, PostInputModel, PostViewModel} from '../types/post'
+import {PostInputModel, PostViewModel} from '../types/post'
 import {basicAuthMiddleware} from '../middleware/basic-auth-middleware'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {postValidateMiddleware} from '../middleware/post-validate-middleware-'
 import {blogsRepository} from '../data-access-layer/blogs-repository'
+import {CustomRequest, IdURIParam} from '../types/common'
 
 export const getPostsRouter = () => {
   const router = express.Router()
@@ -48,7 +49,7 @@ export const getPostsRouter = () => {
     basicAuthMiddleware,
     postValidateMiddleware(),
     validationErrorMiddleware,
-    (req: Request<{}, {}, PostInputModel>, res: Response<PostViewModel>) => {
+    (req: CustomRequest<PostInputModel>, res: Response<PostViewModel>) => {
       const blogId = req.body.blogId
       const blog = blogsRepository.getBlogById(blogId)
 
@@ -79,7 +80,7 @@ export const getPostsRouter = () => {
     postValidateMiddleware(),
     validationErrorMiddleware,
 
-    (req: Request<{id: string}, {}, PostInputModel>, res: Response) => {
+    (req: CustomRequest<PostInputModel, IdURIParam>, res: Response) => {
       const postId = req.params.id
 
       const post = postsRepository.getPostById(postId)
@@ -100,7 +101,7 @@ export const getPostsRouter = () => {
     },
   )
 
-  router.delete('/:id', basicAuthMiddleware, (req: Request<{id: string}>, res: Response) => {
+  router.delete('/:id', basicAuthMiddleware, (req: Request<IdURIParam>, res: Response) => {
     const id = req.params.id
 
     const blog = postsRepository.getPostById(id)

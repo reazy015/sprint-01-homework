@@ -1,7 +1,7 @@
-import {Blog, BlogInputModel} from '../types/blog'
+import {BlogViewModel, BlogInputModel} from '../types/blog'
 
 type BlogId = string
-let blogsDb: Record<BlogId, Blog> = {}
+let blogsDb: Record<BlogId, BlogViewModel> = {}
 
 export const blogsRepository = {
   getAllBlogs() {
