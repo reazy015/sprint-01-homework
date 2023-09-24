@@ -7,7 +7,12 @@ const authDb: Record<string, {login: string; password: string}> = {
 
 export const authRepository = {
   isValidBasicAuth(basicAuthString: string) {
-    const string = basicAuthString?.split(' ')[1]
+    const [authType, string] = basicAuthString?.split(' ')
+
+    if (authType !== 'Basic') {
+      return false
+    }
+
     const decodedString = Buffer.from(string as string, 'base64').toString('ascii')
     const [login, password] = decodedString.split(':')
 

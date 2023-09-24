@@ -6,18 +6,24 @@ const constants_1 = require("./constants");
 const blogs_repository_1 = require("../data-access-layer/blogs-repository");
 const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
     [constants_1.POST_VALIDATION_FIELDS.TITLE]: {
+        trim: true,
+        isString: true,
         isLength: {
             options: { min: 3, max: 30 },
         },
         errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.TITLE],
     },
     [constants_1.POST_VALIDATION_FIELDS.CONTENT]: {
+        trim: true,
+        isString: true,
         isLength: {
             options: { min: 3, max: 1000 },
         },
         errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.CONTENT],
     },
     [constants_1.POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: {
+        trim: true,
+        isString: true,
         isLength: {
             options: { min: 3, max: 100 },
         },

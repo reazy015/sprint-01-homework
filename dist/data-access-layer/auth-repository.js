@@ -9,7 +9,10 @@ const authDb = {
 };
 exports.authRepository = {
     isValidBasicAuth(basicAuthString) {
-        const string = basicAuthString === null || basicAuthString === void 0 ? void 0 : basicAuthString.split(' ')[1];
+        const [authType, string] = basicAuthString === null || basicAuthString === void 0 ? void 0 : basicAuthString.split(' ');
+        if (authType !== 'Basic') {
+            return false;
+        }
         const decodedString = Buffer.from(string, 'base64').toString('ascii');
         const [login, password] = decodedString.split(':');
         if (login in authDb && password === authDb[login].password) {

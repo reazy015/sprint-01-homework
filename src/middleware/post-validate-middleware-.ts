@@ -5,18 +5,24 @@ import {blogsRepository} from '../data-access-layer/blogs-repository'
 export const postValidateMiddleware = () =>
   checkSchema({
     [POST_VALIDATION_FIELDS.TITLE]: {
+      trim: true,
+      isString: true,
       isLength: {
         options: {min: 3, max: 30},
       },
       errorMessage: POST_ERROR_MESSAGES[POST_VALIDATION_FIELDS.TITLE],
     },
     [POST_VALIDATION_FIELDS.CONTENT]: {
+      trim: true,
+      isString: true,
       isLength: {
         options: {min: 3, max: 1000},
       },
       errorMessage: POST_ERROR_MESSAGES[POST_VALIDATION_FIELDS.CONTENT],
     },
     [POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: {
+      trim: true,
+      isString: true,
       isLength: {
         options: {min: 3, max: 100},
       },

@@ -5,12 +5,15 @@ const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
 const postBlogValidateMiddleware = () => (0, express_validator_1.checkSchema)({
     name: {
+        trim: true,
+        isString: true,
         isLength: {
             options: { max: 15, min: 3 },
         },
         errorMessage: constants_1.BLOG_ERROR_MESSAGES.name,
     },
     description: {
+        trim: true,
         isString: true,
         isLength: {
             options: { max: 500 },
@@ -18,6 +21,7 @@ const postBlogValidateMiddleware = () => (0, express_validator_1.checkSchema)({
         errorMessage: constants_1.BLOG_ERROR_MESSAGES.description,
     },
     websiteUrl: {
+        trim: true,
         isString: true,
         isLength: {
             options: { max: 100 },

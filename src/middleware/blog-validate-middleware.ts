@@ -4,12 +4,15 @@ import {BLOG_ERROR_MESSAGES} from './constants'
 export const postBlogValidateMiddleware = () =>
   checkSchema({
     name: {
+      trim: true,
+      isString: true,
       isLength: {
         options: {max: 15, min: 3},
       },
       errorMessage: BLOG_ERROR_MESSAGES.name,
     },
     description: {
+      trim: true,
       isString: true,
       isLength: {
         options: {max: 500},
@@ -17,6 +20,7 @@ export const postBlogValidateMiddleware = () =>
       errorMessage: BLOG_ERROR_MESSAGES.description,
     },
     websiteUrl: {
+      trim: true,
       isString: true,
       isLength: {
         options: {max: 100},
