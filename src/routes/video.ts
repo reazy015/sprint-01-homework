@@ -1,3 +1,4 @@
+import {HTTP_STATUSES} from './../utils/constants'
 import express, {Request, Response} from 'express'
 import {Resolutions, Video} from '../types/video'
 import {videoRepositry} from '../data-access-layer/video-repository'
@@ -12,7 +13,7 @@ export const getVideosRouter = () => {
   const router = express.Router()
 
   router.get('/', (_, res: Response<Video[]>) => {
-    res.status(200).json(videoRepositry.getAllVideos())
+    res.status(HTTP_STATUSES.OK).json(videoRepositry.getAllVideos())
   })
 
   router.get(
@@ -25,11 +26,11 @@ export const getVideosRouter = () => {
       const found = videoRepositry.getVideoById(id)
 
       if (!found) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
-      res.status(200).json(found)
+      res.status(HTTP_STATUSES.OK).json(found)
     },
   )
 
@@ -52,7 +53,7 @@ export const getVideosRouter = () => {
       })
       const createdVideo = videoRepositry.getVideoById(id)
 
-      res.status(201).json(createdVideo)
+      res.status(HTTP_STATUSES.CREATED).json(createdVideo)
     },
   )
 
@@ -66,11 +67,11 @@ export const getVideosRouter = () => {
       const isDeleted = videoRepositry.deleteVideo(id)
 
       if (!isDeleted) {
-        res.status(404)
+        res.status(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
-      res.status(204)
+      res.status(HTTP_STATUSES.NO_CONTENT)
     },
   )
 
@@ -88,12 +89,12 @@ export const getVideosRouter = () => {
       const found = videoRepositry.getVideoById(id)
 
       if (!found) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
       videoRepositry.updateVideo(id, updates)
-      res.sendStatus(204)
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
 

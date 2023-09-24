@@ -6,6 +6,7 @@ import {validationErrorMiddleware} from '../middleware/validation-error-middlewa
 import {postValidateMiddleware} from '../middleware/post-validate-middleware-'
 import {blogsRepository} from '../data-access-layer/blogs-repository'
 import {CustomRequest, IdURIParam} from '../types/common'
+import {HTTP_STATUSES} from '../utils/constants'
 
 export const getPostsRouter = () => {
   const router = express.Router()
@@ -21,7 +22,7 @@ export const getPostsRouter = () => {
       }
     })
 
-    res.status(200).json(postsWithBlogName)
+    res.status(HTTP_STATUSES.OK).json(postsWithBlogName)
   })
 
   router.get('/:id', (req: Request<IdURIParam>, res: Response<PostViewModel>) => {
@@ -30,18 +31,18 @@ export const getPostsRouter = () => {
     const post = postsRepository.getPostById(postId)
 
     if (!post) {
-      res.sendStatus(404)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
     const blog = blogsRepository.getBlogById(post.blogId)
 
     if (!blog) {
-      res.sendStatus(404)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
-    res.status(200).send({...post, blogName: blog.name})
+    res.status(HTTP_STATUSES.OK).send({...post, blogName: blog.name})
   })
 
   router.post(
@@ -54,7 +55,7 @@ export const getPostsRouter = () => {
       const blog = blogsRepository.getBlogById(blogId)
 
       if (!blog) {
-        res.sendStatus(500)
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
         return
       }
 
@@ -63,11 +64,11 @@ export const getPostsRouter = () => {
       const newPost = postsRepository.getPostById(newPostId)
 
       if (!newPost) {
-        res.sendStatus(500)
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
         return
       }
 
-      res.status(201).json({
+      res.status(HTTP_STATUSES.CREATED).json({
         ...newPost,
         blogName: blog.name,
       })
@@ -86,18 +87,18 @@ export const getPostsRouter = () => {
       const post = postsRepository.getPostById(postId)
 
       if (!post) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
       const postUpdated = postsRepository.updatePost(postId, req.body)
 
       if (!postUpdated) {
-        res.sendStatus(500)
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
         return
       }
 
-      res.sendStatus(204)
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
 
@@ -107,18 +108,18 @@ export const getPostsRouter = () => {
     const blog = postsRepository.getPostById(id)
 
     if (!blog) {
-      res.sendStatus(404)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
     const deleteResult = postsRepository.deletePost(id)
 
     if (!deleteResult) {
-      res.sendStatus(500)
+      res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
       return
     }
 
-    res.sendStatus(204)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT)
   })
 
   return router

@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from 'express'
 import {validationResult} from 'express-validator'
+import {HTTP_STATUSES} from '../utils/constants'
 
 export const validationErrorMiddleware = (
   req: Request,
@@ -14,7 +15,7 @@ export const validationErrorMiddleware = (
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    res.status(400).send({
+    res.status(HTTP_STATUSES.BAD_REQUEST).send({
       errorsMessages: Object.entries(errors.mapped()).map(([key, value]) => ({
         field: key,
         message: value.msg,

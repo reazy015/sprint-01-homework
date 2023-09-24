@@ -5,13 +5,14 @@ import {basicAuthMiddleware} from '../middleware/basic-auth-middleware'
 import {postBlogValidateMiddleware} from '../middleware/blog-validate-middleware'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {CustomRequest, IdURIParam} from '../types/common'
+import {HTTP_STATUSES} from '../utils/constants'
 
 export const getBlogsRouter = () => {
   const router = express.Router()
 
   router.get('/', (_, res: Response<BlogViewModel[]>) => {
     const blogs = blogsRepository.getAllBlogs()
-    res.status(200).json(blogs)
+    res.status(HTTP_STATUSES.OK).json(blogs)
   })
 
   router.get('/:id', (req: Request<IdURIParam>, res: Response<BlogViewModel>) => {
@@ -20,11 +21,11 @@ export const getBlogsRouter = () => {
     const blog = blogsRepository.getBlogById(id)
 
     if (!blog) {
-      res.sendStatus(404)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
-    res.status(200).send(blog)
+    res.status(HTTP_STATUSES.OK).send(blog)
   })
 
   router.post(
@@ -41,11 +42,11 @@ export const getBlogsRouter = () => {
       const newBlog = blogsRepository.getBlogById(newBlogId)
 
       if (!newBlog) {
-        res.sendStatus(500)
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
         return
       }
 
-      res.status(201).json(newBlog)
+      res.status(HTTP_STATUSES.CREATED).json(newBlog)
     },
   )
 
@@ -61,18 +62,18 @@ export const getBlogsRouter = () => {
       const blog = blogsRepository.getBlogById(id)
 
       if (!blog) {
-        res.sendStatus(404)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
       const updateResult = blogsRepository.updateBlog(id, req.body)
 
       if (!updateResult) {
-        res.sendStatus(500)
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
         return
       }
 
-      res.sendStatus(204)
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
 
@@ -82,18 +83,18 @@ export const getBlogsRouter = () => {
     const blog = blogsRepository.getBlogById(id)
 
     if (!blog) {
-      res.sendStatus(404)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
     const deleteResult = blogsRepository.deleteBlogById(id)
 
     if (!deleteResult) {
-      res.sendStatus(500)
+      res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
       return
     }
 
-    res.sendStatus(204)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT)
   })
 
   return router

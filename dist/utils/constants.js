@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ERROR_MESSAGE_TEXT = exports.ERROR_MESSAGE_FIELD = exports.RESOLUTIONS_STRING = exports.RESOLUTIONS = void 0;
+exports.HTTP_STATUSES = exports.RESOLUTIONS_STRING = exports.RESOLUTIONS = void 0;
 exports.RESOLUTIONS = [
     'P144',
     'P240',
@@ -12,12 +12,13 @@ exports.RESOLUTIONS = [
     'P2160',
 ];
 exports.RESOLUTIONS_STRING = exports.RESOLUTIONS.join(', ');
-exports.ERROR_MESSAGE_FIELD = {
-    AUTHOR: 'authour',
-    TITLE: 'title'
-};
-exports.ERROR_MESSAGE_TEXT = {
-    AUTHOR: 'Author field must be specified, at least 4 symbols',
-    TITLE: 'Title field must be specified, at least 4 symbols'
+exports.HTTP_STATUSES = {
+    OK: 200,
+    CREATED: 201,
+    NO_CONTENT: 204,
+    BAD_REQUEST: 400,
+    UNAUTH: 401,
+    NOT_FOUND: 404,
+    SERVER_ERROR: 500,
 };
 //# sourceMappingURL=constants.js.map

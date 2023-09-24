@@ -1,3 +1,4 @@
+import {HTTP_STATUSES} from './../../src/utils/constants'
 import {app} from '../../src/app'
 import request from 'supertest'
 import {BlogInputModel} from '../../src/types/blog'
@@ -13,11 +14,14 @@ describe('/blogs', () => {
   })
 
   it('GET /blogs should return 200 and empty array', async () => {
-    await request(app).get('/blogs').expect(200, [])
+    await request(app).get('/blogs').expect(HTTP_STATUSES.OK, [])
   })
 
   it('POST /blogs should return 401 if user unauthorized', async () => {
-    await request(app).post('/blogs').auth(CREDENTIALS.LOGIN, 'wrong_pass').expect(401)
+    await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, 'wrong_pass')
+      .expect(HTTP_STATUSES.UNAUTH)
   })
 
   it('POST /blogs should return 400 errors if input model incorrent', async () => {
@@ -31,7 +35,7 @@ describe('/blogs', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(400)
+      .expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('POST /blogs should return 201 if input model is correct, use GET to check creted blog', async () => {
@@ -45,11 +49,11 @@ describe('/blogs', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     const getBlogByIdResponse = await request(app)
       .get(`/blogs/${postBlogResponse.body.id}`)
-      .expect(200)
+      .expect(HTTP_STATUSES.OK)
 
     expect(getBlogByIdResponse.body).toEqual({
       id: expect.any(String),
@@ -64,7 +68,7 @@ describe('/blogs', () => {
       .put(`/blogs/some_id`)
       .auth(CREDENTIALS.LOGIN, 'wrong_pass')
       .send({})
-      .expect(401)
+      .expect(HTTP_STATUSES.UNAUTH)
   })
 
   it('PUT /blogs/:id should return 404 if blog not found', async () => {
@@ -78,7 +82,7 @@ describe('/blogs', () => {
       .put('/blogs/not_exists_id')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(blogUpdate)
-      .expect(404)
+      .expect(HTTP_STATUSES.NOT_FOUND)
   })
 
   it('PUT /blogs/:id should return 400 if input model incorrect, use POST', async () => {
@@ -92,7 +96,7 @@ describe('/blogs', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     await request(app)
       .put(`/blogs/${postResponse.body.id}`)
@@ -101,7 +105,7 @@ describe('/blogs', () => {
         ...newBlog,
         websiteUrl: '',
       })
-      .expect(400)
+      .expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('PUT /blogs/:id should return 204 if input model correct, use POST', async () => {
@@ -115,24 +119,27 @@ describe('/blogs', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     await request(app)
       .put(`/blogs/${postResponse.body.id}`)
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(204)
+      .expect(HTTP_STATUSES.NO_CONTENT)
   })
 
   it('DELETE /blogs/:id should return 401 if not authorized', async () => {
-    await request(app).delete('/blogs/some_id').auth(CREDENTIALS.LOGIN, 'wrong_pass').expect(401)
+    await request(app)
+      .delete('/blogs/some_id')
+      .auth(CREDENTIALS.LOGIN, 'wrong_pass')
+      .expect(HTTP_STATUSES.UNAUTH)
   })
 
   it('DELETE /blogs/:id should return 404 if not found', async () => {
     await request(app)
       .delete('/blogs/some_id')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .expect(404)
+      .expect(HTTP_STATUSES.NOT_FOUND)
   })
 
   it('DELETE /blogs/:id should return 204 if delete success, use POST', async () => {
@@ -146,11 +153,11 @@ describe('/blogs', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     await request(app)
       .delete(`/blogs/${postResponse.body.id}`)
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .expect(204)
+      .expect(HTTP_STATUSES.NO_CONTENT)
   })
 })

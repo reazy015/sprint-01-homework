@@ -1,6 +1,7 @@
 import {app} from '../../src/app'
 import request from 'supertest'
 import {Video} from '../../src/types/video'
+import {HTTP_STATUSES} from '../../src/utils/constants'
 
 describe('/videos', () => {
   beforeAll(async () => {
@@ -8,18 +9,20 @@ describe('/videos', () => {
   })
 
   it('GET /videos should return 200 and empty array', async () => {
-    await request(app).get('/videos').expect(200, [])
+    await request(app).get('/videos').expect(HTTP_STATUSES.OK, [])
   })
 
   it('GET /videos/:id should return video by id, if found, use POST to create video', async () => {
     const {body: postResponse} = await request(app)
       .post('/videos')
       .send({title: 'title', author: 'author', availableResolutions: ['P240']})
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     const createdVideoId = postResponse.id
 
-    const {body: getResponse} = await request(app).get(`/videos/${createdVideoId}`).expect(200)
+    const {body: getResponse} = await request(app)
+      .get(`/videos/${createdVideoId}`)
+      .expect(HTTP_STATUSES.OK)
 
     const expectedCreatedVideo: Video = {
       title: 'title',
@@ -36,11 +39,11 @@ describe('/videos', () => {
   })
 
   it('GET /videos/:id should return error if ID param is incorrect', async () => {
-    await request(app).get('/videos/wrong-123').expect(400)
+    await request(app).get('/videos/wrong-123').expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('POST /videos should not create video with incorrect data', async () => {
-    await request(app).post('/videos').send({title: 'test_title'}).expect(400)
+    await request(app).post('/videos').send({title: 'test_title'}).expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('POST /videos should create new video, use GET /videos/:id to check created video', async () => {
@@ -58,13 +61,13 @@ describe('/videos', () => {
     const {body: postResponseBody} = await request(app)
       .post('/videos')
       .send({title: 'title', author: 'author', availableResolutions: ['P240']})
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     expect(postResponseBody).toEqual(expectedCreatedVideo)
 
     const {body: getResponseBody} = await request(app)
       .get(`/videos/${postResponseBody.id}`)
-      .expect(200)
+      .expect(HTTP_STATUSES.OK)
 
     expect(getResponseBody).toEqual(expectedCreatedVideo)
   })
@@ -73,7 +76,7 @@ describe('/videos', () => {
     await request(app)
       .post('/videos')
       .send({title: 'title', author: 'author', availableResolutions: ['P240']})
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     await request(app)
       .put('/videos/123123')
@@ -84,7 +87,7 @@ describe('/videos', () => {
         canBeDownloaded: true,
         publicationDate: 'string',
       })
-      .expect(404)
+      .expect(HTTP_STATUSES.NOT_FOUND)
   })
 
   it('PUT /videos/:id should return 400 if input data incorrect, using POST first to create', async () => {
@@ -101,16 +104,19 @@ describe('/videos', () => {
     } = await request(app)
       .post('/videos')
       .send({title: 'title', author: 'author', availableResolutions: ['P240']})
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
-    await request(app).put(`/videos/${id}`).send(incorrectUpdateData).expect(400)
+    await request(app)
+      .put(`/videos/${id}`)
+      .send(incorrectUpdateData)
+      .expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('PUT /videos/:id should return 204 if input data correct, using POST first to create', async () => {
     const {body: postResponseBody} = await request(app)
       .post('/videos')
       .send({title: 'title', author: 'author', availableResolutions: ['P240']})
-      .expect(201)
+      .expect(HTTP_STATUSES.CREATED)
 
     await request(app)
       .put(`/videos/${postResponseBody.id}`)
@@ -120,6 +126,6 @@ describe('/videos', () => {
         author: 'new author',
         minAgeRestriction: 15,
       })
-      .expect(204)
+      .expect(HTTP_STATUSES.NO_CONTENT)
   })
 })

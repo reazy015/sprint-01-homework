@@ -10,6 +10,7 @@ const basic_auth_middleware_1 = require("../middleware/basic-auth-middleware");
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
 const post_validate_middleware_1 = require("../middleware/post-validate-middleware-");
 const blogs_repository_1 = require("../data-access-layer/blogs-repository");
+const constants_1 = require("../utils/constants");
 const getPostsRouter = () => {
     const router = express_1.default.Router();
     router.get('/', (_, res) => {
@@ -19,64 +20,64 @@ const getPostsRouter = () => {
             const blog = blogs_repository_1.blogsRepository.getBlogById(post.blogId);
             return Object.assign(Object.assign({}, post), { blogName: (_a = blog === null || blog === void 0 ? void 0 : blog.name) !== null && _a !== void 0 ? _a : '' });
         });
-        res.status(200).json(postsWithBlogName);
+        res.status(constants_1.HTTP_STATUSES.OK).json(postsWithBlogName);
     });
     router.get('/:id', (req, res) => {
         const postId = req.params.id;
         const post = post_repository_1.postsRepository.getPostById(postId);
         if (!post) {
-            res.sendStatus(404);
+            res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
         const blog = blogs_repository_1.blogsRepository.getBlogById(post.blogId);
         if (!blog) {
-            res.sendStatus(404);
+            res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
-        res.status(200).send(Object.assign(Object.assign({}, post), { blogName: blog.name }));
+        res.status(constants_1.HTTP_STATUSES.OK).send(Object.assign(Object.assign({}, post), { blogName: blog.name }));
     });
     router.post('/', basic_auth_middleware_1.basicAuthMiddleware, (0, post_validate_middleware_1.postValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => {
         const blogId = req.body.blogId;
         const blog = blogs_repository_1.blogsRepository.getBlogById(blogId);
         if (!blog) {
-            res.sendStatus(500);
+            res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
         const newPostId = post_repository_1.postsRepository.addPost(req.body);
         const newPost = post_repository_1.postsRepository.getPostById(newPostId);
         if (!newPost) {
-            res.sendStatus(500);
+            res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
-        res.status(201).json(Object.assign(Object.assign({}, newPost), { blogName: blog.name }));
+        res.status(constants_1.HTTP_STATUSES.CREATED).json(Object.assign(Object.assign({}, newPost), { blogName: blog.name }));
     });
     router.put('/:id', basic_auth_middleware_1.basicAuthMiddleware, (0, post_validate_middleware_1.postValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => {
         const postId = req.params.id;
         const post = post_repository_1.postsRepository.getPostById(postId);
         if (!post) {
-            res.sendStatus(404);
+            res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
         const postUpdated = post_repository_1.postsRepository.updatePost(postId, req.body);
         if (!postUpdated) {
-            res.sendStatus(500);
+            res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
-        res.sendStatus(204);
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
     });
     router.delete('/:id', basic_auth_middleware_1.basicAuthMiddleware, (req, res) => {
         const id = req.params.id;
         const blog = post_repository_1.postsRepository.getPostById(id);
         if (!blog) {
-            res.sendStatus(404);
+            res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
         const deleteResult = post_repository_1.postsRepository.deletePost(id);
         if (!deleteResult) {
-            res.sendStatus(500);
+            res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
-        res.sendStatus(204);
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
     });
     return router;
 };

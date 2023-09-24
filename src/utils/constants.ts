@@ -10,12 +10,12 @@ export const RESOLUTIONS = [
 ] as const
 export const RESOLUTIONS_STRING = RESOLUTIONS.join(', ')
 
-export const ERROR_MESSAGE_FIELD = {
-  AUTHOR: 'authour',
-  TITLE: 'title'
-}
-
-export const ERROR_MESSAGE_TEXT = {
-  AUTHOR: 'Author field must be specified, at least 4 symbols',
-  TITLE: 'Title field must be specified, at least 4 symbols'
+export const HTTP_STATUSES = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTH: 401,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500,
 }

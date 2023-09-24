@@ -11,7 +11,7 @@ const video_repository_1 = require("../data-access-layer/video-repository");
 const getVideosRouter = () => {
     const router = express_1.default.Router();
     router.get('/', (_, res) => {
-        res.status(200).json(video_repository_1.videoRepositry.getAllVideos());
+        res.status(HTTP_STATUSES.OK).json(video_repository_1.videoRepositry.getAllVideos());
     });
     router.get('/:id', (req, res) => {
         const id = +req.params.id;
@@ -20,7 +20,7 @@ const getVideosRouter = () => {
             res.sendStatus(404);
             return;
         }
-        res.status(200).json(found);
+        res.status(HTTP_STATUSES.OK).json(found);
     });
     router.post('/', (req, res) => {
         const { title, author, availableResolutions } = req.body;
@@ -63,7 +63,7 @@ const getVideosRouter = () => {
             canBeDownloaded: false,
         });
         const createdVideo = video_repository_1.videoRepositry.getVideoById(createdVideoId);
-        res.status(201).json(createdVideo);
+        res.status(HTTP_STATUSES.CREATED).json(createdVideo);
     });
     router.delete('/:id', (req, res) => {
         const id = +req.params.id;
