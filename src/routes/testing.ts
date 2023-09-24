@@ -6,7 +6,7 @@ import {postsRepository} from '../data-access-layer/post-repository'
 export const getTestingRouter = () => {
   const router = express.Router()
 
-  router.delete('/testing/all-data', (_, res) => {
+  router.delete('/', (_, res) => {
     videoRepositry.deleteAllVideos()
     blogsRepository.deleteAllBlogs()
     postsRepository.deleteAllPosts()
