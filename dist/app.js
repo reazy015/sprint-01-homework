@@ -11,10 +11,6 @@ const blogs_1 = require("./routes/blogs");
 const posts_1 = require("./routes/posts");
 exports.app = (0, express_1.default)();
 const jsonBodyParser = express_1.default.json();
-exports.app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
-});
 exports.app.use(jsonBodyParser);
 exports.app.use('/videos', (0, video_1.getVideosRouter)());
 exports.app.use('/blogs', (0, blogs_1.getBlogsRouter)());

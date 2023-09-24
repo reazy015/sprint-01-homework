@@ -10,11 +10,11 @@ const blogs_repository_1 = require("../data-access-layer/blogs-repository");
 const post_repository_1 = require("../data-access-layer/post-repository");
 const getTestingRouter = () => {
     const router = express_1.default.Router();
-    router.delete('/testing/all-data', (_, res) => {
+    router.delete('/', (_, res) => {
         video_repository_1.videoRepositry.deleteAllVideos();
         blogs_repository_1.blogsRepository.deleteAllBlogs();
         post_repository_1.postsRepository.deleteAllPosts();
-        res.status(204);
+        res.sendStatus(204);
     });
     return router;
 };
