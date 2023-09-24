@@ -1,6 +1,6 @@
 import {Blog, BlogInputModel} from '../types/blog'
 
-const blogsDb: Record<string, Blog> = {}
+let blogsDb: Record<string, Blog> = {}
 
 export const blogsRepository = {
   getAllBlogs() {
@@ -34,5 +34,8 @@ export const blogsRepository = {
     delete blogsDb[id]
 
     return true
+  },
+  deleteAllBlogs() {
+    blogsDb = {}
   },
 }

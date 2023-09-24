@@ -1,6 +1,6 @@
 import {Post, PostInputModel} from '../types/post'
 
-const postsDb: Record<string, Post> = {}
+let postsDb: Record<string, Post> = {}
 
 export const postsRepository = {
   getAllPosts() {
@@ -31,5 +31,8 @@ export const postsRepository = {
     delete postsDb[id]
 
     return true
+  },
+  deleteAllPosts() {
+    postsDb = {}
   },
 }

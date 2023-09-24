@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
-const postsDb = {};
+let postsDb = {};
 exports.postsRepository = {
     getAllPosts() {
         return Object.values(postsDb);
@@ -21,6 +21,9 @@ exports.postsRepository = {
     deletePost(id) {
         delete postsDb[id];
         return true;
+    },
+    deleteAllPosts() {
+        postsDb = {};
     },
 };
 //# sourceMappingURL=post-repository.js.map
