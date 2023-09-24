@@ -1,6 +1,7 @@
 import {Post, PostInputModel} from '../types/post'
 
-let postsDb: Record<string, Post> = {}
+type PostId = string
+let postsDb: Record<PostId, Post> = {}
 
 export const postsRepository = {
   getAllPosts() {

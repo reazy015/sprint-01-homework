@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.POST_ERROR_MESSAGES = exports.BLOG_ERROR_MESSAGES = exports.ERROR_MESSAGES = exports.POST_VALIDATION_FIELDS = exports.POST_BLOG_VALIDATION_FIELDS = exports.POST_VIDEO_VALIDATION_FIELDS = void 0;
+exports.POST_ERROR_MESSAGES = exports.BLOG_ERROR_MESSAGES = exports.ERROR_MESSAGES = exports.POST_VALIDATION_FIELDS = exports.BLOG_VALIDATION_FIELDS = exports.POST_VIDEO_VALIDATION_FIELDS = void 0;
 const constants_1 = require("../utils/constants");
 exports.POST_VIDEO_VALIDATION_FIELDS = {
     ID: 'id',
@@ -11,7 +11,7 @@ exports.POST_VIDEO_VALIDATION_FIELDS = {
     MIN_AGE_RESTRICTION: 'minAgeRestriction',
     PUBLICATION_DATE: 'publicationDate',
 };
-exports.POST_BLOG_VALIDATION_FIELDS = {
+exports.BLOG_VALIDATION_FIELDS = {
     NAME: 'name',
     DESCRIPTION: 'description',
     WEBSITE_URL: 'websiteUrl',
@@ -32,9 +32,9 @@ exports.ERROR_MESSAGES = {
     [exports.POST_VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE]: 'Can be only of string type',
 };
 exports.BLOG_ERROR_MESSAGES = {
-    [exports.POST_BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',
-    [exports.POST_BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
-    [exports.POST_BLOG_VALIDATION_FIELDS.WEBSITE_URL]: 'Max length 100, should match regexp ^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
+    [exports.BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',
+    [exports.BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
+    [exports.BLOG_VALIDATION_FIELDS.WEBSITE_URL]: 'Max length 100, should match regexp ^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
 };
 exports.POST_ERROR_MESSAGES = {
     [exports.POST_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 30 symbols length',

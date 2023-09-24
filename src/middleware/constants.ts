@@ -10,7 +10,7 @@ export const POST_VIDEO_VALIDATION_FIELDS = {
   PUBLICATION_DATE: 'publicationDate',
 }
 
-export const POST_BLOG_VALIDATION_FIELDS = {
+export const BLOG_VALIDATION_FIELDS = {
   NAME: 'name',
   DESCRIPTION: 'description',
   WEBSITE_URL: 'websiteUrl',
@@ -36,9 +36,9 @@ export const ERROR_MESSAGES = {
 }
 
 export const BLOG_ERROR_MESSAGES = {
-  [POST_BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',
-  [POST_BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
-  [POST_BLOG_VALIDATION_FIELDS.WEBSITE_URL]:
+  [BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',
+  [BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
+  [BLOG_VALIDATION_FIELDS.WEBSITE_URL]:
     'Max length 100, should match regexp ^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
 }
 

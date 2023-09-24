@@ -1,33 +1,36 @@
 import {checkSchema} from 'express-validator'
-import {BLOG_ERROR_MESSAGES} from './constants'
+import {BLOG_ERROR_MESSAGES, BLOG_VALIDATION_FIELDS} from './constants'
 
+const WEBSITE_URL_REGEXP = new RegExp(
+  '^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
+)
 export const postBlogValidateMiddleware = () =>
   checkSchema({
-    name: {
+    [BLOG_VALIDATION_FIELDS.NAME]: {
       trim: true,
       isString: true,
       isLength: {
         options: {max: 15, min: 3},
       },
-      errorMessage: BLOG_ERROR_MESSAGES.name,
+      errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.NAME],
     },
-    description: {
+    [BLOG_VALIDATION_FIELDS.DESCRIPTION]: {
       trim: true,
       isString: true,
       isLength: {
         options: {max: 500},
       },
-      errorMessage: BLOG_ERROR_MESSAGES.description,
+      errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.DESCRIPTION],
     },
-    websiteUrl: {
+    [BLOG_VALIDATION_FIELDS.WEBSITE_URL]: {
       trim: true,
       isString: true,
       isLength: {
         options: {max: 100},
       },
       matches: {
-        options: new RegExp('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$'),
+        options: WEBSITE_URL_REGEXP,
       },
-      errorMessage: BLOG_ERROR_MESSAGES.websiteUrl,
+      errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.WEBSITE_URL],
     },
   })

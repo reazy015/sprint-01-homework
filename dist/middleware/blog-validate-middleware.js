@@ -3,33 +3,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postBlogValidateMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
+const WEBSITE_URL_REGEXP = new RegExp('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$');
 const postBlogValidateMiddleware = () => (0, express_validator_1.checkSchema)({
-    name: {
+    [constants_1.BLOG_VALIDATION_FIELDS.NAME]: {
         trim: true,
         isString: true,
         isLength: {
             options: { max: 15, min: 3 },
         },
-        errorMessage: constants_1.BLOG_ERROR_MESSAGES.name,
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.NAME],
     },
-    description: {
+    [constants_1.BLOG_VALIDATION_FIELDS.DESCRIPTION]: {
         trim: true,
         isString: true,
         isLength: {
             options: { max: 500 },
         },
-        errorMessage: constants_1.BLOG_ERROR_MESSAGES.description,
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.DESCRIPTION],
     },
-    websiteUrl: {
+    [constants_1.BLOG_VALIDATION_FIELDS.WEBSITE_URL]: {
         trim: true,
         isString: true,
         isLength: {
             options: { max: 100 },
         },
         matches: {
-            options: new RegExp('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$'),
+            options: WEBSITE_URL_REGEXP,
         },
-        errorMessage: constants_1.BLOG_ERROR_MESSAGES.websiteUrl,
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.WEBSITE_URL],
     },
 });
 exports.postBlogValidateMiddleware = postBlogValidateMiddleware;
