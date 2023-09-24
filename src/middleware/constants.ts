@@ -16,6 +16,13 @@ export const POST_BLOG_VALIDATION_FIELDS = {
   WEBSITE_URL: 'websiteUrl',
 }
 
+export const POST_VALIDATION_FIELDS = {
+  TITLE: 'title',
+  SHORT_DESCRIPTION: 'shortDescription',
+  CONTENT: 'content',
+  BLOG_ID: 'blogId',
+}
+
 export const ERROR_MESSAGES = {
   [POST_VIDEO_VALIDATION_FIELDS.ID]: 'Can not be empty, only numeric accepted',
   [POST_VIDEO_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 40 symbols length',
@@ -33,4 +40,12 @@ export const BLOG_ERROR_MESSAGES = {
   [POST_BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
   [POST_BLOG_VALIDATION_FIELDS.WEBSITE_URL]:
     'Max length 100, should match regexp ^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
+}
+
+export const POST_ERROR_MESSAGES = {
+  [POST_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 30 symbols length',
+  [POST_VALIDATION_FIELDS.CONTENT]: 'Can not be empty, from 3 to 1000 symboles length',
+  [POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: 'Can not be empty, from 3 to 100 symbols',
+  [POST_VALIDATION_FIELDS.BLOG_ID]: 'Can not be empty, blog must exists',
+  BLOG_NOT_EXISTS_ERROR: 'Blog with this ID does not exists',
 }
