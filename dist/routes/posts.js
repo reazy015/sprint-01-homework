@@ -14,7 +14,12 @@ const getPostsRouter = () => {
     const router = express_1.default.Router();
     router.get('/', (_, res) => {
         const posts = post_repository_1.postsRepository.getAllPosts();
-        res.status(200).json(posts);
+        const postsWithBlogName = posts.map((post) => {
+            var _a;
+            const blog = blogs_repository_1.blogsRepository.getBlogById(post.blogId);
+            return Object.assign(Object.assign({}, post), { blogName: (_a = blog === null || blog === void 0 ? void 0 : blog.name) !== null && _a !== void 0 ? _a : '' });
+        });
+        res.status(200).json(postsWithBlogName);
     });
     router.get('/:id', (req, res) => {
         const postId = req.params.id;

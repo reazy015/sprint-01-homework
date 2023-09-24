@@ -9,9 +9,18 @@ import {blogsRepository} from '../data-access-layer/blogs-repository'
 export const getPostsRouter = () => {
   const router = express.Router()
 
-  router.get('/', (_, res: Response<Post[]>) => {
+  router.get('/', (_, res: Response<PostViewModel[]>) => {
     const posts = postsRepository.getAllPosts()
-    res.status(200).json(posts)
+    const postsWithBlogName = posts.map((post) => {
+      const blog = blogsRepository.getBlogById(post.blogId)
+
+      return {
+        ...post,
+        blogName: blog?.name ?? '',
+      }
+    })
+
+    res.status(200).json(postsWithBlogName)
   })
 
   router.get('/:id', (req: Request<{id: string}>, res: Response<PostViewModel>) => {
