@@ -10,7 +10,7 @@ export const getTestingRouter = () => {
     videoRepositry.deleteAllVideos()
     blogsRepository.deleteAllBlogs()
     postsRepository.deleteAllPosts()
-    res.status(204)
+    res.sendStatus(204)
   })
 
   return router
