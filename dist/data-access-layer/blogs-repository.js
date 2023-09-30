@@ -44,7 +44,7 @@ exports.blogsRepository = {
     },
     updateBlog(id, blogUpdate) {
         return __awaiter(this, void 0, void 0, function* () {
-            const updated = yield blogsCollection.updateOne({ id }, { $set: Object.assign({}, blogUpdate) });
+            const updated = yield blogsCollection.updateOne({ id }, { $set: Object.assign(Object.assign({}, blogUpdate), { isMembership: false }) });
             return Boolean(updated);
         });
     },

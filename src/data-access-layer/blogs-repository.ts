@@ -33,7 +33,10 @@ export const blogsRepository = {
     return false
   },
   async updateBlog(id: string, blogUpdate: BlogInputModel) {
-    const updated = await blogsCollection.updateOne({id}, {$set: {...blogUpdate}})
+    const updated = await blogsCollection.updateOne(
+      {id},
+      {$set: {...blogUpdate, isMembership: false}},
+    )
 
     return Boolean(updated)
   },
