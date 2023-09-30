@@ -35,7 +35,7 @@ exports.blogsRepository = {
             const createdAt = new Date().toISOString();
             const created = yield db_1.db
                 .collection('blogs')
-                .insertOne(Object.assign({ id, createdAt, isMembership: true }, blog));
+                .insertOne(Object.assign({ id, createdAt, isMembership: false }, blog));
             if (created) {
                 return id;
             }

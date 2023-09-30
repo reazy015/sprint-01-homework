@@ -24,7 +24,7 @@ export const blogsRepository = {
     const createdAt = new Date().toISOString()
     const created = await db
       .collection<BlogInputModel & {id: string; createdAt: string; isMembership: boolean}>('blogs')
-      .insertOne({id, createdAt, isMembership: true, ...blog})
+      .insertOne({id, createdAt, isMembership: false, ...blog})
 
     if (created) {
       return id
