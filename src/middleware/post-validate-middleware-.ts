@@ -30,11 +30,10 @@ export const postValidateMiddleware = () =>
     },
     [POST_VALIDATION_FIELDS.BLOG_ID]: {
       custom: {
-        options: (blogId: string) => {
-          const blog = blogsRepository.getBlogById(blogId)
-          return Boolean(blog)
+        options: async (blogId: string) => {
+          const blog = await blogsRepository.getBlogById(blogId)
+          if (!blog) throw new Error(POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR)
         },
       },
-      errorMessage: POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR,
     },
   })

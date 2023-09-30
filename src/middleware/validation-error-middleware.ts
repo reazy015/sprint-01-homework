@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from 'express'
 import {validationResult} from 'express-validator'
 import {HTTP_STATUSES} from '../utils/constants'
 
-export const validationErrorMiddleware = (
+export const validationErrorMiddleware = async (
   req: Request,
   res: Response<{
     errorsMessages: {
@@ -12,7 +12,7 @@ export const validationErrorMiddleware = (
   }>,
   next: NextFunction,
 ) => {
-  const errors = validationResult(req)
+  const errors = await validationResult(req)
 
   if (!errors.isEmpty()) {
     res.status(HTTP_STATUSES.BAD_REQUEST).send({

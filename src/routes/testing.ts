@@ -7,12 +7,17 @@ import {HTTP_STATUSES} from '../utils/constants'
 export const getTestingRouter = () => {
   const router = express.Router()
 
-  router.delete('/', (_, res) => {
+  router.delete('/', async (_, res) => {
     videoRepositry.deleteAllVideos()
-    blogsRepository.deleteAllBlogs()
-    postsRepository.deleteAllPosts()
+    const allBlogsDeleted = await blogsRepository.deleteAllBlogs()
+    const allPostsDeleted = await postsRepository.deleteAllPosts()
 
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+    if (allBlogsDeleted && allPostsDeleted) {
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+      return
+    }
+
+    res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
   })
 
   return router

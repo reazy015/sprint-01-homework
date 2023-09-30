@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postValidateMiddleware = void 0;
 const express_validator_1 = require("express-validator");
@@ -31,12 +40,12 @@ const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
     },
     [constants_1.POST_VALIDATION_FIELDS.BLOG_ID]: {
         custom: {
-            options: (blogId) => {
-                const blog = blogs_repository_1.blogsRepository.getBlogById(blogId);
-                return Boolean(blog);
-            },
+            options: (blogId) => __awaiter(void 0, void 0, void 0, function* () {
+                const blog = yield blogs_repository_1.blogsRepository.getBlogById(blogId);
+                if (!blog)
+                    throw new Error(constants_1.POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR);
+            }),
         },
-        errorMessage: constants_1.POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR,
     },
 });
 exports.postValidateMiddleware = postValidateMiddleware;

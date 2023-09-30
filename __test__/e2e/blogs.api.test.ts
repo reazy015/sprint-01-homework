@@ -2,11 +2,7 @@ import {HTTP_STATUSES} from './../../src/utils/constants'
 import {app} from '../../src/app'
 import request from 'supertest'
 import {BlogInputModel} from '../../src/types/blog'
-
-const CREDENTIALS = {
-  LOGIN: 'admin',
-  PASSWORD: 'qwerty',
-}
+import {CREDENTIALS} from './constants'
 
 describe('/blogs', () => {
   beforeAll(async () => {
@@ -60,6 +56,8 @@ describe('/blogs', () => {
       name: 'name',
       description: 'description',
       websiteUrl: 'https://websiteurl.com',
+      isMembership: expect.any(Boolean),
+      createdAt: expect.any(String),
     })
   })
 

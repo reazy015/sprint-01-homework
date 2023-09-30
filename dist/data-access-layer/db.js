@@ -8,22 +8,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validationErrorMiddleware = void 0;
-const express_validator_1 = require("express-validator");
-const constants_1 = require("../utils/constants");
-const validationErrorMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = yield (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        res.status(constants_1.HTTP_STATUSES.BAD_REQUEST).send({
-            errorsMessages: Object.entries(errors.mapped()).map(([key, value]) => ({
-                field: key,
-                message: value.msg,
-            })),
-        });
-        return;
+exports.rundb = exports.db = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+const mongodb_1 = require("mongodb");
+dotenv_1.default.config();
+const db_url = process.env.DB_URL || 'mongodb://localhost:27017/<db-name>';
+const client = new mongodb_1.MongoClient(db_url);
+exports.db = client.db();
+const rundb = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield client.connect();
+        console.log('DB connected');
     }
-    next();
+    catch (e) {
+        console.log('DB connection error');
+        yield client.close();
+    }
 });
-exports.validationErrorMiddleware = validationErrorMiddleware;
-//# sourceMappingURL=validation-error-middleware.js.map
+exports.rundb = rundb;
+//# sourceMappingURL=db.js.map

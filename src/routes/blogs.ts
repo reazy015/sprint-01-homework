@@ -10,15 +10,15 @@ import {HTTP_STATUSES} from '../utils/constants'
 export const getBlogsRouter = () => {
   const router = express.Router()
 
-  router.get('/', (_, res: Response<BlogViewModel[]>) => {
-    const blogs = blogsRepository.getAllBlogs()
+  router.get('/', async (_, res: Response<BlogViewModel[]>) => {
+    const blogs = await blogsRepository.getAllBlogs()
     res.status(HTTP_STATUSES.OK).json(blogs)
   })
 
-  router.get('/:id', (req: Request<IdURIParam>, res: Response<BlogViewModel>) => {
+  router.get('/:id', async (req: Request<IdURIParam>, res: Response<BlogViewModel>) => {
     const id = req.params.id
 
-    const blog = blogsRepository.getBlogById(id)
+    const blog = await blogsRepository.getBlogById(id)
 
     if (!blog) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND)
@@ -34,12 +34,17 @@ export const getBlogsRouter = () => {
     postBlogValidateMiddleware(),
     validationErrorMiddleware,
 
-    (req: CustomRequest<BlogInputModel>, res: Response<BlogViewModel>) => {
+    async (req: CustomRequest<BlogInputModel>, res: Response<BlogInputModel>) => {
       const addBlogData = req.body
 
-      const newBlogId = blogsRepository.addBlog(addBlogData)
+      const newBlogId = await blogsRepository.addBlog(addBlogData)
 
-      const newBlog = blogsRepository.getBlogById(newBlogId)
+      if (!newBlogId) {
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
+        return
+      }
+
+      const newBlog = await blogsRepository.getBlogById(newBlogId)
 
       if (!newBlog) {
         res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
@@ -56,17 +61,17 @@ export const getBlogsRouter = () => {
     postBlogValidateMiddleware(),
     validationErrorMiddleware,
 
-    (req: CustomRequest<BlogInputModel, IdURIParam>, res: Response) => {
+    async (req: CustomRequest<BlogInputModel, IdURIParam>, res: Response) => {
       const id = req.params.id
 
-      const blog = blogsRepository.getBlogById(id)
+      const blog = await blogsRepository.getBlogById(id)
 
       if (!blog) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND)
         return
       }
 
-      const updateResult = blogsRepository.updateBlog(id, req.body)
+      const updateResult = await blogsRepository.updateBlog(id, req.body)
 
       if (!updateResult) {
         res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
@@ -77,17 +82,17 @@ export const getBlogsRouter = () => {
     },
   )
 
-  router.delete('/:id', basicAuthMiddleware, (req: Request<IdURIParam>, res: Response) => {
+  router.delete('/:id', basicAuthMiddleware, async (req: Request<IdURIParam>, res: Response) => {
     const id = req.params.id
 
-    const blog = blogsRepository.getBlogById(id)
+    const blog = await blogsRepository.getBlogById(id)
 
     if (!blog) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND)
       return
     }
 
-    const deleteResult = blogsRepository.deleteBlogById(id)
+    const deleteResult = await blogsRepository.deleteBlogById(id)
 
     if (!deleteResult) {
       res.sendStatus(HTTP_STATUSES.SERVER_ERROR)

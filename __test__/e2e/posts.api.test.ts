@@ -3,11 +3,7 @@ import request from 'supertest'
 import {BlogInputModel} from '../../src/types/blog'
 import {PostInputModel} from '../../src/types/post'
 import {HTTP_STATUSES} from '../../src/utils/constants'
-
-const CREDENTIALS = {
-  LOGIN: 'admin',
-  PASSWORD: 'qwerty',
-}
+import {CREDENTIALS} from './constants'
 
 describe('/posts', () => {
   beforeAll(async () => {
@@ -22,7 +18,7 @@ describe('/posts', () => {
     await request(app).get('/posts/some_id').expect(HTTP_STATUSES.NOT_FOUND)
   })
 
-  it('GET /posts/:id should return HTTP_STATUSES.OK and post if it exists, use POST to create blog and post first', async () => {
+  it('GET /posts/:id should return 200 and post if it exists, use POST to create blog and post first', async () => {
     const newBlog: BlogInputModel = {
       name: 'blog_name',
       description: 'description',
@@ -59,6 +55,7 @@ describe('/posts', () => {
       content: 'content',
       blogId: postBlogResponse.body.id,
       blogName: newBlog.name,
+      createdAt: expect.any(String),
     })
   })
 
@@ -117,6 +114,7 @@ describe('/posts', () => {
       content: 'content',
       blogId: postBlogResponse.body.id,
       blogName: newBlog.name,
+      createdAt: expect.any(String),
     })
   })
 

@@ -1,42 +1,50 @@
-import {BlogViewModel, BlogInputModel} from '../types/blog'
+import {UUID} from 'mongodb'
+import {BlogInputModel, Blog} from '../types/blog'
+import {db} from './db'
 
-type BlogId = string
-let blogsDb: Record<BlogId, BlogViewModel> = {}
+const blogsCollection = db.collection<Blog>('blogs')
 
 export const blogsRepository = {
-  getAllBlogs() {
-    return Object.values(blogsDb)
+  async getAllBlogs() {
+    const blogs = await blogsCollection.find({}, {projection: {_id: 0}}).toArray()
+
+    return blogs
   },
-  getBlogById(id: string) {
-    if (id in blogsDb) {
-      return blogsDb[id]
+  async getBlogById(id: string) {
+    const blog = await blogsCollection.findOne({id}, {projection: {_id: 0}})
+
+    if (blog) {
+      return blog
     }
 
     return null
   },
-  addBlog(blog: BlogInputModel) {
-    const id = +new Date()
-    blogsDb[id] = {
-      id: id.toString(),
-      ...blog,
+  async addBlog(blog: BlogInputModel) {
+    const id = new UUID(UUID.generate()).toString()
+    const createdAt = new Date().toISOString()
+    const created = await db
+      .collection<BlogInputModel & {id: string; createdAt: string; isMembership: boolean}>('blogs')
+      .insertOne({id, createdAt, isMembership: true, ...blog})
+
+    if (created) {
+      return id
     }
 
-    return id.toString()
+    return false
   },
-  updateBlog(id: string, blogUpdate: BlogInputModel) {
-    blogsDb[id] = {
-      id,
-      ...blogUpdate,
-    }
+  async updateBlog(id: string, blogUpdate: BlogInputModel) {
+    const updated = await blogsCollection.updateOne({id}, {$set: {...blogUpdate}})
 
-    return true
+    return Boolean(updated)
   },
-  deleteBlogById(id: string) {
-    delete blogsDb[id]
+  async deleteBlogById(id: string) {
+    const deleted = await blogsCollection.deleteOne({id})
 
-    return true
+    return Boolean(deleted)
   },
-  deleteAllBlogs() {
-    blogsDb = {}
+  async deleteAllBlogs() {
+    const deleted = await blogsCollection.deleteMany()
+
+    return Boolean(deleted)
   },
 }

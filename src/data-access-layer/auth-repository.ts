@@ -1,12 +1,14 @@
-const authDb: Record<string, {login: string; password: string}> = {
-  admin: {
-    login: 'admin',
-    password: 'qwerty',
-  },
+import {db} from './db'
+
+interface AuthCredentials {
+  login: string
+  password: string
 }
 
+const authCollection = db.collection<AuthCredentials>('credentials')
+
 export const authRepository = {
-  isValidBasicAuth(basicAuthString: string) {
+  async isValidBasicAuth(basicAuthString: string) {
     const [authType, string] = basicAuthString?.split(' ')
 
     if (authType !== 'Basic') {
@@ -16,7 +18,9 @@ export const authRepository = {
     const decodedString = Buffer.from(string as string, 'base64').toString('ascii')
     const [login, password] = decodedString.split(':')
 
-    if (login in authDb && password === authDb[login].password) {
+    const hasRegistered = await authCollection.findOne({login, password}, {projection: {_id: 0}})
+
+    if (hasRegistered) {
       return true
     }
 

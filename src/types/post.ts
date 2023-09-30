@@ -7,8 +7,11 @@ export interface PostInputModel {
 
 export interface Post extends PostInputModel {
   id: string
+  createdAt: string
 }
 
 export interface PostViewModel extends Post {
   blogName: string
 }
+
+export interface DbPost extends PostViewModel {}
