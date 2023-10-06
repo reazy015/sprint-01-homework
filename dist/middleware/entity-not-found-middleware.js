@@ -9,22 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validationErrorMiddleware = void 0;
+exports.entityNotFoundMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("../utils/constants");
-const validationErrorMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const entityNotFoundMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = yield (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const errorsMessages = Object.entries(errors.mapped()).map(([key, value]) => ({
             field: key,
             message: value.msg,
         }));
-        res.status(constants_1.HTTP_STATUSES.BAD_REQUEST).send({
+        res.status(constants_1.HTTP_STATUSES.NOT_FOUND).send({
             errorsMessages,
         });
         return;
     }
     next();
 });
-exports.validationErrorMiddleware = validationErrorMiddleware;
-//# sourceMappingURL=validation-error-middleware.js.map
+exports.entityNotFoundMiddleware = entityNotFoundMiddleware;
+//# sourceMappingURL=entity-not-found-middleware.js.map

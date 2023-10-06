@@ -34,3 +34,47 @@ export const postBlogValidateMiddleware = () =>
       errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.WEBSITE_URL],
     },
   })
+
+export const queryBlogValidateMiddleware = () =>
+  checkSchema(
+    {
+      [BLOG_VALIDATION_FIELDS.SORT_BY]: {
+        optional: true,
+        trim: true,
+        notEmpty: true,
+        isInt: {negated: true},
+        errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.SORT_BY],
+      },
+      [BLOG_VALIDATION_FIELDS.SORT_DIRECTION]: {
+        optional: true,
+        trim: true,
+        isString: true,
+        notEmpty: true,
+        isIn: {
+          options: ['asc', 'desc'],
+        },
+        errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.SORT_DIRECTION],
+      },
+      [BLOG_VALIDATION_FIELDS.PAGE_SIZE]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+          options: ['asc', 'desc'],
+        },
+        errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.PAGE_SIZE],
+      },
+      [BLOG_VALIDATION_FIELDS.PAGE_NUMBER]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+          options: ['asc', 'desc'],
+        },
+        errorMessage: BLOG_ERROR_MESSAGES[BLOG_VALIDATION_FIELDS.PAGE_NUMBER],
+      },
+    },
+    ['query'],
+  )

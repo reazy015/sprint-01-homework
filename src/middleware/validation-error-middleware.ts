@@ -15,11 +15,13 @@ export const validationErrorMiddleware = async (
   const errors = await validationResult(req)
 
   if (!errors.isEmpty()) {
+    const errorsMessages = Object.entries(errors.mapped()).map(([key, value]) => ({
+      field: key,
+      message: value.msg,
+    }))
+
     res.status(HTTP_STATUSES.BAD_REQUEST).send({
-      errorsMessages: Object.entries(errors.mapped()).map(([key, value]) => ({
-        field: key,
-        message: value.msg,
-      })),
+      errorsMessages,
     })
     return
   }

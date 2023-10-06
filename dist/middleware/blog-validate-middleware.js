@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postBlogValidateMiddleware = void 0;
+exports.queryBlogValidateMiddleware = exports.postBlogValidateMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
 const WEBSITE_URL_REGEXP = new RegExp('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$');
@@ -34,4 +34,44 @@ const postBlogValidateMiddleware = () => (0, express_validator_1.checkSchema)({
     },
 });
 exports.postBlogValidateMiddleware = postBlogValidateMiddleware;
+const queryBlogValidateMiddleware = () => (0, express_validator_1.checkSchema)({
+    [constants_1.BLOG_VALIDATION_FIELDS.SORT_BY]: {
+        optional: true,
+        trim: true,
+        notEmpty: true,
+        isInt: { negated: true },
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.SORT_BY],
+    },
+    [constants_1.BLOG_VALIDATION_FIELDS.SORT_DIRECTION]: {
+        optional: true,
+        trim: true,
+        isString: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.SORT_DIRECTION],
+    },
+    [constants_1.BLOG_VALIDATION_FIELDS.PAGE_SIZE]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.PAGE_SIZE],
+    },
+    [constants_1.BLOG_VALIDATION_FIELDS.PAGE_NUMBER]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.BLOG_ERROR_MESSAGES[constants_1.BLOG_VALIDATION_FIELDS.PAGE_NUMBER],
+    },
+}, ['query']);
+exports.queryBlogValidateMiddleware = queryBlogValidateMiddleware;
 //# sourceMappingURL=blog-validate-middleware.js.map

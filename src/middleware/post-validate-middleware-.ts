@@ -1,6 +1,6 @@
 import {checkSchema} from 'express-validator'
 import {POST_ERROR_MESSAGES, POST_VALIDATION_FIELDS} from './constants'
-import {blogsRepository} from '../data-access-layer/blogs-repository'
+import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
 
 export const postValidateMiddleware = () =>
   checkSchema({
@@ -31,7 +31,7 @@ export const postValidateMiddleware = () =>
     [POST_VALIDATION_FIELDS.BLOG_ID]: {
       custom: {
         options: async (blogId: string) => {
-          const blog = await blogsRepository.getBlogById(blogId)
+          const blog = await blogsQueryRepository.getBlogById(blogId)
           if (!blog) throw new Error(POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR)
         },
       },

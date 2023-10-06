@@ -15,14 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTestingRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const video_repository_1 = require("../data-access-layer/video-repository");
-const blogs_repository_1 = require("../data-access-layer/blogs-repository");
 const post_repository_1 = require("../data-access-layer/post-repository");
 const constants_1 = require("../utils/constants");
+const blogs_command_repository_1 = require("../data-access-layer/query/blogs-command-repository");
 const getTestingRouter = () => {
     const router = express_1.default.Router();
     router.delete('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
         video_repository_1.videoRepositry.deleteAllVideos();
-        const allBlogsDeleted = yield blogs_repository_1.blogsRepository.deleteAllBlogs();
+        const allBlogsDeleted = yield blogs_command_repository_1.blogsCommandRepository.deleteAllBlogs();
         const allPostsDeleted = yield post_repository_1.postsRepository.deleteAllPosts();
         if (allBlogsDeleted && allPostsDeleted) {
             res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);

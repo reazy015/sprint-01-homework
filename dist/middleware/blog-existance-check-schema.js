@@ -9,36 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postValidateMiddleware = void 0;
+exports.blogExistanceCheckMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
 const blogs_query_repository_1 = require("../data-access-layer/query/blogs-query-repository");
-const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
-    [constants_1.POST_VALIDATION_FIELDS.TITLE]: {
-        trim: true,
-        isString: true,
-        isLength: {
-            options: { min: 3, max: 30 },
-        },
-        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.TITLE],
-    },
-    [constants_1.POST_VALIDATION_FIELDS.CONTENT]: {
-        trim: true,
-        isString: true,
-        isLength: {
-            options: { min: 3, max: 1000 },
-        },
-        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.CONTENT],
-    },
-    [constants_1.POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: {
-        trim: true,
-        isString: true,
-        isLength: {
-            options: { min: 3, max: 100 },
-        },
-        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.SHORT_DESCRIPTION],
-    },
-    [constants_1.POST_VALIDATION_FIELDS.BLOG_ID]: {
+const constants_2 = require("../utils/constants");
+const blogsExistsCheck = (0, express_validator_1.checkSchema)({
+    [constants_1.POST_VALIDATION_FIELDS.ID]: {
+        optional: true,
+        in: 'params',
         custom: {
             options: (blogId) => __awaiter(void 0, void 0, void 0, function* () {
                 const blog = yield blogs_query_repository_1.blogsQueryRepository.getBlogById(blogId);
@@ -48,5 +27,19 @@ const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
         },
     },
 });
-exports.postValidateMiddleware = postValidateMiddleware;
-//# sourceMappingURL=post-validate-middleware-.js.map
+const blogExistsErrorSummary = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const errors = yield (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        const errorsMessages = Object.entries(errors.mapped()).map(([key, value]) => ({
+            field: key,
+            message: value.msg,
+        }));
+        res.status(constants_2.HTTP_STATUSES.NOT_FOUND).send({
+            errorsMessages,
+        });
+        return;
+    }
+    next();
+});
+exports.blogExistanceCheckMiddleware = [blogsExistsCheck, blogExistsErrorSummary];
+//# sourceMappingURL=blog-existance-check-schema.js.map
