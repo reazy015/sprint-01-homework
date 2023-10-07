@@ -35,9 +35,7 @@ const blogExistsErrorSummary = async (
       message: value.msg,
     }))
 
-    res.status(HTTP_STATUSES.NOT_FOUND).send({
-      errorsMessages,
-    })
+    res.sendStatus(HTTP_STATUSES.NOT_FOUND)
     return
   }
 

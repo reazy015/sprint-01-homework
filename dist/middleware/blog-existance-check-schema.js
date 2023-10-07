@@ -34,9 +34,7 @@ const blogExistsErrorSummary = (req, res, next) => __awaiter(void 0, void 0, voi
             field: key,
             message: value.msg,
         }));
-        res.status(constants_2.HTTP_STATUSES.NOT_FOUND).send({
-            errorsMessages,
-        });
+        res.sendStatus(constants_2.HTTP_STATUSES.NOT_FOUND);
         return;
     }
     next();
