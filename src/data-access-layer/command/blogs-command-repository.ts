@@ -1,6 +1,6 @@
 import {ObjectId} from 'mongodb'
 import {BlogInputModel, DbBlog} from '../../types/blog'
-import {db} from '../db'
+import {db} from '../../db/db'
 import {DbPost, PostInputModel, PostViewModel} from '../../types/post'
 
 const blogsCollection = db.collection<DbBlog>('blogs')

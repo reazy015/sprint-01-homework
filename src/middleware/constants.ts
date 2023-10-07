@@ -18,6 +18,7 @@ export const BLOG_VALIDATION_FIELDS = {
   SORT_BY: 'sortBy',
   PAGE_SIZE: 'pageSize',
   PAGE_NUMBER: 'pageNumber',
+  SEARCH_NAME_TERM: 'searchNameTerm',
 }
 
 export const POST_VALIDATION_FIELDS = {
@@ -26,6 +27,10 @@ export const POST_VALIDATION_FIELDS = {
   CONTENT: 'content',
   BLOG_ID: 'blogId',
   ID: 'id',
+  SORT_DIRECTION: 'sortDirection',
+  SORT_BY: 'sortBy',
+  PAGE_SIZE: 'pageSize',
+  PAGE_NUMBER: 'pageNumber',
 }
 
 export const ERROR_MESSAGES = {
@@ -53,6 +58,11 @@ export const BLOG_ERROR_MESSAGES = {
 }
 
 export const POST_ERROR_MESSAGES = {
+  [POST_VALIDATION_FIELDS.SORT_BY]: 'Can not be null if specified, only string allowed',
+  [POST_VALIDATION_FIELDS.SORT_DIRECTION]:
+    'Can not be null if specified, only "asc" or "desc" values',
+  [POST_VALIDATION_FIELDS.PAGE_NUMBER]: 'Can not be null if specified, only integers allowed',
+  [POST_VALIDATION_FIELDS.PAGE_SIZE]: 'Can not be null if specified, only integers allowed',
   [POST_VALIDATION_FIELDS.TITLE]: 'Can not be empty, from 3 to 30 symbols length',
   [POST_VALIDATION_FIELDS.CONTENT]: 'Can not be empty, from 3 to 1000 symboles length',
   [POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: 'Can not be empty, from 3 to 100 symbols',

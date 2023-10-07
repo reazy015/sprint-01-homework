@@ -10,12 +10,34 @@ describe('/posts', () => {
     await request(app).delete('/testing/all-data')
   })
 
-  it('GET /posts should return 200 and empty array', async () => {
-    await request(app).get('/posts').expect(HTTP_STATUSES.OK, [])
+  it('GET /posts should return 200 and empty array, default paging values', async () => {
+    await request(app).get('/posts').expect(HTTP_STATUSES.OK, {
+      pagesCount: 0,
+      page: 1,
+      pageSize: 10,
+      totalCount: 0,
+      items: [],
+    })
+  })
+
+  it('GET /posts should return 400 if incorrect queries', async () => {
+    await request(app)
+      .get('/posts?sortDir=incorrect&sortBy=123123123')
+      .expect(HTTP_STATUSES.BAD_REQUEST)
+  })
+
+  it('GET /blogs should return 400, if queries specified but has no values', async () => {
+    await request(app)
+      .get('/posts?sortDir=&sortBy=&pageSize=&pageNumber=')
+      .expect(HTTP_STATUSES.BAD_REQUEST)
+  })
+
+  it('GET /posts/:id should return 400 if post id is invalid', async () => {
+    await request(app).get('/posts/invalid_id').expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('GET /posts/:id should return 404 if no post with such id', async () => {
-    await request(app).get('/posts/some_id').expect(HTTP_STATUSES.NOT_FOUND)
+    await request(app).get('/posts/651c05cc013f52cb98c51302').expect(HTTP_STATUSES.NOT_FOUND)
   })
 
   it('GET /posts/:id should return 200 and post if it exists, use POST to create blog and post first', async () => {
@@ -162,7 +184,7 @@ describe('/posts', () => {
     }
 
     await request(app)
-      .put('/posts/not_exists_id')
+      .put('/posts/651c05cc013f52cb98c51302')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(postUpdate)
       .expect(HTTP_STATUSES.NOT_FOUND)
@@ -204,16 +226,16 @@ describe('/posts', () => {
       .expect(HTTP_STATUSES.NO_CONTENT)
   })
 
-  it('DELETE /posts/:id should return HTTP_STATUSES.UNAUTH if not authorized', async () => {
+  it('DELETE /posts/:id should return 401 if not authorized', async () => {
     await request(app)
-      .delete('/posts/some_id')
+      .delete('/posts/651c05cc013f52cb98c51302')
       .auth(CREDENTIALS.LOGIN, 'wrong_pass')
       .expect(HTTP_STATUSES.UNAUTH)
   })
 
   it('DELETE /posts/:id should return 404 if not found', async () => {
     await request(app)
-      .delete('/posts/some_id')
+      .delete('/posts/651c05cc013f52cb98c51302')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .expect(HTTP_STATUSES.NOT_FOUND)
   })

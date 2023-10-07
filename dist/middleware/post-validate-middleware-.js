@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postValidateMiddleware = void 0;
+exports.queryPostValidateMiddleware = exports.postValidateMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
 const blogs_query_repository_1 = require("../data-access-layer/query/blogs-query-repository");
-const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
+exports.postValidateMiddleware = (0, express_validator_1.checkSchema)({
     [constants_1.POST_VALIDATION_FIELDS.TITLE]: {
         trim: true,
         isString: true,
@@ -48,5 +48,43 @@ const postValidateMiddleware = () => (0, express_validator_1.checkSchema)({
         },
     },
 });
-exports.postValidateMiddleware = postValidateMiddleware;
+exports.queryPostValidateMiddleware = (0, express_validator_1.checkSchema)({
+    [constants_1.POST_VALIDATION_FIELDS.SORT_BY]: {
+        optional: true,
+        trim: true,
+        notEmpty: true,
+        isInt: { negated: true },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.SORT_BY],
+    },
+    [constants_1.POST_VALIDATION_FIELDS.SORT_DIRECTION]: {
+        optional: true,
+        trim: true,
+        isString: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.SORT_DIRECTION],
+    },
+    [constants_1.POST_VALIDATION_FIELDS.PAGE_SIZE]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.PAGE_SIZE],
+    },
+    [constants_1.POST_VALIDATION_FIELDS.PAGE_NUMBER]: {
+        optional: true,
+        trim: true,
+        isInt: true,
+        notEmpty: true,
+        isIn: {
+            options: ['asc', 'desc'],
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.PAGE_NUMBER],
+    },
+}, ['query']);
 //# sourceMappingURL=post-validate-middleware-.js.map

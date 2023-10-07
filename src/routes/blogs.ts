@@ -15,7 +15,7 @@ import {
 } from '../types/common'
 import {HTTP_STATUSES} from '../utils/constants'
 import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
-import {blogsCommandRepository} from '../data-access-layer/query/blogs-command-repository'
+import {blogsCommandRepository} from '../data-access-layer/command/blogs-command-repository'
 import {PostInputModel, PostViewModel} from '../types/post'
 import {param} from 'express-validator'
 import {ObjectId} from 'mongodb'
@@ -55,7 +55,7 @@ export const getBlogsRouter = () => {
 
   router.get(
     '/:id/posts',
-    param('id').custom((param: string) => ObjectId.isValid(param)),
+    validIdCheckMiddleware(),
     queryBlogValidateMiddleware(),
     validationErrorMiddleware,
     async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
@@ -97,7 +97,7 @@ export const getBlogsRouter = () => {
     validIdCheckMiddleware(),
     validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,
-    postValidateMiddleware(),
+    postValidateMiddleware,
     validationErrorMiddleware,
     async (req: CustomRequest<PostInputModel, IdURIParam>, res: Response<PostViewModel>) => {
       const createdPost = await blogsCommandRepository.addPostByBlogId(req.params.id, req.body)

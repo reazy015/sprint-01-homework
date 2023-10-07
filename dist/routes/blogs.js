@@ -19,9 +19,7 @@ const blog_validate_middleware_1 = require("../middleware/blog-validate-middlewa
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
 const constants_1 = require("../utils/constants");
 const blogs_query_repository_1 = require("../data-access-layer/query/blogs-query-repository");
-const blogs_command_repository_1 = require("../data-access-layer/query/blogs-command-repository");
-const express_validator_1 = require("express-validator");
-const mongodb_1 = require("mongodb");
+const blogs_command_repository_1 = require("../data-access-layer/command/blogs-command-repository");
 const blog_existance_check_schema_1 = require("../middleware/blog-existance-check-schema");
 const valid_id_check_middleware_1 = require("../middleware/valid-id-check-middleware");
 const post_validate_middleware_1 = require("../middleware/post-validate-middleware-");
@@ -40,7 +38,7 @@ const getBlogsRouter = () => {
         }
         res.status(constants_1.HTTP_STATUSES.OK).send(blog);
     }));
-    router.get('/:id/posts', (0, express_validator_1.param)('id').custom((param) => mongodb_1.ObjectId.isValid(param)), (0, blog_validate_middleware_1.queryBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), (0, blog_validate_middleware_1.queryBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield blogs_query_repository_1.blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query);
         res.status(200).send(posts);
     }));
@@ -58,7 +56,7 @@ const getBlogsRouter = () => {
         }
         res.status(constants_1.HTTP_STATUSES.CREATED).json(newBlog);
     }));
-    router.post('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, (0, post_validate_middleware_1.postValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.post('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, post_validate_middleware_1.postValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const createdPost = yield blogs_command_repository_1.blogsCommandRepository.addPostByBlogId(req.params.id, req.body);
         if (!createdPost) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);

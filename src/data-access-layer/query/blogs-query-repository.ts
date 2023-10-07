@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb'
 import {Blog, BlogViewModel, DbBlog} from '../../types/blog'
 import {BlogQueryParams, WithPaging} from '../../types/common'
-import {db} from '../db'
+import {db} from '../../db/db'
 import {DbPost, PostViewModel} from '../../types/post'
 
 const blogsCollection = db.collection<DbBlog>('blogs')
@@ -16,7 +16,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 export const blogsQueryRepository = {
-  async getAllBlogs(queryParams: Partial<BlogQueryParams>): Promise<WithPaging<Blog>> {
+  async getAllBlogs(queryParams: Partial<BlogQueryParams>): Promise<WithPaging<BlogViewModel>> {
     const {
       searchNameTerm = DEFAULT_QUERY_PARAMS.searchTermName,
       pageSize = DEFAULT_QUERY_PARAMS.pageSize,
@@ -43,7 +43,7 @@ export const blogsQueryRepository = {
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalBlogsCount,
-      items: blogs.map<Blog>((blog) => ({
+      items: blogs.map<BlogViewModel>((blog) => ({
         id: blog._id.toString(),
         name: blog.name,
         websiteUrl: blog.websiteUrl,

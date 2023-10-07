@@ -1,7 +1,6 @@
 import {WithId} from 'mongodb'
 
 export interface Blog {
-  id: string
   name: string
   description: string
   websiteUrl: string
@@ -9,7 +8,9 @@ export interface Blog {
   createdAt: string
 }
 
-export interface BlogViewModel extends Blog {}
+export interface BlogViewModel extends Blog {
+  id: string
+}
 
 export interface DbBlog extends WithId<Blog> {}
 

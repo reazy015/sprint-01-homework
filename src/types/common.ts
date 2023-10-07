@@ -26,3 +26,5 @@ export interface BlogQueryParams {
   sortDirection: 'asc' | 'desc'
   searchNameTerm: string
 }
+
+export interface PostQueryParams extends Omit<BlogQueryParams, 'searchNameTerm'> {}

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsQueryRepository = void 0;
 const mongodb_1 = require("mongodb");
-const db_1 = require("../db");
+const db_1 = require("../../db/db");
 const blogsCollection = db_1.db.collection('blogs');
 const postsCollection = db_1.db.collection('posts');
 const DEFAULT_QUERY_PARAMS = {
