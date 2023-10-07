@@ -27,7 +27,7 @@ export const blogsQueryRepository = {
 
     const sortDir = sortDirection === 'asc' ? 1 : -1
     const filter = {name: {$regex: searchNameTerm, $options: 'i'}}
-    const skip = pageNumber * (pageSize - 1)
+    const skip = pageSize * (pageNumber - 1)
 
     const blogs = await blogsCollection
       .find(filter)
@@ -77,7 +77,7 @@ export const blogsQueryRepository = {
       pageSize = DEFAULT_QUERY_PARAMS.pageSize,
       pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
       sortBy = DEFAULT_QUERY_PARAMS.sortBy,
-      sortDirection = 'asc',
+      sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
     } = queryParams
     const sortDir = sortDirection === 'asc' ? 1 : -1
     const skip = pageSize * (pageNumber - 1)

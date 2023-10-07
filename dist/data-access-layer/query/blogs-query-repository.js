@@ -27,7 +27,7 @@ exports.blogsQueryRepository = {
             const { searchNameTerm = DEFAULT_QUERY_PARAMS.searchTermName, pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
             const sortDir = sortDirection === 'asc' ? 1 : -1;
             const filter = { name: { $regex: searchNameTerm, $options: 'i' } };
-            const skip = pageNumber * (pageSize - 1);
+            const skip = pageSize * (pageNumber - 1);
             const blogs = yield blogsCollection
                 .find(filter)
                 .sort({ [sortBy]: sortDir })
@@ -69,7 +69,7 @@ exports.blogsQueryRepository = {
     },
     getAllPostsByBlogId(id, queryParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = 'asc', } = queryParams;
+            const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
             const sortDir = sortDirection === 'asc' ? 1 : -1;
             const skip = pageSize * (pageNumber - 1);
             const posts = yield postsCollection
