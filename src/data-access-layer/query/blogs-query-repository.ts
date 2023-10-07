@@ -25,7 +25,7 @@ export const blogsQueryRepository = {
     } = queryParams
 
     const pageSize =
-      queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 1
+      queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 10
     const pageNumber =
       queryParams.pageNumber && Number.isInteger(+queryParams.pageNumber)
         ? +queryParams.pageNumber
@@ -89,7 +89,7 @@ export const blogsQueryRepository = {
       sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
     } = queryParams
     const pageSize =
-      queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 1
+      queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 10
     const pageNumber =
       queryParams.pageNumber && Number.isInteger(+queryParams.pageNumber)
         ? +queryParams.pageNumber
