@@ -14,47 +14,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPostsRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const post_repository_1 = require("../data-access-layer/post-repository");
 const basic_auth_middleware_1 = require("../middleware/basic-auth-middleware");
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
 const post_validate_middleware_1 = require("../middleware/post-validate-middleware-");
 const constants_1 = require("../utils/constants");
+const posts_query_repository_1 = require("../data-access-layer/query/posts-query-repository");
+const posts_command_repository_1 = require("../data-access-layer/command/posts-command-repository");
+const valid_id_check_middleware_1 = require("../middleware/valid-id-check-middleware");
+const post_existance_check_schema_1 = require("../middleware/post-existance-check-schema");
 const getPostsRouter = () => {
     const router = express_1.default.Router();
-    router.get('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const posts = yield post_repository_1.postsRepository.getAllPosts();
+    router.get('/', post_validate_middleware_1.queryPostValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const posts = yield posts_query_repository_1.postQueryRepository.getAllPosts(req.query);
         res.status(constants_1.HTTP_STATUSES.OK).json(posts);
     }));
-    router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get('/:id', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const postId = req.params.id;
-        const post = yield post_repository_1.postsRepository.getPostById(postId);
+        const post = yield posts_query_repository_1.postQueryRepository.getPostById(postId);
         if (!post) {
             res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
         res.status(constants_1.HTTP_STATUSES.OK).send(post);
     }));
-    router.post('/', basic_auth_middleware_1.basicAuthMiddleware, (0, post_validate_middleware_1.postValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const newPostId = yield post_repository_1.postsRepository.addPost(req.body);
+    router.post('/', basic_auth_middleware_1.basicAuthMiddleware, post_validate_middleware_1.postValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const newPostId = yield posts_command_repository_1.postsCommandRepository.addPost(req.body);
         if (!newPostId) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
-        const newPost = yield post_repository_1.postsRepository.getPostById(newPostId);
+        const newPost = yield posts_query_repository_1.postQueryRepository.getPostById(newPostId);
         if (!newPost) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
         }
         res.status(constants_1.HTTP_STATUSES.CREATED).json(newPost);
     }));
-    router.put('/:id', basic_auth_middleware_1.basicAuthMiddleware, (0, post_validate_middleware_1.postValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.put('/:id', basic_auth_middleware_1.basicAuthMiddleware, (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...post_existance_check_schema_1.postExistanceCheckMiddleware, post_validate_middleware_1.postValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const postId = req.params.id;
-        const post = yield post_repository_1.postsRepository.getPostById(postId);
+        const post = yield posts_query_repository_1.postQueryRepository.getPostById(postId);
         if (!post) {
             res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
-        const postUpdated = yield post_repository_1.postsRepository.updatePost(postId, req.body);
+        const postUpdated = yield posts_command_repository_1.postsCommandRepository.updatePost(postId, req.body);
         if (!postUpdated) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;
@@ -63,12 +66,12 @@ const getPostsRouter = () => {
     }));
     router.delete('/:id', basic_auth_middleware_1.basicAuthMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const id = req.params.id;
-        const blog = yield post_repository_1.postsRepository.getPostById(id);
+        const blog = yield posts_query_repository_1.postQueryRepository.getPostById(id);
         if (!blog) {
             res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
             return;
         }
-        const deleteResult = yield post_repository_1.postsRepository.deletePost(id);
+        const deleteResult = yield posts_command_repository_1.postsCommandRepository.deletePost(id);
         if (!deleteResult) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
             return;

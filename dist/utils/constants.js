@@ -20,5 +20,6 @@ exports.HTTP_STATUSES = {
     UNAUTH: 401,
     NOT_FOUND: 404,
     SERVER_ERROR: 500,
+    NOT_IMPLEMENTED: 501,
 };
 //# sourceMappingURL=constants.js.map

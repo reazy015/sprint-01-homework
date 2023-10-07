@@ -15,11 +15,12 @@ const constants_1 = require("../utils/constants");
 const validationErrorMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = yield (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
+        const errorsMessages = Object.entries(errors.mapped()).map(([key, value]) => ({
+            field: key,
+            message: value.msg,
+        }));
         res.status(constants_1.HTTP_STATUSES.BAD_REQUEST).send({
-            errorsMessages: Object.entries(errors.mapped()).map(([key, value]) => ({
-                field: key,
-                message: value.msg,
-            })),
+            errorsMessages,
         });
         return;
     }

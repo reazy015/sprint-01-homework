@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRepository = void 0;
-const db_1 = require("./db");
+const db_1 = require("../db/db");
 const authCollection = db_1.db.collection('credentials');
 exports.authRepository = {
     isValidBasicAuth(basicAuthString) {
