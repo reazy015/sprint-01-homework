@@ -21,7 +21,10 @@ import {param} from 'express-validator'
 import {ObjectId} from 'mongodb'
 import {blogExistanceCheckMiddleware} from '../middleware/blog-existance-check-schema'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
-import {postValidateMiddleware} from '../middleware/post-validate-middleware-'
+import {
+  postByBlogValidateMiddleware,
+  postValidateMiddleware,
+} from '../middleware/post-validate-middleware-'
 
 export const getBlogsRouter = () => {
   const router = express.Router()
@@ -97,7 +100,7 @@ export const getBlogsRouter = () => {
     validIdCheckMiddleware(),
     validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,
-    postValidateMiddleware,
+    postByBlogValidateMiddleware,
     validationErrorMiddleware,
     async (req: CustomRequest<PostInputModel, IdURIParam>, res: Response<PostViewModel>) => {
       const createdPost = await blogsCommandRepository.addPostByBlogId(req.params.id, req.body)

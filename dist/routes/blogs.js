@@ -56,7 +56,7 @@ const getBlogsRouter = () => {
         }
         res.status(constants_1.HTTP_STATUSES.CREATED).json(newBlog);
     }));
-    router.post('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, post_validate_middleware_1.postValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.post('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, post_validate_middleware_1.postByBlogValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const createdPost = yield blogs_command_repository_1.blogsCommandRepository.addPostByBlogId(req.params.id, req.body);
         if (!createdPost) {
             res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryPostValidateMiddleware = exports.postValidateMiddleware = void 0;
+exports.postByBlogValidateMiddleware = exports.queryPostValidateMiddleware = exports.postValidateMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const constants_1 = require("./constants");
 const blogs_query_repository_1 = require("../data-access-layer/query/blogs-query-repository");
@@ -87,4 +87,30 @@ exports.queryPostValidateMiddleware = (0, express_validator_1.checkSchema)({
         errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.PAGE_NUMBER],
     },
 }, ['query']);
+exports.postByBlogValidateMiddleware = (0, express_validator_1.checkSchema)({
+    [constants_1.POST_VALIDATION_FIELDS.TITLE]: {
+        trim: true,
+        isString: true,
+        isLength: {
+            options: { min: 3, max: 30 },
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.TITLE],
+    },
+    [constants_1.POST_VALIDATION_FIELDS.CONTENT]: {
+        trim: true,
+        isString: true,
+        isLength: {
+            options: { min: 3, max: 1000 },
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.CONTENT],
+    },
+    [constants_1.POST_VALIDATION_FIELDS.SHORT_DESCRIPTION]: {
+        trim: true,
+        isString: true,
+        isLength: {
+            options: { min: 3, max: 100 },
+        },
+        errorMessage: constants_1.POST_ERROR_MESSAGES[constants_1.POST_VALIDATION_FIELDS.SHORT_DESCRIPTION],
+    },
+});
 //# sourceMappingURL=post-validate-middleware-.js.map
