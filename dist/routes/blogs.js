@@ -23,7 +23,6 @@ const blogs_command_repository_1 = require("../data-access-layer/command/blogs-c
 const blog_existance_check_schema_1 = require("../middleware/blog-existance-check-schema");
 const valid_id_check_middleware_1 = require("../middleware/valid-id-check-middleware");
 const post_validate_middleware_1 = require("../middleware/post-validate-middleware-");
-const express_validator_1 = require("express-validator");
 const getBlogsRouter = () => {
     const router = express_1.default.Router();
     router.get('/', 
@@ -45,7 +44,7 @@ const getBlogsRouter = () => {
     router.get('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, 
     // queryBlogValidateMiddleware(),
     // validationErrorMiddleware,
-    (0, express_validator_1.param)('pageSize').isInt().default(10), (0, express_validator_1.param)('pageNumber').isInt().default(1), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield blogs_query_repository_1.blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query);
         res.status(constants_1.HTTP_STATUSES.OK).send(posts);
     }));

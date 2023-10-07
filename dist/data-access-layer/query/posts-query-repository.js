@@ -23,7 +23,14 @@ const DEFAULT_QUERY_PARAMS = {
 exports.postQueryRepository = {
     getAllPosts(queryParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const { 
+            // pageSize = DEFAULT_QUERY_PARAMS.pageSize,
+            // pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
+            sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const pageSize = queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 1;
+            const pageNumber = queryParams.pageNumber && Number.isInteger(+queryParams.pageNumber)
+                ? +queryParams.pageNumber
+                : 1;
             const sortBy = queryParams.sortBy && Boolean(queryParams.sortBy.trim())
                 ? queryParams.sortBy
                 : DEFAULT_QUERY_PARAMS.sortBy;
