@@ -47,6 +47,7 @@ export const ERROR_MESSAGES = {
 }
 
 export const BLOG_ERROR_MESSAGES = {
+  BLOG_NOT_EXISTS_ERROR: 'No blog with give ID',
   [BLOG_VALIDATION_FIELDS.SORT_BY]: 'Can not be null if specified, only string allowed',
   [BLOG_VALIDATION_FIELDS.SORT_DIRECTION]:
     'Can not be null if specified, only "asc" or "desc" values',

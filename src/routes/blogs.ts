@@ -38,18 +38,24 @@ export const getBlogsRouter = () => {
     },
   )
 
-  router.get('/:id', async (req: Request<IdURIParam>, res: Response<BlogViewModel>) => {
-    const id = req.params.id
+  router.get(
+    '/:id',
+    validIdCheckMiddleware(),
+    validationErrorMiddleware,
+    ...blogExistanceCheckMiddleware,
+    async (req: Request<IdURIParam>, res: Response<BlogViewModel>) => {
+      const id = req.params.id
 
-    const blog = await blogsQueryRepository.getBlogById(id)
+      const blog = await blogsQueryRepository.getBlogById(id)
 
-    if (!blog) {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
-      return
-    }
+      if (!blog) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
+        return
+      }
 
-    res.status(HTTP_STATUSES.OK).send(blog)
-  })
+      res.status(HTTP_STATUSES.OK).send(blog)
+    },
+  )
 
   router.get(
     '/:id/posts',
@@ -59,15 +65,9 @@ export const getBlogsRouter = () => {
     queryBlogValidateMiddleware(),
     validationErrorMiddleware,
     async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
-      const blog = await blogsQueryRepository.getBlogById(req.params.id)
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
-      if (!blog) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
-        return
-      }
       const posts = await blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query)
 
-      res.status(200).send(posts)
+      res.status(HTTP_STATUSES.OK).send(posts)
     },
   )
 

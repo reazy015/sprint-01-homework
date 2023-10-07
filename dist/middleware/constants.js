@@ -43,6 +43,7 @@ exports.ERROR_MESSAGES = {
     [exports.VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE]: 'Can be only of string type',
 };
 exports.BLOG_ERROR_MESSAGES = {
+    BLOG_NOT_EXISTS_ERROR: 'No blog with give ID',
     [exports.BLOG_VALIDATION_FIELDS.SORT_BY]: 'Can not be null if specified, only string allowed',
     [exports.BLOG_VALIDATION_FIELDS.SORT_DIRECTION]: 'Can not be null if specified, only "asc" or "desc" values',
     [exports.BLOG_VALIDATION_FIELDS.PAGE_NUMBER]: 'Can not be null if specified, only integers allowed',
