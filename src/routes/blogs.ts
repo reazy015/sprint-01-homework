@@ -59,6 +59,7 @@ export const getBlogsRouter = () => {
   router.get(
     '/:id/posts',
     validIdCheckMiddleware(),
+    ...blogExistanceCheckMiddleware,
     queryBlogValidateMiddleware(),
     validationErrorMiddleware,
     async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
