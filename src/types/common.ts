@@ -5,7 +5,8 @@ export interface CustomRequest<Body, URIParams = core.ParamsDictionary> extends 
   body: Body
 }
 
-export interface CustomQueryRequest<QueryParams> extends Request<{}, {}, {}, QueryParams> {}
+export interface CustomQueryRequest<QueryParams, URIParams = core.ParamsDictionary>
+  extends Request<URIParams, {}, {}, QueryParams> {}
 
 export type IdURIParam = {
   id: string

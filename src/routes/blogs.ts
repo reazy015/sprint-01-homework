@@ -64,7 +64,10 @@ export const getBlogsRouter = () => {
     ...blogExistanceCheckMiddleware,
     // queryBlogValidateMiddleware(),
     // validationErrorMiddleware,
-    async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
+    async (
+      req: CustomQueryRequest<Partial<BlogQueryParams>, IdURIParam>,
+      res: Response<WithPaging<PostViewModel>>,
+    ) => {
       const posts = await blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query)
 
       res.status(HTTP_STATUSES.OK).send(posts)
