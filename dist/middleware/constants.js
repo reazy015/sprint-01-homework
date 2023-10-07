@@ -20,6 +20,7 @@ exports.BLOG_VALIDATION_FIELDS = {
     PAGE_SIZE: 'pageSize',
     PAGE_NUMBER: 'pageNumber',
     SEARCH_NAME_TERM: 'searchNameTerm',
+    ID: 'id',
 };
 exports.POST_VALIDATION_FIELDS = {
     TITLE: 'title',
@@ -48,6 +49,7 @@ exports.BLOG_ERROR_MESSAGES = {
     [exports.BLOG_VALIDATION_FIELDS.PAGE_SIZE]: 'Can not be null if specified, only integers allowed',
     [exports.BLOG_VALIDATION_FIELDS.NAME]: 'Max length 15',
     [exports.BLOG_VALIDATION_FIELDS.DESCRIPTION]: 'Max length 500',
+    [exports.BLOG_VALIDATION_FIELDS.ID]: 'Can not be empty, blog must exists',
     [exports.BLOG_VALIDATION_FIELDS.WEBSITE_URL]: 'Max length 100, should match regexp ^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$',
 };
 exports.POST_ERROR_MESSAGES = {

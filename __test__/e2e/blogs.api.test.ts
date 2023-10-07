@@ -184,17 +184,43 @@ describe('/blogs', () => {
     await request(app).get('/blogs/invalid_id/posts').expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
+  it('GET /blogs/:id/posts should return 404 if blog not found', async () => {
+    await request(app).get('/blogs/651c05cc013f52cb98c51302/posts').expect(HTTP_STATUSES.NOT_FOUND)
+  })
+
   it('GET /blogs/:id/posts, should return 400 if queries are incorrect', async () => {
+    const newBlog: BlogInputModel = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://websiteurl.com',
+    }
+
+    const postResponse = await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
+      .expect(HTTP_STATUSES.CREATED)
+
     await request(app)
-      .get(
-        '/blogs/651c05cc013f52cb98c51302/posts?sortBy=&sortDirection=12312&pageNumber=&pageSize=',
-      )
+      .get(`/blogs/${postResponse.body.id}/posts?sortBy=&sortDirection=12312&pageNumber=&pageSize=`)
       .expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('GET /blogs/:id/posts, should return 200 and empty items array', async () => {
+    const newBlog: BlogInputModel = {
+      name: 'name',
+      description: 'description',
+      websiteUrl: 'https://websiteurl.com',
+    }
+
+    const postResponse = await request(app)
+      .post('/blogs')
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .send(newBlog)
+      .expect(HTTP_STATUSES.CREATED)
+
     const getResponse = await request(app)
-      .get('/blogs/651c05cc013f52cb98c51302/posts')
+      .get(`/blogs/${postResponse.body.id}/posts`)
       .expect(HTTP_STATUSES.OK)
     expect(getResponse.body.items).toEqual([])
   })

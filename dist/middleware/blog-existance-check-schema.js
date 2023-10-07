@@ -15,14 +15,14 @@ const constants_1 = require("./constants");
 const blogs_query_repository_1 = require("../data-access-layer/query/blogs-query-repository");
 const constants_2 = require("../utils/constants");
 const blogsExistsCheck = (0, express_validator_1.checkSchema)({
-    [constants_1.POST_VALIDATION_FIELDS.ID]: {
+    [constants_1.BLOG_VALIDATION_FIELDS.ID]: {
         optional: true,
         in: 'params',
         custom: {
             options: (blogId) => __awaiter(void 0, void 0, void 0, function* () {
                 const blog = yield blogs_query_repository_1.blogsQueryRepository.getBlogById(blogId);
                 if (!blog)
-                    throw new Error(constants_1.POST_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR);
+                    throw new Error(constants_1.BLOG_ERROR_MESSAGES.BLOG_NOT_EXISTS_ERROR);
             }),
         },
     },

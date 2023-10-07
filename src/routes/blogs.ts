@@ -17,14 +17,9 @@ import {HTTP_STATUSES} from '../utils/constants'
 import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
 import {blogsCommandRepository} from '../data-access-layer/command/blogs-command-repository'
 import {PostInputModel, PostViewModel} from '../types/post'
-import {param} from 'express-validator'
-import {ObjectId} from 'mongodb'
 import {blogExistanceCheckMiddleware} from '../middleware/blog-existance-check-schema'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
-import {
-  postByBlogValidateMiddleware,
-  postValidateMiddleware,
-} from '../middleware/post-validate-middleware-'
+import {postByBlogValidateMiddleware} from '../middleware/post-validate-middleware-'
 
 export const getBlogsRouter = () => {
   const router = express.Router()
@@ -59,10 +54,17 @@ export const getBlogsRouter = () => {
   router.get(
     '/:id/posts',
     validIdCheckMiddleware(),
+    validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,
     queryBlogValidateMiddleware(),
     validationErrorMiddleware,
     async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
+      const blog = await blogsQueryRepository.getBlogById(req.params.id)
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND)
+      if (!blog) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND)
+        return
+      }
       const posts = await blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query)
 
       res.status(200).send(posts)
