@@ -26,8 +26,8 @@ export const getBlogsRouter = () => {
 
   router.get(
     '/',
-    // queryBlogValidateMiddleware(),
-    // validationErrorMiddleware,
+    queryBlogValidateMiddleware(),
+    validationErrorMiddleware,
     async (
       req: CustomQueryRequest<Partial<BlogQueryParams>>,
       res: Response<WithPaging<BlogViewModel>>,
@@ -62,8 +62,8 @@ export const getBlogsRouter = () => {
     validIdCheckMiddleware(),
     validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,
-    // queryBlogValidateMiddleware(),
-    // validationErrorMiddleware,
+    queryBlogValidateMiddleware(),
+    validationErrorMiddleware,
     async (req: Request<IdURIParam>, res: Response<WithPaging<PostViewModel>>) => {
       const posts = await blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query)
 

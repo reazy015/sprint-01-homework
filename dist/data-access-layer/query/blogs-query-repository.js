@@ -24,7 +24,10 @@ const DEFAULT_QUERY_PARAMS = {
 exports.blogsQueryRepository = {
     getAllBlogs(queryParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { searchNameTerm = DEFAULT_QUERY_PARAMS.searchTermName, pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const { searchNameTerm = DEFAULT_QUERY_PARAMS.searchTermName, pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const sortBy = queryParams.sortBy && Boolean(queryParams.sortBy.trim())
+                ? queryParams.sortBy
+                : DEFAULT_QUERY_PARAMS.sortBy;
             const sortDir = sortDirection === 'asc' ? 1 : -1;
             const filter = { name: { $regex: searchNameTerm, $options: 'i' } };
             const skip = pageSize * (pageNumber - 1);
@@ -69,7 +72,10 @@ exports.blogsQueryRepository = {
     },
     getAllPostsByBlogId(id, queryParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const sortBy = queryParams.sortBy && Boolean(queryParams.sortBy.trim())
+                ? queryParams.sortBy
+                : DEFAULT_QUERY_PARAMS.sortBy;
             const sortDir = sortDirection === 'asc' ? 1 : -1;
             const skip = pageSize * (pageNumber - 1);
             const posts = yield postsCollection

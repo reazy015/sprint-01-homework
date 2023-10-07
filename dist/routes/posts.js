@@ -24,10 +24,7 @@ const valid_id_check_middleware_1 = require("../middleware/valid-id-check-middle
 const post_existance_check_schema_1 = require("../middleware/post-existance-check-schema");
 const getPostsRouter = () => {
     const router = express_1.default.Router();
-    router.get('/', 
-    // queryPostValidateMiddleware,
-    // validationErrorMiddleware,
-    (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get('/', post_validate_middleware_1.queryPostValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield posts_query_repository_1.postQueryRepository.getAllPosts(req.query);
         res.status(constants_1.HTTP_STATUSES.OK).json(posts);
     }));

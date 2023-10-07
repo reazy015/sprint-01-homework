@@ -24,8 +24,8 @@ export const getPostsRouter = () => {
 
   router.get(
     '/',
-    // queryPostValidateMiddleware,
-    // validationErrorMiddleware,
+    queryPostValidateMiddleware,
+    validationErrorMiddleware,
     async (
       req: CustomQueryRequest<Partial<PostQueryParams>>,
       res: Response<WithPaging<PostViewModel>>,

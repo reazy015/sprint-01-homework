@@ -18,9 +18,13 @@ export const postQueryRepository = {
     const {
       pageSize = DEFAULT_QUERY_PARAMS.pageSize,
       pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
-      sortBy = DEFAULT_QUERY_PARAMS.sortBy,
       sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
     } = queryParams
+
+    const sortBy =
+      queryParams.sortBy && Boolean(queryParams.sortBy.trim())
+        ? queryParams.sortBy
+        : DEFAULT_QUERY_PARAMS.sortBy
 
     const sortDir = sortDirection === 'asc' ? 1 : -1
     const skip = pageSize * (pageNumber - 1)
