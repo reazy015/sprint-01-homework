@@ -59,7 +59,6 @@ export const getBlogsRouter = () => {
 
   router.get(
     '/:id/posts',
-    basicAuthMiddleware,
     validIdCheckMiddleware(),
     validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,

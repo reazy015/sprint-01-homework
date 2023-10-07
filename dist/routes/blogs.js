@@ -38,7 +38,7 @@ const getBlogsRouter = () => {
         }
         res.status(constants_1.HTTP_STATUSES.OK).send(blog);
     }));
-    router.get('/:id/posts', basic_auth_middleware_1.basicAuthMiddleware, (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, (0, blog_validate_middleware_1.queryBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    router.get('/:id/posts', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, ...blog_existance_check_schema_1.blogExistanceCheckMiddleware, (0, blog_validate_middleware_1.queryBlogValidateMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield blogs_query_repository_1.blogsQueryRepository.getAllPostsByBlogId(req.params.id, req.query);
         res.status(constants_1.HTTP_STATUSES.OK).send(posts);
     }));
