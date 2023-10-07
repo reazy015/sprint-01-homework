@@ -80,7 +80,7 @@ export const blogsQueryRepository = {
       sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
     } = queryParams
     const sortDir = sortDirection === 'asc' ? 1 : -1
-    const skip = pageNumber * (pageSize - 1)
+    const skip = pageSize * (pageNumber - 1)
 
     const posts = await postsCollection
       .find({blogId: id})

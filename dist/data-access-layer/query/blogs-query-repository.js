@@ -71,7 +71,7 @@ exports.blogsQueryRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             const { pageSize = DEFAULT_QUERY_PARAMS.pageSize, pageNumber = DEFAULT_QUERY_PARAMS.pageNumber, sortBy = DEFAULT_QUERY_PARAMS.sortBy, sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
             const sortDir = sortDirection === 'asc' ? 1 : -1;
-            const skip = pageNumber * (pageSize - 1);
+            const skip = pageSize * (pageNumber - 1);
             const posts = yield postsCollection
                 .find({ blogId: id })
                 .sort({ [sortBy]: sortDir })
