@@ -20,6 +20,7 @@ import {PostInputModel, PostViewModel} from '../types/post'
 import {blogExistanceCheckMiddleware} from '../middleware/blog-existance-check-schema'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
 import {postByBlogValidateMiddleware} from '../middleware/post-validate-middleware-'
+import {param} from 'express-validator'
 
 export const getBlogsRouter = () => {
   const router = express.Router()
@@ -64,6 +65,8 @@ export const getBlogsRouter = () => {
     ...blogExistanceCheckMiddleware,
     // queryBlogValidateMiddleware(),
     // validationErrorMiddleware,
+    param('pageSize').isInt().default(10),
+    param('pageNumber').isInt().default(1),
     async (
       req: CustomQueryRequest<Partial<BlogQueryParams>, IdURIParam>,
       res: Response<WithPaging<PostViewModel>>,

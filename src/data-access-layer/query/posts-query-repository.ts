@@ -20,7 +20,6 @@ export const postQueryRepository = {
       pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
       sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
     } = queryParams
-
     const sortBy =
       queryParams.sortBy && Boolean(queryParams.sortBy.trim())
         ? queryParams.sortBy
