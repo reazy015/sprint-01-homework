@@ -77,7 +77,7 @@ export const blogsQueryRepository = {
       pageSize = DEFAULT_QUERY_PARAMS.pageSize,
       pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
       sortBy = DEFAULT_QUERY_PARAMS.sortBy,
-      sortDirection = DEFAULT_QUERY_PARAMS.sortDirection,
+      sortDirection = 'asc',
     } = queryParams
     const sortDir = sortDirection === 'asc' ? 1 : -1
     const skip = pageSize * (pageNumber - 1)
