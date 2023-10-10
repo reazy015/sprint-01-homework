@@ -14,6 +14,9 @@ export interface DbInputUser extends User {
   salt: string
   hash: string
 }
+
+export interface InputUserModel extends User {}
+
 export interface DbUser extends WithId<User> {
   salt: string
   hash: string

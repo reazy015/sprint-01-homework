@@ -1,25 +1,16 @@
-import {db} from '../db/db'
+import {usersCommandRepository} from '../data-access-layer/command/users-command-repository'
 import {NewUserCredentials} from '../types/common'
-import {DbInputUser, UserViewModel} from '../types/user'
 import crypto from 'crypto'
-
-const usersCollection = db.collection<DbInputUser>('users')
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
-    const {password, login, email} = newUser
+    const {password} = newUser
     const {salt, hash} = await this._getHash(password)
     const createdAt = new Date().toISOString()
 
-    const createdUser = await usersCollection.insertOne({
-      login: login,
-      email: email,
-      salt: salt,
-      hash: hash,
-      createdAt: createdAt,
-    })
+    const newUserId = await usersCommandRepository.createUser({...newUser, createdAt}, salt, hash)
 
-    return createdUser.acknowledged ? createdUser.insertedId.toString() : null
+    return newUserId
   },
   async _getHash(password: string): Promise<{salt: string; hash: string}> {
     const salt = crypto.randomBytes(10).toString('base64')

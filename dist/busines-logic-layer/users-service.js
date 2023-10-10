@@ -13,23 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersService = void 0;
-const db_1 = require("../db/db");
+const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
 const crypto_1 = __importDefault(require("crypto"));
-const usersCollection = db_1.db.collection('users');
 exports.usersService = {
     addNewUser(newUser) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { password, login, email } = newUser;
+            const { password } = newUser;
             const { salt, hash } = yield this._getHash(password);
             const createdAt = new Date().toISOString();
-            const createdUser = yield usersCollection.insertOne({
-                login: login,
-                email: email,
-                salt: salt,
-                hash: hash,
-                createdAt: createdAt,
-            });
-            return createdUser.acknowledged ? createdUser.insertedId.toString() : null;
+            const newUserId = yield users_command_repository_1.usersCommandRepository.createUser(Object.assign(Object.assign({}, newUser), { createdAt }), salt, hash);
+            return newUserId;
         });
     },
     _getHash(password) {

@@ -14,6 +14,8 @@ import {usersQueryRepository} from '../data-access-layer/query/users-query-repos
 import {usersService} from '../busines-logic-layer/users-service'
 import {newUserValidateMiddleware} from '../middleware/new-user-validate.middleware'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
+import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
+import {usersCommandRepository} from '../data-access-layer/command/users-command-repository'
 
 export const getUsersRouter = () => {
   const router = express.Router()
@@ -51,6 +53,28 @@ export const getUsersRouter = () => {
 
       res.status(HTTP_STATUSES.CREATED).send(createdUser)
     },
+
+    router.delete(
+      '/:id',
+      validIdCheckMiddleware(),
+      validationErrorMiddleware,
+      async (req: CustomRequest<{userId: string}>, res: Response) => {
+        const user = await usersQueryRepository.getSingleUserById(req.params.id)
+
+        if (!user) {
+          res.sendStatus(HTTP_STATUSES.NOT_FOUND)
+          return
+        }
+
+        const deleted = await usersCommandRepository.deleteUserById(req.params.id)
+
+        if (!deleted) {
+          res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
+        }
+
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+      },
+    ),
   )
 
   return router

@@ -2,6 +2,7 @@ import {app} from '../../src/app'
 import request from 'supertest'
 import {CREDENTIALS} from './constants'
 import {HTTP_STATUSES} from '../../src/utils/constants'
+import {ObjectId} from 'mongodb'
 
 describe('Users api', () => {
   beforeAll(async () => {
@@ -139,5 +140,30 @@ describe('Users api', () => {
         },
       ],
     })
+  })
+
+  it('DELETE /users/:id should return 400 if user id invalid', async () => {
+    await request(app).delete('/users/invalid_id').expect(HTTP_STATUSES.BAD_REQUEST)
+  })
+
+  it('DELETE /users/:id should return 404 if user not found', async () => {
+    const userId = new ObjectId()
+    await request(app).delete(`/users/${userId.toString()}`).expect(HTTP_STATUSES.NOT_FOUND)
+  })
+
+  it('DELETE /users/:id should return 204 if user not found, additional methods POST/users', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    const postResponse = await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    await request(app).delete(`/users/${postResponse.body.id}`).expect(HTTP_STATUSES.NO_CONTENT)
   })
 })

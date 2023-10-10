@@ -21,6 +21,8 @@ const users_query_repository_1 = require("../data-access-layer/query/users-query
 const users_service_1 = require("../busines-logic-layer/users-service");
 const new_user_validate_middleware_1 = require("../middleware/new-user-validate.middleware");
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
+const valid_id_check_middleware_1 = require("../middleware/valid-id-check-middleware");
+const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
 const getUsersRouter = () => {
     const router = express_1.default.Router();
     router.get('/', basic_auth_middleware_1.basicAuthMiddleware, user_query_check_schema_1.validateQueryParamsWithDefault, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,7 +41,18 @@ const getUsersRouter = () => {
             return;
         }
         res.status(constants_1.HTTP_STATUSES.CREATED).send(createdUser);
-    }));
+    }), router.delete('/:id', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = yield users_query_repository_1.usersQueryRepository.getSingleUserById(req.params.id);
+        if (!user) {
+            res.sendStatus(constants_1.HTTP_STATUSES.NOT_FOUND);
+            return;
+        }
+        const deleted = yield users_command_repository_1.usersCommandRepository.deleteUserById(req.params.id);
+        if (!deleted) {
+            res.sendStatus(constants_1.HTTP_STATUSES.SERVER_ERROR);
+        }
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
+    })));
     return router;
 };
 exports.getUsersRouter = getUsersRouter;
