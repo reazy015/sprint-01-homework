@@ -9,11 +9,13 @@ const video_1 = require("./routes/video");
 const testing_1 = require("./routes/testing");
 const blogs_1 = require("./routes/blogs");
 const posts_1 = require("./routes/posts");
+const users_1 = require("./routes/users");
 exports.app = (0, express_1.default)();
 const jsonBodyParser = express_1.default.json();
 exports.app.use(jsonBodyParser);
 exports.app.use('/videos', (0, video_1.getVideosRouter)());
 exports.app.use('/blogs', (0, blogs_1.getBlogsRouter)());
 exports.app.use('/posts', (0, posts_1.getPostsRouter)());
+exports.app.use('/users', (0, users_1.getUsersRouter)());
 exports.app.use('/testing/all-data', (0, testing_1.getTestingRouter)());
 //# sourceMappingURL=app.js.map
