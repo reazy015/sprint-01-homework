@@ -9,10 +9,17 @@ describe('Auth api', () => {
   })
 
   it('POST /auth/login returns 400 if invalid request body params', async () => {
-    await request(app)
+    const postResponse = await request(app)
       .post('/auth/login')
-      .send({loginOrEmail: '', password: ''})
+      .send({loginOrEmail: 123123123, password: ''})
       .expect(HTTP_STATUSES.BAD_REQUEST)
+
+    expect(postResponse.body).toEqual({
+      errorsMessages: [
+        {message: expect.any(String), field: 'loginOrEmail'},
+        {message: expect.any(String), field: 'password'},
+      ],
+    })
   })
 
   it('POST /auth/login returns 401 if request valid, but no such user', async () => {
@@ -38,6 +45,6 @@ describe('Auth api', () => {
     await request(app)
       .post('/auth/login')
       .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
-      .expect(HTTP_STATUSES.UNAUTH)
+      .expect(HTTP_STATUSES.NO_CONTENT)
   })
 })

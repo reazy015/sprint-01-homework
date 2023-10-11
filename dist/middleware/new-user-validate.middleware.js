@@ -7,6 +7,7 @@ const EMAIL_REGEXP = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 exports.newUserValidateMiddleware = (0, express_validator_1.checkSchema)({
     login: {
         isString: true,
+        isInt: { negated: true },
         isLength: {
             options: { min: 3, max: 30 },
         },

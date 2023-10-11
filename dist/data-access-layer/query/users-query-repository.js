@@ -56,5 +56,19 @@ exports.usersQueryRepository = {
             };
         });
     },
+    getUserHashAndSaltByEmailOrLogin(emailOrLogin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield usersCollection.findOne({
+                $or: [{ login: emailOrLogin }, { email: emailOrLogin }],
+            });
+            if (!user) {
+                return null;
+            }
+            return {
+                salt: user.salt,
+                hash: user.hash,
+            };
+        });
+    },
 };
 //# sourceMappingURL=users-query-repository.js.map

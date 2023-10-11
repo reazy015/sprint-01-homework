@@ -78,15 +78,19 @@ describe('Users api', () => {
   })
 
   it('POST /users return 400 if login invalid', async () => {
-    await request(app)
+    const postResponse = await request(app)
       .post(`/users`)
       .send({
         email: 'valid@email.com',
-        login: 'a2',
+        login: '123456789011',
         password: 'password',
       })
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .expect(HTTP_STATUSES.BAD_REQUEST)
+
+    expect(postResponse.body).toEqual({
+      errorsMessages: [{message: expect.any(String), field: 'login'}],
+    })
   })
 
   it('POST /users return 400 if password invalid', async () => {

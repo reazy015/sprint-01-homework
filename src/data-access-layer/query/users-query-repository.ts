@@ -50,4 +50,20 @@ export const usersQueryRepository = {
       createdAt: user.createdAt,
     }
   },
+  async getUserHashAndSaltByEmailOrLogin(
+    emailOrLogin: string,
+  ): Promise<{salt: string; hash: string} | null> {
+    const user = await usersCollection.findOne({
+      $or: [{login: emailOrLogin}, {email: emailOrLogin}],
+    })
+
+    if (!user) {
+      return null
+    }
+
+    return {
+      salt: user.salt,
+      hash: user.hash,
+    }
+  },
 }

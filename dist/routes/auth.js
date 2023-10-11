@@ -15,10 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAuthRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const constants_1 = require("../utils/constants");
+const auth_credentials_check_1 = require("../middleware/auth-credentials-check");
+const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
+const users_service_1 = require("../busines-logic-layer/users-service");
 const getAuthRouter = () => {
     const router = express_1.default.Router();
-    router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        res.sendStatus(constants_1.HTTP_STATUSES.NOT_IMPLEMENTED);
+    router.post('/login', auth_credentials_check_1.authCredentialsCheck, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const isUserRegistered = yield users_service_1.usersService.checkUserRegistered(req.body);
+        if (!isUserRegistered) {
+            res.sendStatus(constants_1.HTTP_STATUSES.UNAUTH);
+            return;
+        }
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
     }));
     return router;
 };

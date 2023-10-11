@@ -6,6 +6,7 @@ const EMAIL_REGEXP = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 export const newUserValidateMiddleware = checkSchema({
   login: {
     isString: true,
+    isInt: {negated: true},
     isLength: {
       options: {min: 3, max: 30},
     },

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersService = void 0;
 const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
+const users_query_repository_1 = require("../data-access-layer/query/users-query-repository");
 const crypto_1 = __importDefault(require("crypto"));
 exports.usersService = {
     addNewUser(newUser) {
@@ -25,9 +26,18 @@ exports.usersService = {
             return newUserId;
         });
     },
-    _getHash(password) {
+    checkUserRegistered({ loginOrEmail, password }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const salt = crypto_1.default.randomBytes(10).toString('base64');
+            const saltAndHash = yield users_query_repository_1.usersQueryRepository.getUserHashAndSaltByEmailOrLogin(loginOrEmail);
+            if (!saltAndHash)
+                return false;
+            const result = yield this._getHash(password, saltAndHash.salt);
+            return result.hash === saltAndHash.hash;
+        });
+    },
+    _getHash(password, usersSalt) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const salt = usersSalt !== null && usersSalt !== void 0 ? usersSalt : crypto_1.default.randomBytes(10).toString('base64');
             const interations = 10000;
             return new Promise((resolve, reject) => {
                 crypto_1.default.pbkdf2(password, salt, interations, 64, 'sha512', (error, hash) => {
