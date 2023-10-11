@@ -56,6 +56,7 @@ export const getUsersRouter = () => {
 
     router.delete(
       '/:id',
+      basicAuthMiddleware,
       validIdCheckMiddleware(),
       validationErrorMiddleware,
       async (req: CustomRequest<{userId: string}>, res: Response) => {

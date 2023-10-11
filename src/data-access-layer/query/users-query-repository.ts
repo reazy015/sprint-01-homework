@@ -11,7 +11,10 @@ export const usersQueryRepository = {
       queryParams
     const sort = sortDirection === 'asc' ? 1 : -1
     const filter = {
-      $or: [{login: {$regex: searchLoginTerm}}, {email: {$regex: searchEmailTerm}}],
+      $or: [
+        {login: {$regex: searchLoginTerm, $options: 'i'}},
+        {email: {$regex: searchEmailTerm, $options: 'i'}},
+      ],
     }
 
     const totalUsersCount = await usersCollection.countDocuments(filter)

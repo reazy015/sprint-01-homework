@@ -19,7 +19,10 @@ exports.usersQueryRepository = {
             const { pageNumber, pageSize, sortBy, sortDirection, searchEmailTerm, searchLoginTerm } = queryParams;
             const sort = sortDirection === 'asc' ? 1 : -1;
             const filter = {
-                $or: [{ login: { $regex: searchLoginTerm } }, { email: { $regex: searchEmailTerm } }],
+                $or: [
+                    { login: { $regex: searchLoginTerm, $options: 'i' } },
+                    { email: { $regex: searchEmailTerm, $options: 'i' } },
+                ],
             };
             const totalUsersCount = yield usersCollection.countDocuments(filter);
             const users = yield usersCollection
