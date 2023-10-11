@@ -18,13 +18,15 @@ const video_repository_1 = require("../data-access-layer/video-repository");
 const constants_1 = require("../utils/constants");
 const blogs_command_repository_1 = require("../data-access-layer/command/blogs-command-repository");
 const posts_command_repository_1 = require("../data-access-layer/command/posts-command-repository");
+const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
 const getTestingRouter = () => {
     const router = express_1.default.Router();
     router.delete('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
         video_repository_1.videoRepositry.deleteAllVideos();
         const allBlogsDeleted = yield blogs_command_repository_1.blogsCommandRepository.deleteAllBlogs();
         const allPostsDeleted = yield posts_command_repository_1.postsCommandRepository.deleteAllPosts();
-        if (allBlogsDeleted && allPostsDeleted) {
+        const allUsersDeleted = yield users_command_repository_1.usersCommandRepository.deleteAllUsers();
+        if (allBlogsDeleted && allPostsDeleted && allUsersDeleted) {
             res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
             return;
         }

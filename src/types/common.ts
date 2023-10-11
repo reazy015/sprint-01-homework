@@ -5,7 +5,7 @@ export interface CustomRequest<Body, URIParams = core.ParamsDictionary> extends 
   body: Body
 }
 
-export interface CustomQueryRequest<QueryParams, URIParams = core.ParamsDictionary>
+export interface CustomQueryRequest<QueryParams = core.Query, URIParams = core.ParamsDictionary>
   extends Request<URIParams, {}, {}, QueryParams> {}
 
 export type IdURIParam = {
@@ -21,11 +21,40 @@ export interface WithPaging<T> {
 }
 
 export interface BlogQueryParams {
-  pageNumber: number
-  pageSize: number
+  pageNumber: string
+  pageSize: string
   sortBy: string
   sortDirection: 'asc' | 'desc'
   searchNameTerm: string
 }
 
 export interface PostQueryParams extends Omit<BlogQueryParams, 'searchNameTerm'> {}
+// export interface UserQueryParams extends Omit<BlogQueryParams, 'searchNameTerm'> {
+//   searchLoginTerm: string
+//   searchEmailTerm: string
+// }
+// export type UserQueryParams = {
+//   pageNumber: string
+//   pageSize: string
+//   sortBy: string
+//   sortDirection: 'asc' | 'desc'
+//   searchNameTerm: string
+//   searchLoginTerm: string
+//   searchEmailTerm: string
+// }
+
+export type UserQueryParams = {
+  pageNumber: string
+  pageSize: string
+  sortBy: string
+  sortDirection: 'asc' | 'desc'
+  searchNameTerm: string
+  searchLoginTerm: string
+  searchEmailTerm: string
+}
+
+export type NewUserCredentials = {
+  login: string
+  password: string
+  email: string
+}
