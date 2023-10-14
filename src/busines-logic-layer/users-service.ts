@@ -2,7 +2,7 @@ import {usersCommandRepository} from '../data-access-layer/command/users-command
 import {usersQueryRepository} from '../data-access-layer/query/users-query-repository'
 import {AuthLoginInput} from '../types/auth'
 import {NewUserCredentials} from '../types/common'
-import crypto from 'crypto'
+import bcrypt from 'bcrypt'
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
@@ -19,25 +19,19 @@ export const usersService = {
 
     if (!saltAndHash) return false
 
-    const result = await this._getHash(password, saltAndHash.salt)
+    const result = await bcrypt.compare(password, saltAndHash.hash)
 
-    return result.hash === saltAndHash.hash
+    return result
   },
-  async _getHash(password: string, usersSalt?: string): Promise<{salt: string; hash: string}> {
-    const salt = usersSalt ?? crypto.randomBytes(10).toString('base64')
-    const interations = 10000
+  async _getHash(password: string, userSalt?: string): Promise<{salt: string; hash: string}> {
+    const roundsNumber = 10
+    const salt = userSalt ?? (await bcrypt.genSalt(roundsNumber))
 
-    return new Promise((resolve, reject) => {
-      crypto.pbkdf2(password, salt, interations, 64, 'sha512', (error, hash) => {
-        if (error) {
-          reject(error)
-        }
+    const hash = await bcrypt.hash(password, roundsNumber)
 
-        resolve({
-          salt,
-          hash: hash.toString('base64'),
-        })
-      })
-    })
+    return {
+      salt,
+      hash,
+    }
   },
 }

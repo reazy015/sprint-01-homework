@@ -1,8 +1,8 @@
 Arguments: 
-  /Users/reazy015/.nvm/versions/node/v18.18.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js add uuid
+  /Users/reazy015/.nvm/versions/node/v18.18.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js add bcrypt
 
 PATH: 
-  /Users/reazy015/yandex-cloud/bin:/Users/reazy015/.nvm/versions/node/v18.18.0/bin:/Users/reazy015/.pyenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/reazy015/yandex-cloud/bin:/Users/reazy015/.pyenv/shims
+  /Users/reazy015/yandex-cloud/bin:/Users/reazy015/.nvm/versions/node/v18.18.0/bin:/Users/reazy015/.pyenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/reazy015/yandex-cloud/bin:/Users/reazy015/.pyenv/shims
 
 Yarn version: 
   1.22.10
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/Users/reazy015/projects/node-studies/sprint-01/node_modules/@mongodb-js/saslprep/LICENSE'
+  Error: EACCES: permission denied, mkdir '/Users/reazy015/projects/node-studies/sprint-01/node_modules/make-dir/node_modules/semver'
 
 npm manifest: 
   {
@@ -26,7 +26,8 @@ npm manifest:
       "dotenv": "^16.3.1",
       "express": "^4.18.2",
       "express-validator": "^7.0.1",
-      "mongodb": "^6.1.0"
+      "mongodb": "^6.1.0",
+      "uuid": "^9.0.1"
     },
     "scripts": {
       "dev": "yarn nodemon --inspect dist/index.js",
@@ -3608,6 +3609,11 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
     integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
+  
+  uuid@^9.0.1:
+    version "9.0.1"
+    resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+    integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
   
   v8-compile-cache-lib@^3.0.1:
     version "3.0.1"
