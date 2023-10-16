@@ -62,10 +62,10 @@ const getPostsRouter = () => {
         }
         res.status(constants_1.HTTP_STATUSES.CREATED).json(newPost);
     }));
-    router.post('/:id/comments', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), ...post_existance_check_schema_1.postExistanceCheckMiddleware, validation_error_middleware_1.validationErrorMiddleware, (0, express_validator_1.body)('content')
+    router.post('/:id/comments', (0, valid_id_check_middleware_1.validIdCheckMiddleware)(), ...post_existance_check_schema_1.postExistanceCheckMiddleware, validation_error_middleware_1.validationErrorMiddleware, jwt_verify_middleware_1.jwtVerifyMiddleware, (0, express_validator_1.body)('content')
         .notEmpty()
         .isLength({ min: 20, max: 300 })
-        .withMessage('Incorrect comment content'), validation_error_middleware_1.validationErrorMiddleware, jwt_verify_middleware_1.jwtVerifyMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        .withMessage('Incorrect comment content'), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newCommentId = yield comments_service_1.commentsService.createNewComment({
             userId: req.context.userId,
             postId: req.params.id,

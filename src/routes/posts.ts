@@ -103,12 +103,13 @@ export const getPostsRouter = () => {
     validIdCheckMiddleware(),
     ...postExistanceCheckMiddleware,
     validationErrorMiddleware,
+    jwtVerifyMiddleware,
+
     body('content')
       .notEmpty()
       .isLength({min: 20, max: 300})
       .withMessage('Incorrect comment content'),
     validationErrorMiddleware,
-    jwtVerifyMiddleware,
 
     async (req: CustomRequest<{content: string}>, res: Response<CommentViewModel>) => {
       const newCommentId = await commentsService.createNewComment({

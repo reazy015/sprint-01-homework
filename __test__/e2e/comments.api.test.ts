@@ -206,19 +206,31 @@ describe('/comments', () => {
 })
 
 describe('/posts/:postId/comments', () => {
+  let JWT_TOKEN: string
+  let POST_ID: string
+
   beforeAll(async () => {
     await request(app).delete('/testing/all-data')
-  })
 
-  it('GET/posts/:postId/comments return 404 if post not found', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
     await request(app)
-      .get(`/posts/${new ObjectId().toString()}/comments`)
-      .expect(HTTP_STATUSES.NOT_FOUND)
-  })
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
 
-  it('GET/posts/:postId/comments return 200 and empty items list, additional methods: POST/posts, POST/blogs', async () => {
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+
+    JWT_TOKEN = loginResponse.body.accessToken
+
     const newBlog: BlogInputModel = {
-      name: 'blog_name',
+      name: 'name',
       description: 'description',
       websiteUrl: 'https://websiteurl.com',
     }
@@ -227,7 +239,6 @@ describe('/posts/:postId/comments', () => {
       .post('/blogs')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newBlog)
-      .expect(HTTP_STATUSES.CREATED)
 
     const newPost: PostInputModel = {
       title: 'title',
@@ -240,10 +251,19 @@ describe('/posts/:postId/comments', () => {
       .post('/posts')
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .send(newPost)
-      .expect(HTTP_STATUSES.CREATED)
 
+    POST_ID = newPostResponse.body.id
+  })
+
+  it('GET/posts/:postId/comments return 404 if post not found', async () => {
+    await request(app)
+      .get(`/posts/${new ObjectId().toString()}/comments`)
+      .expect(HTTP_STATUSES.NOT_FOUND)
+  })
+
+  it('GET/posts/:postId/comments return 200 and empty items list, additional methods: POST/posts, POST/blogs', async () => {
     const getCommentsResponse = await request(app)
-      .get(`/posts/${newPostResponse.body.id}/comments`)
+      .get(`/posts/${POST_ID}/comments`)
       .expect(HTTP_STATUSES.OK)
 
     expect(getCommentsResponse.body).toEqual({
@@ -261,66 +281,17 @@ describe('/posts/:postId/comments', () => {
       .expect(HTTP_STATUSES.NOT_FOUND)
   })
 
-  it('POST/posts/:postId/comments return 400 commnet input model incorrect, additional methods: POST/blogs, POST/posts', async () => {
-    const newBlog: BlogInputModel = {
-      name: 'name',
-      description: 'description',
-      websiteUrl: 'https://websiteurl.com',
-    }
-
-    const postBlogResponse = await request(app)
-      .post('/blogs')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newBlog)
-      .expect(HTTP_STATUSES.CREATED)
-
-    const newPost: PostInputModel = {
-      title: 'title',
-      shortDescription: 'shortDescription',
-      content: 'content',
-      blogId: postBlogResponse.body.id,
-    }
-
-    const newPostResponse = await request(app)
-      .post('/posts')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newPost)
-      .expect(HTTP_STATUSES.CREATED)
-
+  it('POST/posts/:postId/comments return 400 comment input model incorrect, additional methods: POST/blogs, POST/posts', async () => {
     await request(app)
-      .post(`/posts/${newPostResponse.body.id}/comments`)
+      .post(`/posts/${POST_ID}/comments`)
+      .set('Authorization', `Bearer ${JWT_TOKEN}`)
       .send({content: ''})
       .expect(HTTP_STATUSES.BAD_REQUEST)
   })
 
   it('POST/posts/:postId/comments return 401 if token not verified, additional methods: POST/blogs, POST/posts', async () => {
-    const newBlog: BlogInputModel = {
-      name: 'name',
-      description: 'description',
-      websiteUrl: 'https://websiteurl.com',
-    }
-
-    const postBlogResponse = await request(app)
-      .post('/blogs')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newBlog)
-      .expect(HTTP_STATUSES.CREATED)
-
-    const newPost: PostInputModel = {
-      title: 'title',
-      shortDescription: 'shortDescription',
-      content: 'content',
-      blogId: postBlogResponse.body.id,
-    }
-
-    const newPostResponse = await request(app)
-      .post('/posts')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newPost)
-      .expect(HTTP_STATUSES.CREATED)
-
     await request(app)
-      .post(`/posts/${newPostResponse.body.id}/comments`)
+      .post(`/posts/${POST_ID}/comments`)
       .set(
         'Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6IlZhbGlkX2xvZ2luIiwiZW1haWwiOiJ2YWxpZEBlbWFpbC5jb20iLCJpZCI6IjY1MmJmOWE5YTU0OWY2Y2QzN2ZiMjY3NSIsImNyZWF0ZWRBdCI6IjIwMjMtMTAtMTVUMTQ6Mzk6MzcuOTE1WiIsImlhdCI6MTY5NzM4MDc5MywiZXhwIjoxNjk3Mzg0MzkzfQ.GYeAXPdPICwufduwf_M05elE4RxcFOIt8bbVcnzC64o',
@@ -330,52 +301,10 @@ describe('/posts/:postId/comments', () => {
   })
 
   it('POST/posts/:postId/comments return 201 and new comment, additional methods: POST/users, POST/auth/login, POST/blogs, POST/posts', async () => {
-    const newUserRequestBody = {
-      email: 'valid@email.com',
-      login: 'Valid_login',
-      password: '313373valid_password',
-    }
-
-    await request(app)
-      .post(`/users`)
-      .send(newUserRequestBody)
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .expect(HTTP_STATUSES.CREATED)
-
-    const loginResponse = await request(app)
-      .post('/auth/login')
-      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
-      .expect(HTTP_STATUSES.OK)
-
-    const newBlog: BlogInputModel = {
-      name: 'name',
-      description: 'description',
-      websiteUrl: 'https://websiteurl.com',
-    }
-
-    const postBlogResponse = await request(app)
-      .post('/blogs')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newBlog)
-      .expect(HTTP_STATUSES.CREATED)
-
-    const newPost: PostInputModel = {
-      title: 'title',
-      shortDescription: 'shortDescription',
-      content: 'content',
-      blogId: postBlogResponse.body.id,
-    }
-
-    const newPostResponse = await request(app)
-      .post('/posts')
-      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
-      .send(newPost)
-      .expect(HTTP_STATUSES.CREATED)
-
     const newComment = {content: 'some new valid comment'}
     const newCommentPostResponse = await request(app)
-      .post(`/posts/${newPostResponse.body.id}/comments`)
-      .set('Authorization', `Bearer ${loginResponse.body.accessToken}`)
+      .post(`/posts/${POST_ID}/comments`)
+      .set('Authorization', `Bearer ${JWT_TOKEN}`)
       .send(newComment)
       .expect(HTTP_STATUSES.CREATED)
 
