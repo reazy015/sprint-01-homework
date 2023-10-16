@@ -13,6 +13,7 @@ exports.postQueryRepository = void 0;
 const mongodb_1 = require("mongodb");
 const db_1 = require("../../db/db");
 const postsCollection = db_1.db.collection('posts');
+const commentsCollection = db_1.db.collection('comments');
 const DEFAULT_QUERY_PARAMS = {
     searchTermName: '',
     pageSize: 10,
@@ -23,10 +24,7 @@ const DEFAULT_QUERY_PARAMS = {
 exports.postQueryRepository = {
     getAllPosts(queryParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { 
-            // pageSize = DEFAULT_QUERY_PARAMS.pageSize,
-            // pageNumber = DEFAULT_QUERY_PARAMS.pageNumber,
-            sortDirection = DEFAULT_QUERY_PARAMS.sortDirection, } = queryParams;
+            const { sortDirection = DEFAULT_QUERY_PARAMS.sortDirection } = queryParams;
             const pageSize = queryParams.pageSize && Number.isInteger(+queryParams.pageSize) ? +queryParams.pageSize : 10;
             const pageNumber = queryParams.pageNumber && Number.isInteger(+queryParams.pageNumber)
                 ? +queryParams.pageNumber
@@ -74,6 +72,31 @@ exports.postQueryRepository = {
                     createdAt: post.createdAt,
                 }
                 : null;
+        });
+    },
+    getCommentsByPostId(postId, queryParams) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { sortBy, sortDirection, pageNumber, pageSize } = queryParams;
+            const sort = sortDirection === 'asc' ? 1 : -1;
+            const totalCommentsCount = yield commentsCollection.countDocuments();
+            const comments = yield commentsCollection
+                .find({ postId: postId })
+                .sort({ [sortBy]: sort })
+                .skip(+pageSize * (+pageNumber - 1))
+                .limit(+pageSize)
+                .toArray();
+            return {
+                page: +pageNumber,
+                pageSize: +pageSize,
+                totalCount: totalCommentsCount,
+                pagesCount: Math.ceil(totalCommentsCount / +pageSize),
+                items: comments.map((comment) => ({
+                    id: comment._id.toString(),
+                    content: comment.content,
+                    commentatorInfo: comment.commentatorInfo,
+                    createdAt: comment.createdAt,
+                })),
+            };
         });
     },
 };

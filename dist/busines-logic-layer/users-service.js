@@ -16,6 +16,11 @@ exports.usersService = void 0;
 const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
 const users_query_repository_1 = require("../data-access-layer/query/users-query-repository");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+dotenv_1.default.config();
+const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key';
+const TOKEN_EXPIRES_IN = '1h';
 exports.usersService = {
     addNewUser(newUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,6 +38,22 @@ exports.usersService = {
                 return false;
             const result = yield bcrypt_1.default.compare(password, saltAndHash.hash);
             return result;
+        });
+    },
+    loginUser({ loginOrEmail, password }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield users_query_repository_1.usersQueryRepository.getUserByEmailOrLogin(loginOrEmail);
+            if (!user)
+                return null;
+            const userExists = yield bcrypt_1.default.compare(password, user.hash);
+            if (!userExists)
+                return null;
+            return yield jsonwebtoken_1.default.sign({
+                login: user.login,
+                email: user.email,
+                id: user.id,
+                createdAt: user.createdAt,
+            }, SECREY_KEY, { expiresIn: TOKEN_EXPIRES_IN });
         });
     },
     _getHash(password, userSalt) {

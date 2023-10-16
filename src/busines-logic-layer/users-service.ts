@@ -3,6 +3,13 @@ import {usersQueryRepository} from '../data-access-layer/query/users-query-repos
 import {AuthLoginInput} from '../types/auth'
 import {NewUserCredentials} from '../types/common'
 import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
+
+dotenv.config()
+
+const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key'
+const TOKEN_EXPIRES_IN = '1h'
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
@@ -22,6 +29,26 @@ export const usersService = {
     const result = await bcrypt.compare(password, saltAndHash.hash)
 
     return result
+  },
+  async loginUser({loginOrEmail, password}: AuthLoginInput): Promise<string | null> {
+    const user = await usersQueryRepository.getUserByEmailOrLogin(loginOrEmail)
+
+    if (!user) return null
+
+    const userExists = await bcrypt.compare(password, user.hash)
+
+    if (!userExists) return null
+
+    return await jwt.sign(
+      {
+        login: user.login,
+        email: user.email,
+        id: user.id,
+        createdAt: user.createdAt,
+      },
+      SECREY_KEY,
+      {expiresIn: TOKEN_EXPIRES_IN},
+    )
   },
   async _getHash(password: string, userSalt?: string): Promise<{salt: string; hash: string}> {
     const roundsNumber = 10

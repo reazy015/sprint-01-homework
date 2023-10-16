@@ -73,5 +73,21 @@ exports.usersQueryRepository = {
             };
         });
     },
+    getUserByEmailOrLogin(emailOrLogin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield usersCollection.findOne({
+                $or: [{ login: emailOrLogin }, { email: emailOrLogin }],
+            });
+            if (!user)
+                return null;
+            return {
+                id: user._id.toString(),
+                login: user.login,
+                email: user.email,
+                createdAt: user.createdAt,
+                hash: user.hash,
+            };
+        });
+    },
 };
 //# sourceMappingURL=users-query-repository.js.map
