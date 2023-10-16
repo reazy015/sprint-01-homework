@@ -21,5 +21,6 @@ exports.HTTP_STATUSES = {
     NOT_FOUND: 404,
     SERVER_ERROR: 500,
     NOT_IMPLEMENTED: 501,
+    FORBIDDEN: 403,
 };
 //# sourceMappingURL=constants.js.map

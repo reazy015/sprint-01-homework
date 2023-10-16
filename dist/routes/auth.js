@@ -18,15 +18,19 @@ const constants_1 = require("../utils/constants");
 const auth_credentials_check_1 = require("../middleware/auth-credentials-check");
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
 const users_service_1 = require("../busines-logic-layer/users-service");
+const jwt_verify_middleware_1 = require("../middleware/jwt-verify-middleware");
 const getAuthRouter = () => {
     const router = express_1.default.Router();
     router.post('/login', auth_credentials_check_1.authCredentialsCheck, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const isUserRegistered = yield users_service_1.usersService.checkUserRegistered(req.body);
-        if (!isUserRegistered) {
+        const accessToken = yield users_service_1.usersService.loginUser(req.body);
+        if (!accessToken) {
             res.sendStatus(constants_1.HTTP_STATUSES.UNAUTH);
             return;
         }
-        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
+        res.status(constants_1.HTTP_STATUSES.OK).send({ accessToken });
+    }));
+    router.get('/me', jwt_verify_middleware_1.jwtVerifyMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        res.status(constants_1.HTTP_STATUSES.OK).send(req.context.userId);
     }));
     return router;
 };

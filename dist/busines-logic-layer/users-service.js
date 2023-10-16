@@ -15,7 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersService = void 0;
 const users_command_repository_1 = require("../data-access-layer/command/users-command-repository");
 const users_query_repository_1 = require("../data-access-layer/query/users-query-repository");
-const crypto_1 = __importDefault(require("crypto"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+dotenv_1.default.config();
+const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key';
+const TOKEN_EXPIRES_IN = '1h';
 exports.usersService = {
     addNewUser(newUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,25 +36,35 @@ exports.usersService = {
             const saltAndHash = yield users_query_repository_1.usersQueryRepository.getUserHashAndSaltByEmailOrLogin(loginOrEmail);
             if (!saltAndHash)
                 return false;
-            const result = yield this._getHash(password, saltAndHash.salt);
-            return result.hash === saltAndHash.hash;
+            const result = yield bcrypt_1.default.compare(password, saltAndHash.hash);
+            return result;
         });
     },
-    _getHash(password, usersSalt) {
+    loginUser({ loginOrEmail, password }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const salt = usersSalt !== null && usersSalt !== void 0 ? usersSalt : crypto_1.default.randomBytes(10).toString('base64');
-            const interations = 10000;
-            return new Promise((resolve, reject) => {
-                crypto_1.default.pbkdf2(password, salt, interations, 64, 'sha512', (error, hash) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve({
-                        salt,
-                        hash: hash.toString('base64'),
-                    });
-                });
-            });
+            const user = yield users_query_repository_1.usersQueryRepository.getUserByEmailOrLogin(loginOrEmail);
+            if (!user)
+                return null;
+            const userExists = yield bcrypt_1.default.compare(password, user.hash);
+            if (!userExists)
+                return null;
+            return yield jsonwebtoken_1.default.sign({
+                login: user.login,
+                email: user.email,
+                id: user.id,
+                createdAt: user.createdAt,
+            }, SECREY_KEY, { expiresIn: TOKEN_EXPIRES_IN });
+        });
+    },
+    _getHash(password, userSalt) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const roundsNumber = 10;
+            const salt = userSalt !== null && userSalt !== void 0 ? userSalt : (yield bcrypt_1.default.genSalt(roundsNumber));
+            const hash = yield bcrypt_1.default.hash(password, roundsNumber);
+            return {
+                salt,
+                hash,
+            };
         });
     },
 };

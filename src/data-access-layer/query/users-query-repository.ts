@@ -69,4 +69,21 @@ export const usersQueryRepository = {
       hash: user.hash,
     }
   },
+  async getUserByEmailOrLogin(
+    emailOrLogin: string,
+  ): Promise<(UserViewModel & {hash: string}) | null> {
+    const user = await usersCollection.findOne({
+      $or: [{login: emailOrLogin}, {email: emailOrLogin}],
+    })
+
+    if (!user) return null
+
+    return {
+      id: user._id.toString(),
+      login: user.login,
+      email: user.email,
+      createdAt: user.createdAt,
+      hash: user.hash,
+    }
+  },
 }

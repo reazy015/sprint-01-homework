@@ -13,7 +13,7 @@ indent_style=space
 indent_size=2
 
 
-[*.jsx,*.tsx,*.js,*.ts]
+[*.jsx,*.tsx,*.js,*.ts, *.*.test.ts]
 indent_style=space
 indent_size=2
 max_line_length=100

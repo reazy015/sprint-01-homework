@@ -28,20 +28,14 @@ export interface BlogQueryParams {
   searchNameTerm: string
 }
 
+export type CommentQueryParams = {
+  pageNumber: string
+  pageSize: string
+  sortBy: string
+  sortDirection: 'asc' | 'desc'
+}
+
 export interface PostQueryParams extends Omit<BlogQueryParams, 'searchNameTerm'> {}
-// export interface UserQueryParams extends Omit<BlogQueryParams, 'searchNameTerm'> {
-//   searchLoginTerm: string
-//   searchEmailTerm: string
-// }
-// export type UserQueryParams = {
-//   pageNumber: string
-//   pageSize: string
-//   sortBy: string
-//   sortDirection: 'asc' | 'desc'
-//   searchNameTerm: string
-//   searchLoginTerm: string
-//   searchEmailTerm: string
-// }
 
 export type UserQueryParams = {
   pageNumber: string

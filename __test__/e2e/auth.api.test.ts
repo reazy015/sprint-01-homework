@@ -42,9 +42,41 @@ describe('Auth api', () => {
       .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
       .expect(HTTP_STATUSES.CREATED)
 
-    await request(app)
+    const loginResponse = await request(app)
       .post('/auth/login')
       .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
-      .expect(HTTP_STATUSES.NO_CONTENT)
+      .expect(HTTP_STATUSES.OK)
+
+    expect(loginResponse.body).toEqual({
+      accessToken: expect.any(String),
+    })
+  })
+
+  it('GET/auth/me should 401 if unauthorized', async () => {
+    await request(app).get('/auth/me').expect(HTTP_STATUSES.UNAUTH)
+  })
+
+  it('GET/auth/me should 200 and user id, additional methods: POST/users, POST/auth/login', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+      .expect(HTTP_STATUSES.OK)
+
+    await request(app)
+      .get('/auth/me')
+      .set('Authorization', `Bearer ${loginResponse.body.accessToken}`)
+      .expect(HTTP_STATUSES.OK)
   })
 })
