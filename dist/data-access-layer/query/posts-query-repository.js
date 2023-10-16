@@ -78,7 +78,7 @@ exports.postQueryRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             const { sortBy, sortDirection, pageNumber, pageSize } = queryParams;
             const sort = sortDirection === 'asc' ? 1 : -1;
-            const totalCommentsCount = yield commentsCollection.countDocuments();
+            const totalCommentsCount = yield commentsCollection.countDocuments({ postId: postId });
             const comments = yield commentsCollection
                 .find({ postId: postId })
                 .sort({ [sortBy]: sort })

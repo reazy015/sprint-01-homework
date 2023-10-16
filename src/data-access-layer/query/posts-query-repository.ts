@@ -80,7 +80,7 @@ export const postQueryRepository = {
     const {sortBy, sortDirection, pageNumber, pageSize} = queryParams
     const sort = sortDirection === 'asc' ? 1 : -1
 
-    const totalCommentsCount = await commentsCollection.countDocuments()
+    const totalCommentsCount = await commentsCollection.countDocuments({postId: postId})
     const comments = await commentsCollection
       .find({postId: postId})
       .sort({[sortBy]: sort})
