@@ -3,13 +3,13 @@ import {HTTP_STATUSES} from '../utils/constants'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
 import {CustomRequest} from '../types/common'
-import {commentsQueryRepository} from '../data-access-layer/query/comments-query-repository'
-import {CommentViewModel} from '../types/comment'
+import {body} from 'express-validator'
+import {commentsService} from '../domain/comments-service'
+import {commentBelongsToMiddleware} from '../middleware/comment-belongs-to-middleware'
 import {commentExistanceCheckMiddleware} from '../middleware/comment-existance-check-schema'
 import {jwtVerifyMiddleware} from '../middleware/jwt-verify-middleware'
-import {commentBelongsToMiddleware} from '../middleware/comment-belongs-to-middleware'
-import {body} from 'express-validator'
-import {commentsService} from '../busines-logic-layer/comments-service'
+import {commentsQueryRepository} from '../repositories/query/comments-query-repository'
+import {CommentViewModel} from '../types/comment'
 
 export const getCommentsRouter = () => {
   const router = express.Router()

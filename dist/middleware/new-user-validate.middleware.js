@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newUserValidateMiddleware = void 0;
+exports.newUserValidateMiddleware = exports.EMAIL_REGEXP = void 0;
 const express_validator_1 = require("express-validator");
 const LOGIN_REGEXP = /^[a-zA-Z0-9_-]*$/;
-const EMAIL_REGEXP = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+exports.EMAIL_REGEXP = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 exports.newUserValidateMiddleware = (0, express_validator_1.checkSchema)({
     login: {
         isString: true,
@@ -24,7 +24,7 @@ exports.newUserValidateMiddleware = (0, express_validator_1.checkSchema)({
     email: {
         isString: true,
         matches: {
-            options: EMAIL_REGEXP,
+            options: exports.EMAIL_REGEXP,
         },
     },
 });

@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
-import {authRepository} from '../data-access-layer/auth-repository'
 import {HTTP_STATUSES} from '../utils/constants'
+import {authRepository} from '../repositories/auth-repository'
 
 export const basicAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const auth = req.headers.authorization

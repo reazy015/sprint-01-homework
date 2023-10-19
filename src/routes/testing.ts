@@ -1,10 +1,10 @@
 import express from 'express'
-import {videoRepositry} from '../data-access-layer/video-repository'
+import {blogsCommandRepository} from '../repositories/command/blogs-command-repository'
+import {commentsCommandRespository} from '../repositories/command/comments-command-repository'
+import {postsCommandRepository} from '../repositories/command/posts-command-repository'
+import {usersCommandRepository} from '../repositories/command/users-command-repository'
+import {videoRepositry} from '../repositories/video-repository'
 import {HTTP_STATUSES} from '../utils/constants'
-import {blogsCommandRepository} from '../data-access-layer/command/blogs-command-repository'
-import {postsCommandRepository} from '../data-access-layer/command/posts-command-repository'
-import {usersCommandRepository} from '../data-access-layer/command/users-command-repository'
-import {commentsCommandRespository} from '../data-access-layer/command/comments-command-repository'
 
 export const getTestingRouter = () => {
   const router = express.Router()

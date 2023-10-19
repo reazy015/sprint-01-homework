@@ -17,6 +17,18 @@ export interface DbInputUser extends User {
 
 export interface InputUserModel extends User {}
 
+export interface InputNoneConfirmedUserModel extends User {
+  confirmationCode: string | null
+  confirmationSentDate: string
+  expiresIn: string | null
+  confirmed: boolean
+}
+
+export interface DbInputNoneConfirmedUserModel extends InputNoneConfirmedUserModel {
+  hash: string
+  salt: string
+}
+
 export interface DbUser extends WithId<User> {
   salt: string
   hash: string

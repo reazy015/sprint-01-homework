@@ -17,8 +17,10 @@ const express_1 = __importDefault(require("express"));
 const constants_1 = require("../utils/constants");
 const auth_credentials_check_1 = require("../middleware/auth-credentials-check");
 const validation_error_middleware_1 = require("../middleware/validation-error-middleware");
-const users_service_1 = require("../busines-logic-layer/users-service");
 const jwt_verify_middleware_1 = require("../middleware/jwt-verify-middleware");
+const new_user_validate_middleware_1 = require("../middleware/new-user-validate.middleware");
+const users_service_1 = require("../domain/users-service");
+const express_validator_1 = require("express-validator");
 const getAuthRouter = () => {
     const router = express_1.default.Router();
     router.post('/login', auth_credentials_check_1.authCredentialsCheck, validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -27,10 +29,35 @@ const getAuthRouter = () => {
             res.sendStatus(constants_1.HTTP_STATUSES.UNAUTH);
             return;
         }
-        res.status(constants_1.HTTP_STATUSES.OK).send({ accessToken });
+        res.status(constants_1.HTTP_STATUSES.OK).json({ accessToken });
     }));
     router.get('/me', jwt_verify_middleware_1.jwtVerifyMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(constants_1.HTTP_STATUSES.OK).send(req.context.userId);
+    }));
+    router.post('/registration', new_user_validate_middleware_1.newUserValidateMiddleware, validation_error_middleware_1.validationErrorMiddleware, 
+    // confirmationCheckMiddleware,
+    (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const code = yield users_service_1.usersService.registerNewUser(req.body);
+        if (!code) {
+            res.sendStatus(constants_1.HTTP_STATUSES.BAD_REQUEST);
+            return;
+        }
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
+    }));
+    router.post('/registration-confirmation', (0, express_validator_1.body)('code').notEmpty().withMessage('invalid code'), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const confirmed = yield users_service_1.usersService.confirmUserRegistration(req.body.code);
+        if (!confirmed) {
+            res.sendStatus(constants_1.HTTP_STATUSES.BAD_REQUEST);
+            return;
+        }
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
+    }));
+    router.post('/registration-email-resending', (0, express_validator_1.body)('email').matches(new_user_validate_middleware_1.EMAIL_REGEXP).withMessage('Incorrect email'), validation_error_middleware_1.validationErrorMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const emailResent = yield users_service_1.usersService.resendConfirmationEmail(req.body.email);
+        if (!emailResent) {
+            res.sendStatus(constants_1.HTTP_STATUSES.BAD_REQUEST).json({ message: 'Something went wrong' });
+        }
+        res.sendStatus(constants_1.HTTP_STATUSES.NO_CONTENT);
     }));
     return router;
 };

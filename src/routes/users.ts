@@ -10,12 +10,12 @@ import {
   WithPaging,
 } from '../types/common'
 import {UserViewModel} from '../types/user'
-import {usersQueryRepository} from '../data-access-layer/query/users-query-repository'
-import {usersService} from '../busines-logic-layer/users-service'
 import {newUserValidateMiddleware} from '../middleware/new-user-validate.middleware'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
-import {usersCommandRepository} from '../data-access-layer/command/users-command-repository'
+import {usersQueryRepository} from '../repositories/query/users-query-repository'
+import {usersService} from '../domain/users-service'
+import {usersCommandRepository} from '../repositories/command/users-command-repository'
 
 export const getUsersRouter = () => {
   const router = express.Router()

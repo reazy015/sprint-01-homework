@@ -1,13 +1,13 @@
 import {HTTP_STATUSES} from './../utils/constants'
 import express, {Request, Response} from 'express'
 import {Resolutions, Video} from '../types/video'
-import {videoRepositry} from '../data-access-layer/video-repository'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {
   getVideoByIdMiddleware,
   postVideoMiddleware,
   putVideoMiddleware,
 } from '../middleware/video-validate-middleware'
+import {videoRepositry} from '../repositories/video-repository'
 
 export const getVideosRouter = () => {
   const router = express.Router()
