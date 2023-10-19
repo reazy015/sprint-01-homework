@@ -99,5 +99,11 @@ exports.usersQueryRepository = {
             return user.confirmationCode;
         });
     },
+    isConfirmedUser(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield noneConfirmedUsersCollection.findOne({ email });
+            return user ? user.confirmed : false;
+        });
+    },
 };
 //# sourceMappingURL=users-query-repository.js.map

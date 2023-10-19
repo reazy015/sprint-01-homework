@@ -20,18 +20,18 @@ const confirmationCheckMiddleware = (req, res, next) => __awaiter(void 0, void 0
     if (!user) {
         return next();
     }
-    if (new Date(user.expiresIn) < new Date()) {
-        res.status(constants_1.HTTP_STATUSES.BAD_REQUEST).json({
-            message: 'Confirmation code expired, ask for confirmation code resend',
-        });
-        return;
-    }
     if (new Date(user.expiresIn) > new Date()) {
         res.status(constants_1.HTTP_STATUSES.BAD_REQUEST).json({
             message: 'Confirmation code sent, please check your email and try a bit later',
         });
         return;
     }
+    // if (new Date(user.expiresIn!) < new Date()) {
+    //   res.status(HTTP_STATUSES.BAD_REQUEST).json({
+    //     message: 'Confirmation code expired, ask for confirmation code resend',
+    //   })
+    //   return
+    // }
     if (user.confirmed) {
         res.sendStatus(constants_1.HTTP_STATUSES.BAD_REQUEST).json({
             message: 'User already confirmed',

@@ -19,7 +19,9 @@ describe('Auth api', () => {
     await request(app).delete('/testing/all-data')
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await request(app).delete('/testing/all-data')
+
     sendMailMock.mockClear()
   })
 
