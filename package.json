@@ -16,7 +16,8 @@
     "dev": "yarn nodemon --inspect dist/index.js",
     "watch": "tsc -w",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "vercel-build": "echo hello"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
