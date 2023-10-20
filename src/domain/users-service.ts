@@ -100,11 +100,13 @@ export const usersService = {
     return userConfirmed
   },
   async resendConfirmationEmail(email: string): Promise<boolean> {
-    const confirmationCode = await usersQueryRepository.getUserConfirmationCodeByEmail(email)
+    const user = await usersQueryRepository.getUserByEmailOrLogin(email)
 
-    if (!confirmationCode) {
+    if (!user) {
       return false
     }
+
+    const confirmationCode = uuidv4()
 
     const emailResent = await mailService.sendConfimationEmail(email, confirmationCode)
 
