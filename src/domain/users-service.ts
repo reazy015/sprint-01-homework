@@ -1,16 +1,13 @@
 import {AuthLoginInput} from '../types/auth'
 import {NewUserCredentials} from '../types/common'
 import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import {usersCommandRepository} from '../repositories/command/users-command-repository'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {mailService} from '../application/mail-service'
 import crypto from 'crypto'
+import {SETTINGS} from '../shared/configs'
 
-dotenv.config()
-
-const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key'
 const TOKEN_EXPIRES_IN = '1h'
 
 export const usersService = {
@@ -48,7 +45,7 @@ export const usersService = {
         id: user.id,
         createdAt: user.createdAt,
       },
-      SECREY_KEY,
+      SETTINGS.SECRET_KEY,
       {expiresIn: TOKEN_EXPIRES_IN},
     )
   },

@@ -1,11 +1,9 @@
-import dotenv from 'dotenv'
 import {MongoClient} from 'mongodb'
+import {SETTINGS} from '../shared/configs'
 
-dotenv.config()
+const DB_URL = SETTINGS.DB_URL
 
-const db_url = process.env.DB_URL || 'mongodb://localhost:27017/<db-name>'
-
-const client = new MongoClient(db_url)
+const client = new MongoClient(DB_URL)
 export const db = client.db()
 
 export const rundb = async () => {

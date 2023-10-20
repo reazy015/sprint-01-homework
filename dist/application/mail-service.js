@@ -14,19 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mailService = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const configs_1 = require("../shared/configs");
 exports.mailService = {
     sendConfimationEmail(email, confirmationCode) {
         return __awaiter(this, void 0, void 0, function* () {
             const transport = nodemailer_1.default.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'redshuhart015@gmail.com',
-                    pass: 'wwhkbzjzhcwofwqj',
+                    user: configs_1.SETTINGS.EMAIL_USER,
+                    pass: configs_1.SETTINGS.EMAIL_PASS,
                 },
             });
             try {
                 yield transport.sendMail({
-                    from: '"It-kamasutra 👻" <redshuhart015@gmail.com>',
+                    from: `"It-kamasutra 👻" <${configs_1.SETTINGS.EMAIL_USER}>`,
                     to: email,
                     subject: 'Hello ✔',
                     text: 'Hello world?',

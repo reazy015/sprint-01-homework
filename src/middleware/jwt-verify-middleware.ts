@@ -1,11 +1,8 @@
 import {NextFunction, Response, Request} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
-import dotenv from 'dotenv'
 import {UserViewModel} from '../types/user'
 import jwt from 'jsonwebtoken'
-
-dotenv.config()
-const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key'
+import {SETTINGS} from '../shared/configs'
 
 export const jwtVerifyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {
@@ -22,7 +19,7 @@ export const jwtVerifyMiddleware = async (req: Request, res: Response, next: Nex
   let verifiedUser
 
   try {
-    verifiedUser = (await jwt.verify(bearerToken, SECREY_KEY)) as UserViewModel
+    verifiedUser = (await jwt.verify(bearerToken, SETTINGS.SECRET_KEY)) as UserViewModel
   } catch (error) {
     res.status(HTTP_STATUSES.UNAUTH).send(error)
     return

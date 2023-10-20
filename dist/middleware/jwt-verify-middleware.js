@@ -14,10 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwtVerifyMiddleware = void 0;
 const constants_1 = require("../utils/constants");
-const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-dotenv_1.default.config();
-const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key';
+const configs_1 = require("../shared/configs");
 const jwtVerifyMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.headers.authorization) {
         res.sendStatus(constants_1.HTTP_STATUSES.UNAUTH);
@@ -30,7 +28,7 @@ const jwtVerifyMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0
     }
     let verifiedUser;
     try {
-        verifiedUser = (yield jsonwebtoken_1.default.verify(bearerToken, SECREY_KEY));
+        verifiedUser = (yield jsonwebtoken_1.default.verify(bearerToken, configs_1.SETTINGS.SECRET_KEY));
     }
     catch (error) {
         res.status(constants_1.HTTP_STATUSES.UNAUTH).send(error);

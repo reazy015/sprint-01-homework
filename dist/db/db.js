@@ -8,16 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rundb = exports.db = void 0;
-const dotenv_1 = __importDefault(require("dotenv"));
 const mongodb_1 = require("mongodb");
-dotenv_1.default.config();
-const db_url = process.env.DB_URL || 'mongodb://localhost:27017/<db-name>';
-const client = new mongodb_1.MongoClient(db_url);
+const configs_1 = require("../shared/configs");
+const DB_URL = configs_1.SETTINGS.DB_URL;
+const client = new mongodb_1.MongoClient(DB_URL);
 exports.db = client.db();
 const rundb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

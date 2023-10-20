@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "yarn nodemon --inspect dist/index.js",
     "watch": "tsc -w",
-    "compile": "tsc",
+    "build": "tsc",
     "test": "jest"
   },
   "devDependencies": {

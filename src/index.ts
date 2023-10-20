@@ -1,7 +1,8 @@
 import {app} from './app'
 import {rundb} from './db/db'
+import {SETTINGS} from './shared/configs'
 
-const PORT = process.env.PORT || 5000
+const PORT = SETTINGS.PORT
 
 rundb()
 

@@ -14,14 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const users_command_repository_1 = require("../repositories/command/users-command-repository");
 const users_query_repository_1 = require("../repositories/query/users-query-repository");
 const mail_service_1 = require("../application/mail-service");
 const crypto_1 = __importDefault(require("crypto"));
-dotenv_1.default.config();
-const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key';
+const configs_1 = require("../shared/configs");
 const TOKEN_EXPIRES_IN = '1h';
 exports.usersService = {
     addNewUser(newUser) {
@@ -55,7 +53,7 @@ exports.usersService = {
                 email: user.email,
                 id: user.id,
                 createdAt: user.createdAt,
-            }, SECREY_KEY, { expiresIn: TOKEN_EXPIRES_IN });
+            }, configs_1.SETTINGS.SECRET_KEY, { expiresIn: TOKEN_EXPIRES_IN });
         });
     },
     _getHash(password, userSalt) {
