@@ -1,10 +1,7 @@
 {
-    "version": 2,
-    "name": "it-kamasutra-hw",
-    "builds": [
-       { "src": "dist/index.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-       { "src": "/(.*)", "dest": "dist/index.js" }
-    ]
- }
+  "version": 2,
+  "name": "it-kamasutra-hw",
+  "builds": [{"src": "dist/index.js", "use": "@vercel/node"}],
+  "routes": [{"src": "/(.*)", "dest": "dist/index.js"}],
+  "buildCommand": "yarn build"
+}
