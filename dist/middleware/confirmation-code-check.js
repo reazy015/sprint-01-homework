@@ -17,12 +17,13 @@ exports.confirmationCodeCheck = (0, express_validator_1.checkSchema)({
         notEmpty: true,
         custom: {
             options: (code) => __awaiter(void 0, void 0, void 0, function* () {
+                const codeExists = yield users_query_repository_1.usersQueryRepository.confirmationCodeExistsCheck(code);
+                if (!codeExists) {
+                    throw new Error('No such confirmation code');
+                }
                 const confirmed = yield users_query_repository_1.usersQueryRepository.isConfirmedUserByCode(code);
                 if (confirmed) {
                     throw new Error('User already confirmed');
-                }
-                else {
-                    throw new Error('No such confirmation code');
                 }
             }),
         },

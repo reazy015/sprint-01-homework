@@ -106,4 +106,9 @@ export const usersQueryRepository = {
 
     return user ? user.confirmed : false
   },
+  async confirmationCodeExistsCheck(confirmationCode: string): Promise<boolean> {
+    const found = await noneConfirmedUsersCollection.findOne({confirmationCode})
+
+    return found ? true : false
+  },
 }

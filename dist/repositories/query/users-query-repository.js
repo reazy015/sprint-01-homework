@@ -111,5 +111,11 @@ exports.usersQueryRepository = {
             return user ? user.confirmed : false;
         });
     },
+    confirmationCodeExistsCheck(confirmationCode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const found = yield noneConfirmedUsersCollection.findOne({ confirmationCode });
+            return found ? true : false;
+        });
+    },
 };
 //# sourceMappingURL=users-query-repository.js.map

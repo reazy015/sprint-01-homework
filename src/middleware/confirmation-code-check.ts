@@ -6,12 +6,16 @@ export const confirmationCodeCheck = checkSchema({
     notEmpty: true,
     custom: {
       options: async (code: string) => {
+        const codeExists = await usersQueryRepository.confirmationCodeExistsCheck(code)
+
+        if (!codeExists) {
+          throw new Error('No such confirmation code')
+        }
+
         const confirmed = await usersQueryRepository.isConfirmedUserByCode(code)
 
         if (confirmed) {
           throw new Error('User already confirmed')
-        } else {
-          throw new Error('No such confirmation code')
         }
       },
     },
