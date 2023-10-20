@@ -9,9 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.confirmationCheckMiddleware = void 0;
+exports.confirmationCheckMiddleware = exports.emailRegistrationCheck = void 0;
 const auth_query_repository_1 = require("../repositories/query/auth-query-repository");
 const constants_1 = require("../utils/constants");
+const express_validator_1 = require("express-validator");
+exports.emailRegistrationCheck = (0, express_validator_1.checkSchema)({
+    email: {
+        options: {
+            custom: (email) => { },
+        },
+    },
+});
 const confirmationCheckMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield auth_query_repository_1.authQueryRepository.getNoneConfirmedUserByEmailOrLogin({
         email: req.body.email,

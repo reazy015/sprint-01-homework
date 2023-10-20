@@ -2,7 +2,15 @@ import {Response, NextFunction} from 'express'
 import {CustomRequest, NewUserCredentials} from '../types/common'
 import {authQueryRepository} from '../repositories/query/auth-query-repository'
 import {HTTP_STATUSES} from '../utils/constants'
+import {checkSchema} from 'express-validator'
 
+export const emailRegistrationCheck = checkSchema({
+  email: {
+    options: {
+      custom: (email: string) => {},
+    },
+  },
+})
 export const confirmationCheckMiddleware = async (
   req: CustomRequest<NewUserCredentials>,
   res: Response,
