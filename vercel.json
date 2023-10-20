@@ -3,7 +3,5 @@
   "name": "it-kamasutra-hw",
   "builds": [{"src": "dist/index.js", "use": "@vercel/node"}],
   "routes": [{"src": "/(.*)", "dest": "dist/index.js"}],
-  "rewrites": [{"source": "/(.*)", "destination": "/api"}],
-  "packageManager": "yarn",
-  "buildCommand": "yarn build"
+  "rewrites": [{"source": "/(.*)", "destination": "/api"}]
 }
