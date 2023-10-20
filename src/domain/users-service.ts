@@ -1,19 +1,15 @@
 import {AuthLoginInput} from '../types/auth'
 import {NewUserCredentials} from '../types/common'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import {usersCommandRepository} from '../repositories/command/users-command-repository'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {mailService} from '../application/mail-service'
-import crypto from 'crypto'
-import {SETTINGS} from '../shared/configs'
-
-const TOKEN_EXPIRES_IN = '1h'
+import {cryptoService} from '../application/crypto-service'
+import {UserJWTPayload} from '../types/user'
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
     const {password} = newUser
-    const {salt, hash} = await this._getHash(password)
+    const {salt, hash} = await cryptoService.getHash(password)
     const createdAt = new Date().toISOString()
 
     const newUserId = await usersCommandRepository.createUser({...newUser, createdAt}, salt, hash)
@@ -25,7 +21,7 @@ export const usersService = {
 
     if (!saltAndHash) return false
 
-    const result = await bcrypt.compare(password, saltAndHash.hash)
+    const result = await cryptoService.verifyPassword(password, saltAndHash.hash)
 
     return result
   },
@@ -34,35 +30,21 @@ export const usersService = {
 
     if (!user) return null
 
-    const userExists = await bcrypt.compare(password, user.hash)
+    const userExists = await cryptoService.verifyPassword(password, user.hash)
 
     if (!userExists) return null
 
-    return await jwt.sign(
-      {
-        login: user.login,
-        email: user.email,
-        id: user.id,
-        createdAt: user.createdAt,
-      },
-      SETTINGS.SECRET_KEY,
-      {expiresIn: TOKEN_EXPIRES_IN},
-    )
+    return await cryptoService.getJWTToken<UserJWTPayload>({
+      login: user.login,
+      email: user.email,
+      id: user.id,
+      createdAt: user.createdAt,
+    })
   },
-  async _getHash(password: string, userSalt?: string): Promise<{salt: string; hash: string}> {
-    const roundsNumber = 10
-    const salt = userSalt ?? (await bcrypt.genSalt(roundsNumber))
 
-    const hash = await bcrypt.hash(password, roundsNumber)
-
-    return {
-      salt,
-      hash,
-    }
-  },
   async registerNewUser({login, password, email}: NewUserCredentials): Promise<boolean> {
-    const confirmationCode = crypto.randomUUID()
-    const {hash, salt} = await this._getHash(password)
+    const confirmationCode = cryptoService.getConfirmationCode()
+    const {hash, salt} = await cryptoService.getHash(password)
     const createdAt = new Date().toISOString()
     const expiresIn = new Date(new Date().setMinutes(new Date().getMinutes() + 5)).toISOString()
 
@@ -103,7 +85,7 @@ export const usersService = {
       return false
     }
 
-    const confirmationCode = crypto.randomUUID()
+    const confirmationCode = cryptoService.getConfirmationCode()
 
     const emailResent = await mailService.sendConfimationEmail(email, confirmationCode)
 
