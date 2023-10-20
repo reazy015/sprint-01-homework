@@ -10,6 +10,7 @@ import {usersService} from '../domain/users-service'
 import {body} from 'express-validator'
 import {confirmationCheckMiddleware} from '../middleware/confirmation-check-middleware'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
+import {confirmationCodeCheck} from '../middleware/confirmation-code-check'
 
 export const getAuthRouter = () => {
   const router = express.Router()
@@ -53,7 +54,7 @@ export const getAuthRouter = () => {
 
   router.post(
     '/registration-confirmation',
-    body('code').notEmpty().withMessage('invalid code'),
+    confirmationCodeCheck,
     validationErrorMiddleware,
     async (req: CustomRequest<{code: string}>, res: Response) => {
       const confirmed = await usersService.confirmUserRegistration(req.body.code)
