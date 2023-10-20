@@ -77,7 +77,7 @@ export const getAuthRouter = () => {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST).json({message: 'User already confirmed'})
         return
       }
-
+      console.log(true)
       next()
     },
     validationErrorMiddleware,
