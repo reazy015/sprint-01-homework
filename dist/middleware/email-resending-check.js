@@ -25,6 +25,10 @@ exports.emailResendingCheck = (0, express_validator_1.checkSchema)({
                 if (confirmed) {
                     throw new Error('User already confirmed');
                 }
+                const user = yield users_query_repository_1.usersQueryRepository.getUserConfirmationCodeByEmail(email);
+                if (!user) {
+                    throw new Error('No such email');
+                }
             }),
         },
     },

@@ -15,6 +15,12 @@ export const emailResendingCheck = checkSchema({
         if (confirmed) {
           throw new Error('User already confirmed')
         }
+
+        const user = await usersQueryRepository.getUserConfirmationCodeByEmail(email)
+
+        if (!user) {
+          throw new Error('No such email')
+        }
       },
     },
   },
