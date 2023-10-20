@@ -55,4 +55,12 @@ export const usersCommandRepository = {
 
     return deleted.acknowledged
   },
+  async updateUserConfirmationCodeByEmail(
+    email: string,
+    confirmationCode: string,
+  ): Promise<boolean> {
+    await noneConfirmedUsersCollection.updateOne({email}, {$set: {confirmationCode}})
+
+    return true
+  },
 }

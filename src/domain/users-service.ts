@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import {usersCommandRepository} from '../repositories/command/users-command-repository'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {mailService} from '../application/mail-service'
-import {v4 as uuidv4} from 'uuid'
+import crypto from 'crypto'
 
 dotenv.config()
 
@@ -64,7 +64,7 @@ export const usersService = {
     }
   },
   async registerNewUser({login, password, email}: NewUserCredentials): Promise<boolean> {
-    const confirmationCode = uuidv4()
+    const confirmationCode = crypto.randomUUID()
     const {hash, salt} = await this._getHash(password)
     const createdAt = new Date().toISOString()
     const expiresIn = new Date(new Date().setMinutes(new Date().getMinutes() + 5)).toISOString()
@@ -106,9 +106,13 @@ export const usersService = {
       return false
     }
 
-    const confirmationCode = uuidv4()
+    const confirmationCode = crypto.randomUUID()
 
     const emailResent = await mailService.sendConfimationEmail(email, confirmationCode)
+
+    if (emailResent) {
+      await usersCommandRepository.updateUserConfirmationCodeByEmail(email, confirmationCode)
+    }
 
     return emailResent
   },

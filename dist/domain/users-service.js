@@ -19,7 +19,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const users_command_repository_1 = require("../repositories/command/users-command-repository");
 const users_query_repository_1 = require("../repositories/query/users-query-repository");
 const mail_service_1 = require("../application/mail-service");
-const uuid_1 = require("uuid");
+const crypto_1 = __importDefault(require("crypto"));
 dotenv_1.default.config();
 const SECREY_KEY = process.env.SECRET_KEY || 'localhost_temp_secret_key';
 const TOKEN_EXPIRES_IN = '1h';
@@ -71,7 +71,7 @@ exports.usersService = {
     },
     registerNewUser({ login, password, email }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const confirmationCode = (0, uuid_1.v4)();
+            const confirmationCode = crypto_1.default.randomUUID();
             const { hash, salt } = yield this._getHash(password);
             const createdAt = new Date().toISOString();
             const expiresIn = new Date(new Date().setMinutes(new Date().getMinutes() + 5)).toISOString();
@@ -105,11 +105,15 @@ exports.usersService = {
     },
     resendConfirmationEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const confirmationCode = yield users_query_repository_1.usersQueryRepository.getUserConfirmationCodeByEmail(email);
-            if (!confirmationCode) {
+            const user = yield users_query_repository_1.usersQueryRepository.getUserByEmailOrLogin(email);
+            if (!user) {
                 return false;
             }
+            const confirmationCode = crypto_1.default.randomUUID();
             const emailResent = yield mail_service_1.mailService.sendConfimationEmail(email, confirmationCode);
+            if (emailResent) {
+                yield users_command_repository_1.usersCommandRepository.updateUserConfirmationCodeByEmail(email, confirmationCode);
+            }
             return emailResent;
         });
     },

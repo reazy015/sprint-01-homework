@@ -1,4 +1,4 @@
-import {ObjectId, UUID} from 'mongodb'
+import {ObjectId} from 'mongodb'
 import {DbPost, PostInputModel} from '../../types/post'
 import {db} from '../../db/db'
 import {DbBlog} from '../../types/blog'

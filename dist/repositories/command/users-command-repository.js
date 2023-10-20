@@ -64,5 +64,11 @@ exports.usersCommandRepository = {
             return deleted.acknowledged;
         });
     },
+    updateUserConfirmationCodeByEmail(email, confirmationCode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield noneConfirmedUsersCollection.updateOne({ email }, { $set: { confirmationCode } });
+            return true;
+        });
+    },
 };
 //# sourceMappingURL=users-command-repository.js.map
