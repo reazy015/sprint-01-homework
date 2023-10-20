@@ -1,16 +1,15 @@
-import express, {NextFunction, Request, Response} from 'express'
+import express, {Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
 import {CustomRequest, NewUserCredentials} from '../types/common'
 import {AuthLoginInput} from '../types/auth'
 import {authCredentialsCheck} from '../middleware/auth-credentials-check'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {jwtVerifyMiddleware} from '../middleware/jwt-verify-middleware'
-import {EMAIL_REGEXP, newUserValidateMiddleware} from '../middleware/new-user-validate.middleware'
+import {newUserValidateMiddleware} from '../middleware/new-user-validate.middleware'
 import {usersService} from '../domain/users-service'
-import {body} from 'express-validator'
 import {confirmationCheckMiddleware} from '../middleware/confirmation-check-middleware'
-import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {confirmationCodeCheck} from '../middleware/confirmation-code-check'
+import {emailResendingCheck} from '../middleware/email-resending-check'
 
 export const getAuthRouter = () => {
   const router = express.Router()
@@ -70,17 +69,7 @@ export const getAuthRouter = () => {
 
   router.post(
     '/registration-email-resending',
-    body('email').matches(EMAIL_REGEXP).withMessage('Incorrect email'),
-    async (req: CustomRequest<{email: string}>, res: Response, next: NextFunction) => {
-      const confirmed = await usersQueryRepository.isConfirmedUser(req.body.email)
-
-      if (confirmed) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST).json({message: 'User already confirmed'})
-        return
-      }
-      console.log(true)
-      next()
-    },
+    emailResendingCheck,
     validationErrorMiddleware,
     async (req: CustomRequest<{email: string}>, res: Response) => {
       const emailResent = await usersService.resendConfirmationEmail(req.body.email)
