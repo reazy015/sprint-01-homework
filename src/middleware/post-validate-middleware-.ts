@@ -1,6 +1,6 @@
 import {checkSchema} from 'express-validator'
 import {POST_ERROR_MESSAGES, POST_VALIDATION_FIELDS} from './constants'
-import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
+import {blogsQueryRepository} from '../repositories/query/blogs-query-repository'
 
 export const postValidateMiddleware = checkSchema({
   [POST_VALIDATION_FIELDS.TITLE]: {

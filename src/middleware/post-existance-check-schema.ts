@@ -2,7 +2,7 @@ import {checkSchema, validationResult} from 'express-validator'
 import {POST_ERROR_MESSAGES, POST_VALIDATION_FIELDS} from './constants'
 import {NextFunction, Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
-import {postQueryRepository} from '../data-access-layer/query/posts-query-repository'
+import {postQueryRepository} from '../repositories/query/posts-query-repository'
 
 const postsExistanceCheck = checkSchema({
   [POST_VALIDATION_FIELDS.ID]: {

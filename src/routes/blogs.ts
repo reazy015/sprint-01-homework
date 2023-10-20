@@ -14,12 +14,12 @@ import {
   WithPaging,
 } from '../types/common'
 import {HTTP_STATUSES} from '../utils/constants'
-import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
-import {blogsCommandRepository} from '../data-access-layer/command/blogs-command-repository'
 import {PostInputModel, PostViewModel} from '../types/post'
 import {blogExistanceCheckMiddleware} from '../middleware/blog-existance-check-schema'
 import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
 import {postByBlogValidateMiddleware} from '../middleware/post-validate-middleware-'
+import {blogsCommandRepository} from '../repositories/command/blogs-command-repository'
+import {blogsQueryRepository} from '../repositories/query/blogs-query-repository'
 
 export const getBlogsRouter = () => {
   const router = express.Router()

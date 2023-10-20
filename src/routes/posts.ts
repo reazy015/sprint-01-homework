@@ -15,17 +15,16 @@ import {
   WithPaging,
 } from '../types/common'
 import {HTTP_STATUSES} from '../utils/constants'
-import {postQueryRepository} from '../data-access-layer/query/posts-query-repository'
-import {postsCommandRepository} from '../data-access-layer/command/posts-command-repository'
-import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
+import {body} from 'express-validator'
+import {commentsService} from '../domain/comments-service'
+import {jwtVerifyMiddleware} from '../middleware/jwt-verify-middleware'
 import {postExistanceCheckMiddleware} from '../middleware/post-existance-check-schema'
 import {validateQueryParamsWithDefault} from '../middleware/user-query-check-schema'
-import {jwtVerifyMiddleware} from '../middleware/jwt-verify-middleware'
-import {body} from 'express-validator'
-import {commentsService} from '../busines-logic-layer/comments-service'
+import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
+import {postsCommandRepository} from '../repositories/command/posts-command-repository'
+import {commentsQueryRepository} from '../repositories/query/comments-query-repository'
+import {postQueryRepository} from '../repositories/query/posts-query-repository'
 import {CommentViewModel} from '../types/comment'
-import {commentsQueryRepository} from '../data-access-layer/query/comments-query-repository'
-
 export const getPostsRouter = () => {
   const router = express.Router()
 

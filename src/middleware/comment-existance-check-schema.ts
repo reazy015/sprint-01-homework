@@ -1,7 +1,7 @@
 import {checkSchema, validationResult} from 'express-validator'
 import {NextFunction, Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
-import {commentsQueryRepository} from '../data-access-layer/query/comments-query-repository'
+import {commentsQueryRepository} from '../repositories/query/comments-query-repository'
 
 const commentExistanceCheck = checkSchema({
   id: {

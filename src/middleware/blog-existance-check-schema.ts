@@ -1,8 +1,8 @@
 import {checkSchema, validationResult} from 'express-validator'
 import {BLOG_ERROR_MESSAGES, BLOG_VALIDATION_FIELDS} from './constants'
-import {blogsQueryRepository} from '../data-access-layer/query/blogs-query-repository'
 import {NextFunction, Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
+import {blogsQueryRepository} from '../repositories/query/blogs-query-repository'
 
 const blogsExistsCheck = checkSchema({
   [BLOG_VALIDATION_FIELDS.ID]: {
