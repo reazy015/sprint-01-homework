@@ -33,3 +33,10 @@ export interface DbUser extends WithId<User> {
   salt: string
   hash: string
 }
+
+export interface UserJWTPayload {
+  login: string
+  email: string
+  id: string
+  createdAt: string
+}

@@ -18,3 +18,5 @@ app.use('/users', getUsersRouter())
 app.use('/auth', getAuthRouter())
 app.use('/comments', getCommentsRouter())
 app.use('/testing/all-data', getTestingRouter())
+
+export default app

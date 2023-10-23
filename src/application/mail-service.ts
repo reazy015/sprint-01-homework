@@ -1,18 +1,19 @@
 import nodemailer from 'nodemailer'
+import {SETTINGS} from '../shared/configs'
 
 export const mailService = {
   async sendConfimationEmail(email: string, confirmationCode: string): Promise<boolean> {
     const transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'redshuhart015@gmail.com',
-        pass: 'wwhkbzjzhcwofwqj',
+        user: SETTINGS.EMAIL_USER,
+        pass: SETTINGS.EMAIL_PASS,
       },
     })
 
     try {
       await transport.sendMail({
-        from: '"It-kamasutra 👻" <redshuhart015@gmail.com>',
+        from: `"It-kamasutra 👻" <${SETTINGS.EMAIL_USER}>`,
         to: email,
         subject: 'Hello ✔',
         text: 'Hello world?',

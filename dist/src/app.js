@@ -22,4 +22,5 @@ exports.app.use('/users', (0, users_1.getUsersRouter)());
 exports.app.use('/auth', (0, auth_1.getAuthRouter)());
 exports.app.use('/comments', (0, comments_1.getCommentsRouter)());
 exports.app.use('/testing/all-data', (0, testing_1.getTestingRouter)());
+exports.default = exports.app;
 //# sourceMappingURL=app.js.map
