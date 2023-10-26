@@ -3,14 +3,14 @@ import jwt from 'jsonwebtoken'
 import {SETTINGS} from '../shared/configs'
 import crypto from 'crypto'
 
-const TOKEN_EXPIRES_IN = '1h'
+const TOKEN_EXPIRES_IN = '10s'
 
 export const cryptoService = {
-  getJWTToken<T extends string | object | Buffer>(payload: T): string | null {
+  getJWTToken<T extends string | object | Buffer>(payload: T, expiresIn?: string): string | null {
     let token: string
 
     try {
-      token = jwt.sign(payload, SETTINGS.SECRET_KEY, {expiresIn: TOKEN_EXPIRES_IN})
+      token = jwt.sign(payload, SETTINGS.SECRET_KEY, {expiresIn: expiresIn || TOKEN_EXPIRES_IN})
     } catch (error) {
       console.log(error)
 

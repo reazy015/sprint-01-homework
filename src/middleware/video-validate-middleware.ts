@@ -4,30 +4,30 @@ import {ERROR_MESSAGES, VIDEO_VALIDATION_FIELDS} from './constants'
 
 export const getVideoByIdMiddleware = () =>
   param('id').notEmpty().isNumeric().withMessage(ERROR_MESSAGES.id)
-export const postVideoMiddleware = () =>
+export const postVideoMiddleware = checkSchema({
+  [VIDEO_VALIDATION_FIELDS.TITLE]: {
+    isLength: {
+      options: {min: 3, max: 40},
+      errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.TITLE],
+    },
+  },
+  [VIDEO_VALIDATION_FIELDS.AUTHOR]: {
+    isLength: {
+      options: {min: 3, max: 20},
+      errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.AUTHOR],
+    },
+  },
+  [VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: {
+    isArray: {options: {min: 1}},
+    isIn: {
+      options: [RESOLUTIONS],
+    },
+    errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS],
+  },
+})
+
+export const putVideoMiddleware = () =>
   checkSchema({
-    [VIDEO_VALIDATION_FIELDS.TITLE]: {
-      isLength: {
-        options: {min: 3, max: 40},
-        errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.TITLE],
-      },
-    },
-    [VIDEO_VALIDATION_FIELDS.AUTHOR]: {
-      isLength: {
-        options: {min: 3, max: 20},
-        errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.AUTHOR],
-      },
-    },
-    [VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS]: {
-      isArray: {options: {min: 1}},
-      isIn: {
-        options: [RESOLUTIONS],
-      },
-      errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.AVAILABLE_RESOLUTIONS],
-    },
-  })
-export const putVideoMiddleware = () => {
-  return checkSchema({
     [VIDEO_VALIDATION_FIELDS.TITLE]: {
       isLength: {
         options: {min: 3, max: 40},
@@ -65,4 +65,3 @@ export const putVideoMiddleware = () => {
       errorMessage: ERROR_MESSAGES[VIDEO_VALIDATION_FIELDS.PUBLICATION_DATE],
     },
   })
-}

@@ -4,6 +4,9 @@ import {DbInputNoneConfirmedUserModel, DbInputUser, DbUser, InputUserModel} from
 
 const usersCollection = db.collection<DbInputUser>('users')
 const noneConfirmedUsersCollection = db.collection<DbInputNoneConfirmedUserModel>('users')
+const refreshTokenBlackListCollection = db.collection<{refreshToken: string}>(
+  'refresh-token-black-list',
+)
 
 export const usersCommandRepository = {
   async createUser(user: InputUserModel, salt: string, hash: string): Promise<string | null> {
@@ -62,5 +65,10 @@ export const usersCommandRepository = {
     await noneConfirmedUsersCollection.updateOne({email}, {$set: {confirmationCode}})
 
     return true
+  },
+  async addRefreshTokenToBlackList(refreshToken: string): Promise<boolean> {
+    const addToBlackList = await refreshTokenBlackListCollection.insertOne({refreshToken})
+
+    return addToBlackList.acknowledged
   },
 }

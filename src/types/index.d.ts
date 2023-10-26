@@ -4,7 +4,9 @@ declare global {
   namespace Express {
     export interface Request {
       context: {
-        userId: stirng | null
+        userId: stirng
+        email: string
+        login: string
       }
     }
   }

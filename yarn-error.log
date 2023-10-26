@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/reazy015/.nvm/versions/node/v18.18.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js add -D @types/nodemailer-mock
+  /Users/reazy015/.nvm/versions/node/v18.18.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js add cookie-parser
 
 PATH: 
   /Users/reazy015/yandex-cloud/bin:/Users/reazy015/.nvm/versions/node/v18.18.0/bin:/Users/reazy015/.pyenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/reazy015/yandex-cloud/bin:/Users/reazy015/.pyenv/shims
@@ -14,17 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fnodemailer-mock: Not found
-      at params.callback [as _callback] (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:66988:18)
-      at self.callback (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:140749:22)
-      at Request.emit (node:events:517:28)
-      at Request.<anonymous> (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:141721:10)
-      at Request.emit (node:events:517:28)
-      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:141643:12)
-      at Object.onceWrapper (node:events:631:28)
-      at IncomingMessage.emit (node:events:529:35)
-      at endReadableNT (node:internal/streams/readable:1368:12)
-      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+  Error: EACCES: permission denied, unlink '/Users/reazy015/projects/node-studies/sprint-01/node_modules/@mongodb-js/saslprep/LICENSE'
 
 npm manifest: 
   {
@@ -39,29 +29,28 @@ npm manifest:
       "express-validator": "^7.0.1",
       "jsonwebtoken": "^9.0.2",
       "mongodb": "^6.1.0",
-      "nodemailer": "^6.9.6",
-      "uuid": "^9.0.1"
+      "nodemailer": "^6.9.6"
     },
     "scripts": {
-      "dev": "yarn nodemon --inspect dist/index.js",
+      "dev": "node --loader ts-node/esm --inspect ./src/index.ts",
       "watch": "tsc -w",
-      "compile": "tsc",
-      "test": "jest"
+      "build": "tsc",
+      "test": "jest",
+      "vercel-build": "echo hello"
     },
     "devDependencies": {
+      "@jest/globals": "^29.7.0",
       "@types/bcrypt": "^5.0.1",
       "@types/express": "^4.17.17",
-      "@types/jest": "^29.5.5",
+      "@types/jest": "^29.5.6",
       "@types/jsonwebtoken": "^9.0.3",
       "@types/node": "^20.6.0",
       "@types/nodemailer": "^6.4.12",
       "@types/supertest": "^2.0.12",
-      "@types/uuid": "^9.0.5",
       "@typescript-eslint/eslint-plugin": "^6.7.0",
       "@typescript-eslint/parser": "^6.7.0",
       "eslint": "^8.49.0",
       "jest": "^29.7.0",
-      "nodemailer-mock": "^2.0.1",
       "nodemon": "^3.0.1",
       "supertest": "^6.3.3",
       "ts-jest": "^29.1.1",
@@ -893,10 +882,10 @@ Lockfile:
     dependencies:
       "@types/istanbul-lib-report" "*"
   
-  "@types/jest@^29.5.5":
-    version "29.5.5"
-    resolved "https://registry.npmjs.org/@types/jest/-/jest-29.5.5.tgz#727204e06228fe24373df9bae76b90f3e8236a2a"
-    integrity sha512-ebylz2hnsWR9mYvmBFbXJXr+33UPc4+ZdxyDXh5w0FlPBTfCVN3wPL+kuOiQt3xvrK419v7XWeAs+AeOksafXg==
+  "@types/jest@^29.5.6":
+    version "29.5.6"
+    resolved "https://registry.npmjs.org/@types/jest/-/jest-29.5.6.tgz#f4cf7ef1b5b0bfc1aa744e41b24d9cc52533130b"
+    integrity sha512-/t9NnzkOpXb4Nfvg17ieHE6EeSjDS2SGSpNYfoLbUAeL/EOueU/RSdOWFpfQTXBEM7BguYW1XQ0EbM+6RlIh6w==
     dependencies:
       expect "^29.0.0"
       pretty-format "^29.0.0"
@@ -986,11 +975,6 @@ Lockfile:
     integrity sha512-X3HPWTwXRerBZS7Mo1k6vMVR1Z6zmJcDVn5O/31whe0tnjE4te6ZJSJGq1RiqHPjzPdMTfjCFogDJmwng9xHaQ==
     dependencies:
       "@types/superagent" "*"
-  
-  "@types/uuid@^9.0.5":
-    version "9.0.5"
-    resolved "https://registry.npmjs.org/@types/uuid/-/uuid-9.0.5.tgz#25a71eb73eba95ac0e559ff3dd018fc08294acf6"
-    integrity sha512-xfHdwa1FMJ082prjSJpoEI57GZITiQz10r3vEJCHa2khEFQjKy91aWKz6+zybzssCvXUwE1LQWgWVwZ4nYUvHQ==
   
   "@types/webidl-conversions@*":
     version "7.0.1"
@@ -3177,13 +3161,6 @@ Lockfile:
     resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.13.tgz#d5ed1627c23e3461e819b02e57b75e4899b1c81d"
     integrity sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==
   
-  nodemailer-mock@^2.0.1:
-    version "2.0.1"
-    resolved "https://registry.npmjs.org/nodemailer-mock/-/nodemailer-mock-2.0.1.tgz#93831d6f5b0426c776bb3ad7e4edb380543f6c20"
-    integrity sha512-2gkdW/ApexF/Y9EwJ/FXF4Df+1n/Y6Oek29QzsVJf/kMXshDW7q4CVzK/yTFFUw3Z0XnxNZNi/hG9RmMe6HHpg==
-    dependencies:
-      debug "^4.3.4"
-  
   nodemailer@^6.9.6:
     version "6.9.6"
     resolved "https://registry.npmjs.org/nodemailer/-/nodemailer-6.9.6.tgz#5a38a2a4d9fb1e349542a138f9e2d5c760a663ed"
@@ -3957,11 +3934,6 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
     integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
-  
-  uuid@^9.0.1:
-    version "9.0.1"
-    resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
-    integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
   
   v8-compile-cache-lib@^3.0.1:
     version "3.0.1"
