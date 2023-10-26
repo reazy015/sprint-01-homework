@@ -65,11 +65,14 @@ export const usersService = {
 
     return addToBlackList
   },
-  async refreshLoginUser(user: {
-    userId: string
-    email: string
-    login: string
-  }): Promise<{accessToken: string; refreshToken: string} | null> {
+  async refreshLoginUser(
+    user: {
+      userId: string
+      email: string
+      login: string
+    },
+    oldRefreshToken: string,
+  ): Promise<{accessToken: string; refreshToken: string} | null> {
     const accessToken = cryptoService.getJWTToken({
       login: user.login,
       email: user.email,
@@ -85,7 +88,9 @@ export const usersService = {
       '40s',
     )
 
-    if (!accessToken || !refreshToken) {
+    const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
+
+    if (!accessToken || !refreshToken || !addToBlackList) {
       return null
     }
 

@@ -216,7 +216,7 @@ describe('Auth api', () => {
     expect(confirmationCode).toEqual(expect.any(String))
   })
 
-  it('POST/auth/refresh-token -> 200; additional methods: POST/users, POST/auth/login', async () => {
+  it('POST/auth/refresh-token -> 200, 401; additional methods: POST/users, POST/auth/login', async () => {
     const newUserRequestBody = {
       email: 'valid@email.com',
       login: 'Valid_login',
@@ -246,6 +246,11 @@ describe('Auth api', () => {
 
     expect(newAccessToken).toEqual(expect.any(String))
     expect(newRefreshToken.value).toEqual(expect.any(String))
+
+    await request(app)
+      .post('/auth/refresh-token')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.UNAUTH)
   })
 
   it('POST/auth/logout -> 204, 401, 401; additional methods: POST/users, POST/auth/login', async () => {

@@ -90,7 +90,7 @@ export const getAuthRouter = () => {
   )
 
   router.post('/refresh-token', jwtRefreshVerifyMiddleware, async (req: Request, res: Response) => {
-    const loggedIn = await usersService.refreshLoginUser(req.context)
+    const loggedIn = await usersService.refreshLoginUser(req.context, req.cookies['refreshToken'])
 
     if (!loggedIn) {
       res.sendStatus(HTTP_STATUSES.BAD_REQUEST)
