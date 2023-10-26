@@ -19,7 +19,7 @@ export const jwtVerifyMiddleware = async (req: Request, res: Response, next: Nex
   let verifiedUser
 
   try {
-    verifiedUser = (await jwt.verify(bearerToken, SETTINGS.SECRET_KEY)) as UserViewModel
+    verifiedUser = jwt.verify(bearerToken, SETTINGS.SECRET_KEY) as UserViewModel
   } catch (error) {
     res.status(HTTP_STATUSES.UNAUTH).send(error)
     return
@@ -32,6 +32,8 @@ export const jwtVerifyMiddleware = async (req: Request, res: Response, next: Nex
 
   req.context = {
     userId: verifiedUser.id,
+    email: verifiedUser.email,
+    login: verifiedUser.login,
   }
   next()
 }

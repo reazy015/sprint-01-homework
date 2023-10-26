@@ -5,6 +5,9 @@ import {DbInputNoneConfirmedUserModel, DbUser, UserViewModel} from '../../types/
 
 const usersCollection = db.collection<DbUser>('users')
 const noneConfirmedUsersCollection = db.collection<DbInputNoneConfirmedUserModel>('users')
+const refreshTokenBlackListCollection = db.collection<{refreshToken: string}>(
+  'refresh-token-black-list',
+)
 
 export const usersQueryRepository = {
   async getUsers(queryParams: UserQueryParams): Promise<WithPaging<UserViewModel>> {
@@ -110,5 +113,10 @@ export const usersQueryRepository = {
     const found = await noneConfirmedUsersCollection.findOne({confirmationCode})
 
     return found ? true : false
+  },
+  async refreshTokenBlackListCheck(refreshToken: string): Promise<boolean> {
+    const inBlackList = await refreshTokenBlackListCollection.findOne({refreshToken})
+
+    return Boolean(inBlackList)
   },
 }

@@ -32,13 +32,6 @@ export const confirmationCheckMiddleware = async (
     return
   }
 
-  // if (new Date(user.expiresIn!) < new Date()) {
-  //   res.status(HTTP_STATUSES.BAD_REQUEST).json({
-  //     message: 'Confirmation code expired, ask for confirmation code resend',
-  //   })
-  //   return
-  // }
-
   if (user.confirmed) {
     res.sendStatus(HTTP_STATUSES.BAD_REQUEST).json({
       message: 'User already confirmed',

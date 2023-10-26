@@ -1,10 +1,7 @@
 import express, {Request, Response} from 'express'
 import {BlogInputModel, BlogViewModel} from '../types/blog'
 import {basicAuthMiddleware} from '../middleware/basic-auth-middleware'
-import {
-  postBlogValidateMiddleware,
-  queryBlogValidateMiddleware,
-} from '../middleware/blog-validate-middleware'
+import {postBlogValidateMiddleware} from '../middleware/blog-validate-middleware'
 import {validationErrorMiddleware} from '../middleware/validation-error-middleware'
 import {
   BlogQueryParams,
@@ -62,8 +59,6 @@ export const getBlogsRouter = () => {
     validIdCheckMiddleware(),
     validationErrorMiddleware,
     ...blogExistanceCheckMiddleware,
-    // queryBlogValidateMiddleware(),
-    // validationErrorMiddleware,
     async (
       req: CustomQueryRequest<Partial<BlogQueryParams>, IdURIParam>,
       res: Response<WithPaging<PostViewModel>>,
@@ -77,9 +72,8 @@ export const getBlogsRouter = () => {
   router.post(
     '/',
     basicAuthMiddleware,
-    postBlogValidateMiddleware(),
+    postBlogValidateMiddleware,
     validationErrorMiddleware,
-
     async (req: CustomRequest<BlogInputModel>, res: Response<BlogInputModel>) => {
       const addBlogData = req.body
 
@@ -124,7 +118,7 @@ export const getBlogsRouter = () => {
   router.put(
     '/:id',
     basicAuthMiddleware,
-    postBlogValidateMiddleware(),
+    postBlogValidateMiddleware,
     validationErrorMiddleware,
 
     async (req: CustomRequest<BlogInputModel, IdURIParam>, res: Response) => {

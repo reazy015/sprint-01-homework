@@ -4,7 +4,6 @@ import {usersCommandRepository} from '../repositories/command/users-command-repo
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {mailService} from '../application/mail-service'
 import {cryptoService} from '../application/crypto-service'
-import {UserJWTPayload} from '../types/user'
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
@@ -25,7 +24,10 @@ export const usersService = {
 
     return result
   },
-  async loginUser({loginOrEmail, password}: AuthLoginInput): Promise<string | null> {
+  async loginUser({
+    loginOrEmail,
+    password,
+  }: AuthLoginInput): Promise<{accessToken: string; refreshToken: string} | null> {
     const user = await usersQueryRepository.getUserByEmailOrLogin(loginOrEmail)
 
     if (!user) return null
@@ -34,14 +36,64 @@ export const usersService = {
 
     if (!userExists) return null
 
-    return await cryptoService.getJWTToken<UserJWTPayload>({
+    const accessToken = cryptoService.getJWTToken({
       login: user.login,
       email: user.email,
       id: user.id,
-      createdAt: user.createdAt,
     })
-  },
 
+    const refreshToken = cryptoService.getJWTToken(
+      {
+        login: user.login,
+        email: user.email,
+        id: user.id,
+      },
+      '20s',
+    )
+
+    if (!accessToken || !refreshToken) {
+      return null
+    }
+
+    return {
+      accessToken,
+      refreshToken,
+    }
+  },
+  async logoutUser(refreshToken: string): Promise<boolean> {
+    const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(refreshToken)
+
+    return addToBlackList
+  },
+  async refreshLoginUser(user: {
+    userId: string
+    email: string
+    login: string
+  }): Promise<{accessToken: string; refreshToken: string} | null> {
+    const accessToken = cryptoService.getJWTToken({
+      login: user.login,
+      email: user.email,
+      id: user.userId,
+    })
+
+    const refreshToken = cryptoService.getJWTToken(
+      {
+        login: user.login,
+        email: user.email,
+        id: user.userId,
+      },
+      '40s',
+    )
+
+    if (!accessToken || !refreshToken) {
+      return null
+    }
+
+    return {
+      accessToken,
+      refreshToken,
+    }
+  },
   async registerNewUser({login, password, email}: NewUserCredentials): Promise<boolean> {
     const confirmationCode = cryptoService.getConfirmationCode()
     const {hash, salt} = await cryptoService.getHash(password)

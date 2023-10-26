@@ -3,7 +3,8 @@ import request from 'supertest'
 import {HTTP_STATUSES} from '../../src/utils/constants'
 import {CREDENTIALS} from './constants'
 import {jest} from '@jest/globals'
-import {CustomRequest} from '../../src/types/common'
+import cookieParser from 'cookie-parser'
+import {extractCookie} from './utils/extract-cookie'
 
 const sendMailMock = jest.fn()
 jest.mock('nodemailer', () => ({
@@ -46,7 +47,7 @@ describe('Auth api', () => {
       .expect(HTTP_STATUSES.UNAUTH)
   })
 
-  it('POST /auth/login returns 204 if login successfully, additional methods: POST/users', async () => {
+  it('POST /auth/login -> 204; body: {accessToken}, cookie: {refreshToken}; additional methods: POST/users', async () => {
     const newUserRequestBody = {
       email: 'valid@email.com',
       login: 'Valid_login',
@@ -67,13 +68,23 @@ describe('Auth api', () => {
     expect(loginResponse.body).toEqual({
       accessToken: expect.any(String),
     })
+
+    const refreshToken = extractCookie(loginResponse.headers)['refreshToken']
+
+    expect(refreshToken.value).toEqual(expect.any(String))
+    expect(refreshToken.options).toEqual(
+      expect.objectContaining({
+        HttpOnly: true,
+        Secure: true,
+      }),
+    )
   })
 
   it('GET/auth/me should 401 if unauthorized', async () => {
     await request(app).get('/auth/me').expect(HTTP_STATUSES.UNAUTH)
   })
 
-  it('GET/auth/me should 200 and user id, additional methods: POST/users, POST/auth/login', async () => {
+  it('GET/auth/me -> 200; {email, login, userId}; additional methods: POST/users, POST/auth/login', async () => {
     const newUserRequestBody = {
       email: 'valid@email.com',
       login: 'Valid_login',
@@ -91,10 +102,16 @@ describe('Auth api', () => {
       .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
       .expect(HTTP_STATUSES.OK)
 
-    await request(app)
+    const authResponse = await request(app)
       .get('/auth/me')
       .set('Authorization', `Bearer ${loginResponse.body.accessToken}`)
       .expect(HTTP_STATUSES.OK)
+
+    expect(authResponse.body).toEqual({
+      userId: expect.any(String),
+      email: newUserRequestBody.email,
+      login: newUserRequestBody.login,
+    })
   })
 
   it('POST/auth/registration return 400 if input model incorrect', async () => {
@@ -197,5 +214,70 @@ describe('Auth api', () => {
     const confirmationCode = emailConfirmationCode(sendMailMock.mock.calls[0][0].html)
 
     expect(confirmationCode).toEqual(expect.any(String))
+  })
+
+  it('POST/auth/refresh-token -> 200; additional methods: POST/users, POST/auth/login', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+      .expect(HTTP_STATUSES.OK)
+
+    const refreshToken = loginResponse.headers['set-cookie']
+
+    const refreshResponse = await request(app)
+      .post('/auth/refresh-token')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.OK)
+
+    const newAccessToken = refreshResponse.body.accessToken
+    const newRefreshToken = extractCookie(refreshResponse.headers)['refreshToken']
+
+    expect(newAccessToken).toEqual(expect.any(String))
+    expect(newRefreshToken.value).toEqual(expect.any(String))
+  })
+
+  it('POST/auth/logout -> 204, 401, 401; additional methods: POST/users, POST/auth/login', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+      .expect(HTTP_STATUSES.OK)
+
+    const refreshToken = loginResponse.headers['set-cookie']
+
+    await request(app)
+      .post('/auth/logout')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.NO_CONTENT)
+
+    await request(app)
+      .post('/auth/refresh-token')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.UNAUTH)
+
+    await request(app).post('/auth/logout').set('Cookie', refreshToken).expect(HTTP_STATUSES.UNAUTH)
   })
 })

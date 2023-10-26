@@ -10,6 +10,7 @@ import {usersService} from '../domain/users-service'
 import {confirmationCheckMiddleware} from '../middleware/confirmation-check-middleware'
 import {confirmationCodeCheck} from '../middleware/confirmation-code-check'
 import {emailResendingCheck} from '../middleware/email-resending-check'
+import {jwtRefreshVerifyMiddleware} from '../middleware/jwt-refresh-verify-middleware'
 
 export const getAuthRouter = () => {
   const router = express.Router()
@@ -19,20 +20,26 @@ export const getAuthRouter = () => {
     authCredentialsCheck,
     validationErrorMiddleware,
     async (req: CustomRequest<AuthLoginInput>, res: Response<{accessToken: string}>) => {
-      const accessToken = await usersService.loginUser(req.body)
+      const loggedIn = await usersService.loginUser(req.body)
 
-      if (!accessToken) {
+      if (!loggedIn) {
         res.sendStatus(HTTP_STATUSES.UNAUTH)
         return
       }
 
+      const {accessToken, refreshToken} = loggedIn
+      res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
       res.status(HTTP_STATUSES.OK).json({accessToken})
     },
   )
 
-  router.get('/me', jwtVerifyMiddleware, async (req: Request, res: Response) => {
-    res.status(HTTP_STATUSES.OK).send(req.context.userId)
-  })
+  router.get(
+    '/me',
+    jwtVerifyMiddleware,
+    async (req: Request, res: Response<{login: string; email: string; userId: string}>) => {
+      res.status(HTTP_STATUSES.OK).send(req.context)
+    },
+  )
 
   router.post(
     '/registration',
@@ -81,6 +88,34 @@ export const getAuthRouter = () => {
       res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
+
+  router.post('/refresh-token', jwtRefreshVerifyMiddleware, async (req: Request, res: Response) => {
+    const loggedIn = await usersService.refreshLoginUser(req.context)
+
+    if (!loggedIn) {
+      res.sendStatus(HTTP_STATUSES.BAD_REQUEST)
+      return
+    }
+
+    const {refreshToken, accessToken} = loggedIn
+
+    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+    res.status(HTTP_STATUSES.OK).send({
+      accessToken,
+    })
+  })
+
+  router.post('/logout', jwtRefreshVerifyMiddleware, async (req: Request, res: Response) => {
+    const refreshToken = req.cookies['refreshToken']
+    const loggedOut = await usersService.logoutUser(refreshToken)
+
+    if (!loggedOut) {
+      res.sendStatus(HTTP_STATUSES.BAD_REQUEST)
+      return
+    }
+
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+  })
 
   return router
 }

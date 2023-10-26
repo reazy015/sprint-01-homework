@@ -36,7 +36,7 @@ export const getVideosRouter = () => {
 
   router.post(
     '/',
-    postVideoMiddleware(),
+    postVideoMiddleware,
     validationErrorMiddleware,
     (
       req: Request<{}, {}, {title: string; author: string; availableResolutions: Resolutions[]}>,
