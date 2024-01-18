@@ -20,7 +20,7 @@ export const getAuthRouter = () => {
     authCredentialsCheck,
     validationErrorMiddleware,
     async (req: CustomRequest<AuthLoginInput>, res: Response<{accessToken: string}>) => {
-      const loggedIn = await usersService.loginUser(req.body)
+      const loggedIn = await usersService.loginUser(req.body, req.headers['user-agent'], req.ip)
 
       if (!loggedIn) {
         res.sendStatus(HTTP_STATUSES.UNAUTH)

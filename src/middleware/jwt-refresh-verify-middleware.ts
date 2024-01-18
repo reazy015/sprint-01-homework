@@ -27,7 +27,7 @@ export const jwtRefreshVerifyMiddleware = async (
   let verifiedUser
 
   try {
-    verifiedUser = jwt.verify(refreshToken, SETTINGS.SECRET_KEY) as UserViewModel
+    verifiedUser = jwt.verify(refreshToken, SETTINGS.SECRET_KEY) as UserViewModel & {exp: number}
   } catch (error) {
     res.status(HTTP_STATUSES.UNAUTH).send(error)
     return
@@ -42,6 +42,7 @@ export const jwtRefreshVerifyMiddleware = async (
     userId: verifiedUser.id,
     email: verifiedUser.email,
     login: verifiedUser.login,
+    refreshTokenExp: verifiedUser.exp,
   }
   next()
 }

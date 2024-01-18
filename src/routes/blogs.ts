@@ -17,12 +17,14 @@ import {validIdCheckMiddleware} from '../middleware/valid-id-check-middleware'
 import {postByBlogValidateMiddleware} from '../middleware/post-validate-middleware-'
 import {blogsCommandRepository} from '../repositories/command/blogs-command-repository'
 import {blogsQueryRepository} from '../repositories/query/blogs-query-repository'
+import {deviceAuthSession} from '../middleware/device-auth-session'
 
 export const getBlogsRouter = () => {
   const router = express.Router()
 
   router.get(
     '/',
+    deviceAuthSession,
     // queryBlogValidateMiddleware(),
     // validationErrorMiddleware,
     async (

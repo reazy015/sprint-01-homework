@@ -40,4 +40,7 @@ export const cryptoService = {
   getConfirmationCode(): string {
     return crypto.randomUUID()
   },
+  getJWTTokenPayload<T extends {iat: number; exp: number}>(token: string): T {
+    return jwt.verify(token, SETTINGS.SECRET_KEY) as T
+  },
 }

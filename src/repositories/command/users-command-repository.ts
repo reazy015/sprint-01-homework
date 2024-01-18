@@ -1,12 +1,19 @@
 import {ObjectId} from 'mongodb'
 import {db} from '../../db/db'
-import {DbInputNoneConfirmedUserModel, DbInputUser, DbUser, InputUserModel} from '../../types/user'
+import {
+  DeviceAuthSession,
+  DbInputNoneConfirmedUserModel,
+  DbInputUser,
+  DbUser,
+  InputUserModel,
+} from '../../types/user'
 
 const usersCollection = db.collection<DbInputUser>('users')
 const noneConfirmedUsersCollection = db.collection<DbInputNoneConfirmedUserModel>('users')
 const refreshTokenBlackListCollection = db.collection<{refreshToken: string}>(
   'refresh-token-black-list',
 )
+const deviceAuthSessionsCollection = db.collection<DeviceAuthSession>('device-auth-sessions')
 
 export const usersCommandRepository = {
   async createUser(user: InputUserModel, salt: string, hash: string): Promise<string | null> {
@@ -70,5 +77,27 @@ export const usersCommandRepository = {
     const addToBlackList = await refreshTokenBlackListCollection.insertOne({refreshToken})
 
     return addToBlackList.acknowledged
+  },
+  async addDeviceAuthSession(
+    iat: number,
+    exp: number,
+    userId: string,
+    ip: string,
+    title: string,
+    deviceId: string,
+  ): Promise<boolean> {
+    const lastActiveDate = new Date().getTime()
+
+    const addToDeviceAuthSessions = await deviceAuthSessionsCollection.insertOne({
+      iat,
+      exp,
+      userId,
+      ip,
+      title,
+      lastActiveDate,
+      deviceId,
+    })
+
+    return addToDeviceAuthSessions.acknowledged
   },
 }

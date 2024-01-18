@@ -7,11 +7,12 @@ import {getUsersRouter} from './routes/users'
 import {getAuthRouter} from './routes/auth'
 import {getCommentsRouter} from './routes/comments'
 import cookieParser from 'cookie-parser'
+import {getSecurityRouter} from './routes/security'
 
 export const app = express()
 const jsonBodyParser = express.json()
 
-app.use(jsonBodyParser)
+app.use(express.json())
 app.use(cookieParser())
 app.use('/videos', getVideosRouter())
 app.use('/blogs', getBlogsRouter())
@@ -20,5 +21,6 @@ app.use('/users', getUsersRouter())
 app.use('/auth', getAuthRouter())
 app.use('/comments', getCommentsRouter())
 app.use('/testing/all-data', getTestingRouter())
+app.use('/security', getSecurityRouter())
 
 export default app

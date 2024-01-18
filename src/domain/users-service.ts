@@ -4,6 +4,8 @@ import {usersCommandRepository} from '../repositories/command/users-command-repo
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
 import {mailService} from '../application/mail-service'
 import {cryptoService} from '../application/crypto-service'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 
 export const usersService = {
   async addNewUser(newUser: NewUserCredentials): Promise<string | null> {
@@ -24,10 +26,11 @@ export const usersService = {
 
     return result
   },
-  async loginUser({
-    loginOrEmail,
-    password,
-  }: AuthLoginInput): Promise<{accessToken: string; refreshToken: string} | null> {
+  async loginUser(
+    {loginOrEmail, password}: AuthLoginInput,
+    userAgent = 'unknown',
+    ip: string,
+  ): Promise<{accessToken: string; refreshToken: string} | null> {
     const user = await usersQueryRepository.getUserByEmailOrLogin(loginOrEmail)
 
     if (!user) return null
@@ -42,16 +45,40 @@ export const usersService = {
       id: user.id,
     })
 
+    const deviceId = crypto.randomUUID()
+
     const refreshToken = cryptoService.getJWTToken(
       {
         login: user.login,
         email: user.email,
         id: user.id,
+        deviceId,
       },
       '20s',
     )
 
     if (!accessToken || !refreshToken) {
+      return null
+    }
+
+    const decoded = cryptoService.getJWTTokenPayload(refreshToken)
+
+    console.log(decoded)
+
+    if (!decoded) {
+      return null
+    }
+
+    const deviceAuthSessionSaved = usersCommandRepository.addDeviceAuthSession(
+      decoded.iat,
+      decoded.exp,
+      user.id,
+      ip,
+      userAgent,
+      deviceId,
+    )
+
+    if (!deviceAuthSessionSaved) {
       return null
     }
 

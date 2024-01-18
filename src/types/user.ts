@@ -40,3 +40,13 @@ export interface UserJWTPayload {
   id: string
   createdAt: string
 }
+
+export interface DeviceAuthSession {
+  iat: number
+  exp: number
+  userId: string
+  ip: string
+  title: string
+  lastActiveDate: number
+  deviceId: string
+}

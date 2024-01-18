@@ -7,6 +7,7 @@ declare global {
         userId: stirng
         email: string
         login: string
+        refreshTokenExp?: number
       }
     }
   }

@@ -1,13 +1,19 @@
 import {ObjectId} from 'mongodb'
 import {db} from '../../db/db'
 import {UserQueryParams, WithPaging} from '../../types/common'
-import {DbInputNoneConfirmedUserModel, DbUser, UserViewModel} from '../../types/user'
+import {
+  DeviceAuthSession,
+  DbInputNoneConfirmedUserModel,
+  DbUser,
+  UserViewModel,
+} from '../../types/user'
 
 const usersCollection = db.collection<DbUser>('users')
 const noneConfirmedUsersCollection = db.collection<DbInputNoneConfirmedUserModel>('users')
 const refreshTokenBlackListCollection = db.collection<{refreshToken: string}>(
   'refresh-token-black-list',
 )
+const deviceAuthSessionsCollection = db.collection<DeviceAuthSession>('device-auth-sessions')
 
 export const usersQueryRepository = {
   async getUsers(queryParams: UserQueryParams): Promise<WithPaging<UserViewModel>> {
@@ -118,5 +124,17 @@ export const usersQueryRepository = {
     const inBlackList = await refreshTokenBlackListCollection.findOne({refreshToken})
 
     return Boolean(inBlackList)
+  },
+  async getUserDeviceAuthSessions(
+    userId: string,
+  ): Promise<Omit<DeviceAuthSession, 'iat' | 'exp' | 'userId'>[]> {
+    const deviceAuthSessions = await deviceAuthSessionsCollection.find({userId}).toArray()
+
+    return deviceAuthSessions.map((session) => ({
+      deviceId: session.deviceId,
+      lastActiveDate: session.lastActiveDate,
+      title: session.title,
+      ip: session.ip,
+    }))
   },
 }
