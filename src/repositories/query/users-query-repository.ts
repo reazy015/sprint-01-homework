@@ -137,4 +137,44 @@ export const usersQueryRepository = {
       ip: session.ip,
     }))
   },
+  async getDeviceAuthSessionUserId(deviceId: string): Promise<string | null> {
+    const deviceAuthSession = await deviceAuthSessionsCollection.findOne({deviceId})
+
+    if (!deviceAuthSession) {
+      return null
+    }
+
+    return deviceAuthSession.userId
+  },
+  async getSingleDeviceAuthSession(
+    deviceId: string,
+  ): Promise<Omit<DeviceAuthSession, 'iat' | 'exp' | 'userId'> | null> {
+    const deviceAuthSession = await deviceAuthSessionsCollection.findOne({deviceId})
+
+    if (!deviceAuthSession) {
+      return null
+    }
+
+    return {
+      deviceId: deviceAuthSession.deviceId,
+      ip: deviceAuthSession.ip,
+      title: deviceAuthSession.title,
+      lastActiveDate: deviceAuthSession.lastActiveDate,
+    }
+  },
+  async deleteAllDeviceAuthSessions(tokenIat: number, userId: string): Promise<boolean> {
+    const deviceAuthSessionsDeleted = await deviceAuthSessionsCollection.deleteMany({
+      iat: {$ne: tokenIat},
+      userId: {$ne: userId},
+    })
+
+    return deviceAuthSessionsDeleted.acknowledged
+  },
+  async deleteSingleDeviceAuthSession(deviceId: string): Promise<boolean> {
+    const deviceAuthSessionsDeleted = await deviceAuthSessionsCollection.deleteOne({
+      deviceId,
+    })
+
+    return deviceAuthSessionsDeleted.acknowledged
+  },
 }
