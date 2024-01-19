@@ -3,7 +3,6 @@ import request from 'supertest'
 import {HTTP_STATUSES} from '../../src/utils/constants'
 import {CREDENTIALS} from './constants'
 import {jest} from '@jest/globals'
-import cookieParser from 'cookie-parser'
 import {extractCookie} from './utils/extract-cookie'
 
 const sendMailMock = jest.fn()

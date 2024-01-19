@@ -63,8 +63,6 @@ export const usersService = {
 
     const decoded = cryptoService.getJWTTokenPayload(refreshToken)
 
-    console.log(decoded)
-
     if (!decoded) {
       return null
     }
@@ -118,6 +116,22 @@ export const usersService = {
     const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
 
     if (!accessToken || !refreshToken || !addToBlackList) {
+      return null
+    }
+
+    const decoded = cryptoService.getJWTTokenPayload(refreshToken)
+    const oldDecoded = cryptoService.getJWTTokenPayload(oldRefreshToken)
+
+    if (!decoded || !oldDecoded) {
+      return null
+    }
+
+    const deviceAuthSessionUpdated = usersCommandRepository.updateDeviceAuthSession(
+      oldDecoded.iat,
+      decoded.iat,
+    )
+
+    if (!deviceAuthSessionUpdated) {
       return null
     }
 

@@ -47,6 +47,6 @@ export interface DeviceAuthSession {
   userId: string
   ip: string
   title: string
-  lastActiveDate: number
+  lastActiveDate: string
   deviceId: string
 }

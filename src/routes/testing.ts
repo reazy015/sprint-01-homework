@@ -15,8 +15,15 @@ export const getTestingRouter = () => {
     const allPostsDeleted = await postsCommandRepository.deleteAllPosts()
     const allUsersDeleted = await usersCommandRepository.deleteAllUsers()
     const allCommentsDeleted = await commentsCommandRespository.deleteAllComments()
+    const allDeviceAuthSessionDeleted = await usersCommandRepository.deleteAllDeviceAuthSessions()
 
-    if (allBlogsDeleted && allPostsDeleted && allUsersDeleted && allCommentsDeleted) {
+    if (
+      allBlogsDeleted &&
+      allPostsDeleted &&
+      allUsersDeleted &&
+      allCommentsDeleted &&
+      allDeviceAuthSessionDeleted
+    ) {
       res.sendStatus(HTTP_STATUSES.NO_CONTENT)
       return
     }

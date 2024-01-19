@@ -65,6 +65,11 @@ export const usersCommandRepository = {
 
     return deleted.acknowledged
   },
+  async deleteAllDeviceAuthSessions(): Promise<boolean> {
+    const deleted = await deviceAuthSessionsCollection.deleteMany()
+
+    return deleted.acknowledged
+  },
   async updateUserConfirmationCodeByEmail(
     email: string,
     confirmationCode: string,
@@ -86,7 +91,7 @@ export const usersCommandRepository = {
     title: string,
     deviceId: string,
   ): Promise<boolean> {
-    const lastActiveDate = new Date().getTime()
+    const lastActiveDate = new Date().toISOString()
 
     const addToDeviceAuthSessions = await deviceAuthSessionsCollection.insertOne({
       iat,
@@ -99,5 +104,18 @@ export const usersCommandRepository = {
     })
 
     return addToDeviceAuthSessions.acknowledged
+  },
+  async updateDeviceAuthSession(tokenIat: number, newTokenIat: number): Promise<boolean> {
+    const lastActiveDate = new Date().toISOString()
+
+    const deviceAuthSessionUpdated = await deviceAuthSessionsCollection.findOneAndUpdate(
+      {
+        iat: tokenIat,
+      },
+      {$set: {iat: newTokenIat, lastActiveDate}},
+      {returnDocument: 'after'},
+    )
+
+    return Boolean(deviceAuthSessionUpdated)
   },
 }
