@@ -28,6 +28,14 @@ describe('/security', () => {
       await request(app).delete('/testing/all-data')
     })
 
+    afterAll(async () => {
+      await request(app)
+        .post(`/users`)
+        .send(USER)
+        .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+        .expect(HTTP_STATUSES.CREATED)
+    })
+
     it('GET /devices return 401 if refresh token not specified ', async () => {
       await request(app).get('/security/devices').expect(HTTP_STATUSES.UNAUTH)
     })
@@ -50,6 +58,8 @@ describe('/security', () => {
         .get('/security/devices')
         .set('Cookie', refreshToken)
         .expect(HTTP_STATUSES.OK)
+
+      console.log(devicesResponse.body)
 
       expect(devicesResponse.body.length).toEqual(4)
     })
