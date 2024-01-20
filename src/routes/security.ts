@@ -77,7 +77,9 @@ export const getSecurityRouter = () => {
     async (req: Request<{deviceId: string}>, res) => {
       const deviceAuthSessionDeleted =
         await usersQueryRepository.deleteSingleDeviceAuthSessionByDeviceId(req.params.deviceId)
-      await usersCommandRepository.addRefreshTokenToBlackList(req.cookies['refreshToken'])
+      // const oldTokenBlackListed = await usersCommandRepository.addRefreshTokenToBlackList(
+      //   req.cookies['refreshToken'],
+      // )
 
       if (!deviceAuthSessionDeleted) {
         res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
