@@ -86,9 +86,16 @@ export const usersService = {
     }
   },
   async logoutUser(refreshToken: string): Promise<boolean> {
-    const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(refreshToken)
+    // const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(refreshToken)
 
-    return addToBlackList
+    // return addToBlackList
+    const oldDecoded = cryptoService.getJWTTokenPayload(refreshToken)
+
+    const deviceAuthSessionRemoved = await usersCommandRepository.deleteSingleDeviceAuthSession(
+      oldDecoded.iat,
+    )
+
+    return deviceAuthSessionRemoved
   },
   async refreshLoginUser(
     user: {
@@ -115,9 +122,9 @@ export const usersService = {
       '40s',
     )
 
-    const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
+    // const addToBlackList = await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
 
-    if (!accessToken || !refreshToken || !addToBlackList) {
+    if (!accessToken || !refreshToken) {
       return null
     }
 

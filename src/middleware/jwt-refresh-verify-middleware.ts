@@ -4,6 +4,7 @@ import {SETTINGS} from '../shared/configs'
 import {UserViewModel} from '../types/user'
 import jwt from 'jsonwebtoken'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
+import {cryptoService} from '../application/crypto-service'
 
 export const jwtRefreshVerifyMiddleware = async (
   req: Request,
@@ -13,13 +14,6 @@ export const jwtRefreshVerifyMiddleware = async (
   const refreshToken = req.cookies['refreshToken']
 
   if (!refreshToken) {
-    res.sendStatus(HTTP_STATUSES.UNAUTH)
-    return
-  }
-
-  const inBlackList = await usersQueryRepository.refreshTokenBlackListCheck(refreshToken)
-
-  if (inBlackList) {
     res.sendStatus(HTTP_STATUSES.UNAUTH)
     return
   }
@@ -36,7 +30,13 @@ export const jwtRefreshVerifyMiddleware = async (
     return
   }
 
-  if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000) {
+  const inDeviceAuthSessionList =
+    await usersQueryRepository.checkRefreshTokenIsInAuthDeviceSessionList(
+      verifiedUser.iat,
+      verifiedUser.id,
+    )
+
+  if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000 || !inDeviceAuthSessionList) {
     res.sendStatus(HTTP_STATUSES.UNAUTH)
     return
   }

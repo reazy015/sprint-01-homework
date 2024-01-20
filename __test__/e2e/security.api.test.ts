@@ -254,6 +254,8 @@ describe('/security', () => {
         .set('Cookie', refreshToken1)
         .expect(HTTP_STATUSES.OK)
 
+      expect(devicesResponse1.body.length).toEqual(2)
+
       await request(app)
         .post('/auth/logout')
         .set('Cookie', refreshToken1)
@@ -264,7 +266,7 @@ describe('/security', () => {
         .set('Cookie', refreshToken2)
         .expect(HTTP_STATUSES.OK)
 
-      expect(devicesResponse2.body.length).toBe(devicesResponse1.body.length - 1)
+      expect(devicesResponse2.body.length).toEqual(devicesResponse1.body.length - 1)
     })
   })
 })

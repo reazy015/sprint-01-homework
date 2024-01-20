@@ -120,10 +120,10 @@ export const usersQueryRepository = {
 
     return found ? true : false
   },
-  async refreshTokenBlackListCheck(refreshToken: string): Promise<boolean> {
-    const inBlackList = await refreshTokenBlackListCollection.findOne({refreshToken})
+  async checkRefreshTokenIsInAuthDeviceSessionList(iat: number, userId: string): Promise<boolean> {
+    const valid = await deviceAuthSessionsCollection.findOne({$and: [{iat}, {userId}]})
 
-    return Boolean(inBlackList)
+    return Boolean(valid)
   },
   async getUserDeviceAuthSessions(
     userId: string,

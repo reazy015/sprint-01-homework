@@ -70,6 +70,11 @@ export const usersCommandRepository = {
 
     return deleted.acknowledged
   },
+  async deleteSingleDeviceAuthSession(iat: number): Promise<boolean> {
+    const deleted = await deviceAuthSessionsCollection.deleteOne({iat})
+
+    return deleted.acknowledged
+  },
   async updateUserConfirmationCodeByEmail(
     email: string,
     confirmationCode: string,
