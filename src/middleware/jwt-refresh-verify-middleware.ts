@@ -20,7 +20,7 @@ export const jwtRefreshVerifyMiddleware = async (
   const inBlackList = await usersQueryRepository.refreshTokenBlackListCheck(refreshToken)
 
   if (inBlackList) {
-    res.sendStatus(512)
+    res.sendStatus(HTTP_STATUSES.UNAUTH)
     return
   }
 
