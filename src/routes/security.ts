@@ -42,7 +42,7 @@ export const getSecurityRouter = () => {
     },
     async (req, res) => {
       const deviceAuthSessions = await usersQueryRepository.deleteAllDeviceAuthSessions(
-        req.context.userId,
+        req.context.refreshTokenExp!,
         req.context.userId,
       )
 
