@@ -187,4 +187,7 @@ export const usersQueryRepository = {
 
     return deviceAuthSessionsDeleted.acknowledged
   },
+  async deleteBlackListRecords(): Promise<boolean> {
+    return (await refreshTokenBlackListCollection.deleteMany()).acknowledged
+  },
 }

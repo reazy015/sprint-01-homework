@@ -5,6 +5,7 @@ import {postsCommandRepository} from '../repositories/command/posts-command-repo
 import {usersCommandRepository} from '../repositories/command/users-command-repository'
 import {videoRepositry} from '../repositories/video-repository'
 import {HTTP_STATUSES} from '../utils/constants'
+import {usersQueryRepository} from '../repositories/query/users-query-repository'
 
 export const getTestingRouter = () => {
   const router = express.Router()
@@ -16,13 +17,15 @@ export const getTestingRouter = () => {
     const allUsersDeleted = await usersCommandRepository.deleteAllUsers()
     const allCommentsDeleted = await commentsCommandRespository.deleteAllComments()
     const allDeviceAuthSessionDeleted = await usersCommandRepository.deleteAllDeviceAuthSessions()
+    const blackListCleared = await usersQueryRepository.deleteBlackListRecords()
 
     if (
       allBlogsDeleted &&
       allPostsDeleted &&
       allUsersDeleted &&
       allCommentsDeleted &&
-      allDeviceAuthSessionDeleted
+      allDeviceAuthSessionDeleted &&
+      blackListCleared
     ) {
       res.sendStatus(HTTP_STATUSES.NO_CONTENT)
       return

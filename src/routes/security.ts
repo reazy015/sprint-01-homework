@@ -12,10 +12,10 @@ export const getSecurityRouter = () => {
     jwtRefreshVerifyMiddleware,
     (req, res, next) => {
       const currentDate = new Date().getTime() / 1000
-      // if (req.context.refreshTokenExp && req.context.refreshTokenExp < currentDate) {
-      //   res.sendStatus(HTTP_STATUSES.UNAUTH)
-      //   return
-      // }
+      if (req.context.refreshTokenExp && req.context.refreshTokenExp < currentDate) {
+        res.sendStatus(HTTP_STATUSES.UNAUTH)
+        return
+      }
 
       next()
     },
