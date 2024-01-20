@@ -98,7 +98,7 @@ export const usersService = {
     },
     oldRefreshToken: string,
   ): Promise<{accessToken: string; refreshToken: string} | null> {
-    await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
+    // await usersCommandRepository.addRefreshTokenToBlackList(oldRefreshToken)
 
     const accessToken = cryptoService.getJWTToken({
       login: user.login,
