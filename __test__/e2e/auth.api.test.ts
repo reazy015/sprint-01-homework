@@ -252,6 +252,66 @@ describe('Auth api', () => {
       .expect(HTTP_STATUSES.UNAUTH)
   })
 
+  it('POST/auth/refresh-token;/auth/logout -> 401; additional methods: POST/users, POST/auth/login', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+      .expect(HTTP_STATUSES.OK)
+
+    const refreshToken = loginResponse.headers['set-cookie']
+
+    await request(app)
+      .post('/auth/refresh-token')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.OK)
+
+    await request(app)
+      .post('/auth/refresh-token')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.UNAUTH)
+
+    await request(app).post('/auth/logout').set('Cookie', refreshToken).expect(HTTP_STATUSES.UNAUTH)
+  })
+
+  it('POST/auth/logout -> 401; additional methods: POST/users, POST/auth/login', async () => {
+    const newUserRequestBody = {
+      email: 'valid@email.com',
+      login: 'Valid_login',
+      password: '313373valid_password',
+    }
+
+    await request(app)
+      .post(`/users`)
+      .send(newUserRequestBody)
+      .auth(CREDENTIALS.LOGIN, CREDENTIALS.PASSWORD)
+      .expect(HTTP_STATUSES.CREATED)
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({loginOrEmail: 'Valid_login', password: '313373valid_password'})
+      .expect(HTTP_STATUSES.OK)
+
+    const refreshToken = loginResponse.headers['set-cookie']
+
+    await request(app)
+      .post('/auth/logout')
+      .set('Cookie', refreshToken)
+      .expect(HTTP_STATUSES.NO_CONTENT)
+    await request(app).post('/auth/logout').set('Cookie', refreshToken).expect(HTTP_STATUSES.UNAUTH)
+  })
+
   it('POST/auth/logout -> 204, 401, 401; additional methods: POST/users, POST/auth/login', async () => {
     const newUserRequestBody = {
       email: 'valid@email.com',
