@@ -230,5 +230,41 @@ describe('/security', () => {
         .set('Cookie', refreshToken)
         .expect(HTTP_STATUSES.NO_CONTENT)
     })
+
+    it('GET /devices should return 200 list without logged out device; additional methods: POST/auth/logout', async () => {
+      const {login, password} = USER
+
+      const loginResponse1 = await request(app)
+        .post('/auth/login')
+        .send({loginOrEmail: login, password})
+        .set('user-agent', 'desktop_test_1')
+        .expect(HTTP_STATUSES.OK)
+
+      const loginResponse2 = await request(app)
+        .post('/auth/login')
+        .send({loginOrEmail: login, password})
+        .set('user-agent', 'desktop_test_2')
+        .expect(HTTP_STATUSES.OK)
+
+      const refreshToken1 = loginResponse1.headers['set-cookie']
+      const refreshToken2 = loginResponse2.headers['set-cookie']
+
+      const devicesResponse1 = await request(app)
+        .get('/security/devices')
+        .set('Cookie', refreshToken1)
+        .expect(HTTP_STATUSES.OK)
+
+      await request(app)
+        .post('/auth/logout')
+        .set('Cookie', refreshToken1)
+        .expect(HTTP_STATUSES.NO_CONTENT)
+
+      const devicesResponse2 = await request(app)
+        .get(`/security/devices`)
+        .set('Cookie', refreshToken2)
+        .expect(HTTP_STATUSES.OK)
+
+      expect(devicesResponse2.body.length).toBe(devicesResponse1.body.length - 1)
+    })
   })
 })

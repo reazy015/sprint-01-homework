@@ -74,11 +74,15 @@ export const getSecurityRouter = () => {
       next()
     },
     async (req: Request<{deviceId: string}>, res) => {
-      const deviceAuthSessions = await usersQueryRepository.deleteSingleDeviceAuthSession(
-        req.params.deviceId,
-      )
+      const deviceAuthSessionDeleted =
+        await usersQueryRepository.deleteSingleDeviceAuthSessionByDeviceId(req.params.deviceId)
 
-      res.status(HTTP_STATUSES.NO_CONTENT).send(deviceAuthSessions)
+      if (!deviceAuthSessionDeleted) {
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
+        return
+      }
+
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
 
