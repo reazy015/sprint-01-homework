@@ -13,7 +13,7 @@ export const jwtRefreshVerifyMiddleware = async (
   const refreshToken = req.cookies['refreshToken']
 
   if (!refreshToken) {
-    res.sendStatus(511)
+    res.sendStatus(HTTP_STATUSES.UNAUTH)
     return
   }
 
@@ -32,12 +32,12 @@ export const jwtRefreshVerifyMiddleware = async (
       iat: number
     }
   } catch (error) {
-    res.status(513).send(error)
+    res.status(HTTP_STATUSES.UNAUTH).send(error)
     return
   }
 
   if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000) {
-    res.sendStatus(514)
+    res.sendStatus(HTTP_STATUSES.UNAUTH)
     return
   }
 
