@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
 import {jwtRefreshVerifyMiddleware} from '../middleware/jwt-refresh-verify-middleware'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
+import {usersCommandRepository} from '../repositories/command/users-command-repository'
 
 export const getSecurityRouter = () => {
   const router = express.Router()
@@ -76,6 +77,7 @@ export const getSecurityRouter = () => {
     async (req: Request<{deviceId: string}>, res) => {
       const deviceAuthSessionDeleted =
         await usersQueryRepository.deleteSingleDeviceAuthSessionByDeviceId(req.params.deviceId)
+      await usersCommandRepository.addRefreshTokenToBlackList(req.cookies['refreshToken'])
 
       if (!deviceAuthSessionDeleted) {
         res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
