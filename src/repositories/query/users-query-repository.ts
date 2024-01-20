@@ -170,9 +170,16 @@ export const usersQueryRepository = {
 
     return deviceAuthSessionsDeleted.acknowledged
   },
-  async deleteSingleDeviceAuthSession(deviceId: string): Promise<boolean> {
+  async deleteSingleDeviceAuthSessionByDeviceId(deviceId: string): Promise<boolean> {
     const deviceAuthSessionsDeleted = await deviceAuthSessionsCollection.deleteOne({
       deviceId,
+    })
+
+    return deviceAuthSessionsDeleted.acknowledged
+  },
+  async deleteSingleDeviceAuthSessionByRefreshTokenIat(iat: number): Promise<boolean> {
+    const deviceAuthSessionsDeleted = await deviceAuthSessionsCollection.deleteOne({
+      iat,
     })
 
     return deviceAuthSessionsDeleted.acknowledged

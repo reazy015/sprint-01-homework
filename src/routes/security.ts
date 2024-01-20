@@ -2,7 +2,6 @@ import express, {Request, Response} from 'express'
 import {HTTP_STATUSES} from '../utils/constants'
 import {jwtRefreshVerifyMiddleware} from '../middleware/jwt-refresh-verify-middleware'
 import {usersQueryRepository} from '../repositories/query/users-query-repository'
-import {deviceAuthSession} from '../middleware/device-auth-session'
 
 export const getSecurityRouter = () => {
   const router = express.Router()

@@ -8,6 +8,7 @@ declare global {
         email: string
         login: string
         refreshTokenExp?: number
+        refreshTokenIat?: number
       }
     }
   }

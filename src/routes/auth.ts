@@ -11,6 +11,7 @@ import {confirmationCheckMiddleware} from '../middleware/confirmation-check-midd
 import {confirmationCodeCheck} from '../middleware/confirmation-code-check'
 import {emailResendingCheck} from '../middleware/email-resending-check'
 import {jwtRefreshVerifyMiddleware} from '../middleware/jwt-refresh-verify-middleware'
+import {usersQueryRepository} from '../repositories/query/users-query-repository'
 
 export const getAuthRouter = () => {
   const router = express.Router()
@@ -108,8 +109,12 @@ export const getAuthRouter = () => {
   router.post('/logout', jwtRefreshVerifyMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies['refreshToken']
     const loggedOut = await usersService.logoutUser(refreshToken)
+    const deviceAuthSessionDeleted =
+      await usersQueryRepository.deleteSingleDeviceAuthSessionByRefreshTokenIat(
+        req.context.refreshTokenIat!,
+      )
 
-    if (!loggedOut) {
+    if (!loggedOut || !deviceAuthSessionDeleted) {
       res.sendStatus(HTTP_STATUSES.BAD_REQUEST)
       return
     }
