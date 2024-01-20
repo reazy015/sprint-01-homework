@@ -36,10 +36,10 @@ export const jwtRefreshVerifyMiddleware = async (
     return
   }
 
-  if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000) {
-    res.sendStatus(HTTP_STATUSES.UNAUTH)
-    return
-  }
+  // if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000) {
+  //   res.sendStatus(HTTP_STATUSES.UNAUTH)
+  //   return
+  // }
 
   req.context = {
     userId: verifiedUser.id,
