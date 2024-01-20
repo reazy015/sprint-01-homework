@@ -162,7 +162,10 @@ export const usersQueryRepository = {
       lastActiveDate: deviceAuthSession.lastActiveDate,
     }
   },
-  async deleteAllDeviceAuthSessions(tokenIat: number, userId: string): Promise<boolean> {
+  async deleteAllDeviceAuthSessionsExceptCurrent(
+    tokenIat: number,
+    userId: string,
+  ): Promise<boolean> {
     const deviceAuthSessionsDeleted = await deviceAuthSessionsCollection.deleteMany({
       iat: {$ne: tokenIat},
       userId: {$ne: userId},

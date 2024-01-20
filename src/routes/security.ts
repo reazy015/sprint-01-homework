@@ -41,10 +41,11 @@ export const getSecurityRouter = () => {
       next()
     },
     async (req, res) => {
-      const deviceAuthSessions = await usersQueryRepository.deleteAllDeviceAuthSessions(
-        req.context.refreshTokenExp!,
-        req.context.userId,
-      )
+      const deviceAuthSessions =
+        await usersQueryRepository.deleteAllDeviceAuthSessionsExceptCurrent(
+          req.context.refreshTokenExp!,
+          req.context.userId,
+        )
 
       res.status(HTTP_STATUSES.NO_CONTENT).send(deviceAuthSessions)
     },
@@ -77,9 +78,9 @@ export const getSecurityRouter = () => {
     async (req: Request<{deviceId: string}>, res) => {
       const deviceAuthSessionDeleted =
         await usersQueryRepository.deleteSingleDeviceAuthSessionByDeviceId(req.params.deviceId)
-      // const oldTokenBlackListed = await usersCommandRepository.addRefreshTokenToBlackList(
-      //   req.cookies['refreshToken'],
-      // )
+      const oldTokenBlackListed = await usersCommandRepository.addRefreshTokenToBlackList(
+        req.cookies['refreshToken'],
+      )
 
       if (!deviceAuthSessionDeleted) {
         res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
