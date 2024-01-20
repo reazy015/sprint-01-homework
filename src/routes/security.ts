@@ -41,13 +41,18 @@ export const getSecurityRouter = () => {
       next()
     },
     async (req, res) => {
-      const deviceAuthSessions =
+      const deviceAuthSessionsDeleted =
         await usersQueryRepository.deleteAllDeviceAuthSessionsExceptCurrent(
           req.context.refreshTokenExp!,
           req.context.userId,
         )
 
-      res.status(HTTP_STATUSES.NO_CONTENT).send(deviceAuthSessions)
+      if (!deviceAuthSessionsDeleted) {
+        res.sendStatus(HTTP_STATUSES.SERVER_ERROR)
+        return
+      }
+
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT)
     },
   )
 

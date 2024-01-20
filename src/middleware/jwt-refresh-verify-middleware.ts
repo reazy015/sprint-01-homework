@@ -13,14 +13,14 @@ export const jwtRefreshVerifyMiddleware = async (
   const refreshToken = req.cookies['refreshToken']
 
   if (!refreshToken) {
-    res.sendStatus(HTTP_STATUSES.UNAUTH)
+    res.sendStatus(511)
     return
   }
 
   const inBlackList = await usersQueryRepository.refreshTokenBlackListCheck(refreshToken)
 
   if (inBlackList) {
-    res.sendStatus(HTTP_STATUSES.UNAUTH)
+    res.sendStatus(512)
     return
   }
 
@@ -32,12 +32,12 @@ export const jwtRefreshVerifyMiddleware = async (
       iat: number
     }
   } catch (error) {
-    res.status(HTTP_STATUSES.UNAUTH).send(error)
+    res.status(513).send(error)
     return
   }
 
   if (!verifiedUser || verifiedUser.exp < new Date().getTime() / 1000) {
-    res.sendStatus(HTTP_STATUSES.UNAUTH)
+    res.sendStatus(514)
     return
   }
 
